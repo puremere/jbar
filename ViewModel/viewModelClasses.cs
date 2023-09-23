@@ -1,0 +1,324 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace jbar.ViewModel
+{
+
+    public class distanceVM
+    {
+        public double? distance { get; set; }
+    }
+    public class viewModelClasses
+    {
+    }
+    public class responseModel
+    {
+        public int status { get; set; }
+        public string message { get; set; }
+        public string data { get; set; }
+    }
+    public class doSignIn
+    {
+        public string code { get; set; }
+        public string phone { get; set; }
+        public string userType { get; set; }
+    }
+    public class sendOrderNotif
+    {
+        public string orderID { get; set; }
+        public double lat { get; set; }
+
+        public double lon { get; set; }
+    }
+    public class getCityVM
+    {
+        public string ID { get; set; }
+        public string search { get; set; }
+
+    }
+
+    public class getCityNameVM
+    {
+        public double lat { get; set; }
+
+        public double lon { get; set; }
+    }
+    public class setProfileVM
+    {
+
+        public string name { get; set; }
+        public string coName { get; set; }
+        public string shenaseSherkat { get; set; }
+
+        public string firebaseToken { get; set; }
+        public string hooshmandMashin { get; set; }
+        public string postalCode { get; set; }
+        public string cartMelliModir { get; set; }
+        public string RPT { get; set; }
+        public string clientType { get; set; }
+        public string profileImage { get; set; }
+        public string codeMelli { get; set; }
+        public string cityID { get; set; }
+        public string address { get; set; }
+        public string emPhone { get; set; }
+        public string typeID { get; set; }
+        public string pelakIran { get; set; }
+        public string pelak1 { get; set; }
+        public string pelakHarf { get; set; }
+        public string pelak2 { get; set; }
+        public string cartNavgan { get; set; }
+        public string cartDriver { get; set; }
+    }
+
+    public class sendTypeVMF
+    {
+        public string json { get; set; }
+
+    }
+    public class sendProfileVM
+    {
+        public Model.user user { get; set; }
+        public int status { get; set; }
+        public string message { get; set; }
+        public string baseURL { get; set; }
+        public string city { get; set; }
+        public string type { get; set; }
+
+    }
+
+    public class sndUser
+    {
+        public string userType { get; set; }
+        public string name { get; set; }
+        public string profileImage { get; set; }
+        public string coName { get; set; }
+        public string phone { get; set; }
+        public string code { get; set; }
+        public string codeMelli { get; set; }
+        public string shenaseSherkat { get; set; }
+        public string cityID { get; set; }
+        public string address { get; set; }
+        public string emPhone { get; set; }
+        public string typeID { get; set; }
+        public string hooshmandMashin { get; set; }
+        public string pelakIran { get; set; }
+        public string pelak1 { get; set; }
+        public string pelakHarf { get; set; }
+        public string pelak2 { get; set; }
+        public string cartNavgan { get; set; }
+        public string cartDriver { get; set; }
+        public string cartMelliModir { get; set; }
+        public string rooznameOrParvane { get; set; }
+        public string status { get; set; }
+        public string statusMessage { get; set; }
+        public string baseURL { get; set; }
+        public string cityName { get; set; }
+        public string typeName { get; set; }
+    }
+    public class sendLoadTypeVM
+    {
+        public List<Model.loadType> lst { get; set; }
+        public int status { get; set; }
+        public string message { get; set; }
+    }
+    public class getDashbaord
+    {
+        public Model.cartype type { get; set; }
+        public Model.city origin { get; set; }
+        public int status { get; set; }
+    }
+    public class sendTypeVM
+    {
+        public List<Model.cartype> lst { get; set; }
+        public int status { get; set; }
+        public string message { get; set; }
+
+    }
+    public class orderListVM
+    {
+        public string orderID { get; set; }
+
+        public string origin { get; set; }
+        public string destin { get; set; }
+        public int priceTotal { get; set; }
+        public int pricePerTon { get; set; }
+        public string viewNumber { get; set; }
+
+    }
+    public class getOrderVM
+    {
+        public List<orderListVM> orderList { get; set; }
+        public int status { get; set; }
+        public string message { get; set; }
+
+    }
+    public class sendCityVM
+    {
+        public List<newcity> lst { get; set; }
+        public int status { get; set; }
+        public string message { get; set; }
+
+    }
+
+
+    public class newcity
+    {
+        public Guid userID { get; set; }
+        public Guid parentID { get; set; }
+        public string title { get; set; }
+        public string lat { get; set; }
+        public string lon { get; set; }
+    }
+
+
+
+    public class Datum
+    {
+        public int place_id { get; set; }
+        public string licence { get; set; }
+        public string osm_type { get; set; }
+        public object osm_id { get; set; }
+        public string lat { get; set; }
+        public string lon { get; set; }
+        public string category { get; set; }
+        public string type { get; set; }
+        public int place_rank { get; set; }
+        public double importance { get; set; }
+        public string addresstype { get; set; }
+        public string name { get; set; }
+        public string display_name { get; set; }
+        public List<string> boundingbox { get; set; }
+        public Geojson geojson { get; set; }
+    }
+
+    public class Geojson
+    {
+        public string type { get; set; }
+        public List<object> coordinates { get; set; }
+    }
+
+    public class GeoVM
+    {
+        public List<Datum> data { get; set; }
+    }
+
+
+    public class orrdinates
+    {
+        public List<List<double>> obb { get; set; }
+    }
+
+    public class notifVM
+    {
+        public bigStyle big_style { get; set; }
+        public titleModel title { get; set; }
+        public int id { get; set; }
+        public string direction { get; set; }
+        public string sound { get; set; }
+        public string icon { get; set; }
+        public string vibration { get; set; }
+        public string color { get; set; }
+        public clickAction click_action { get; set; }
+        public clickAction delete_action { get; set; }
+        public List<clickAction> actions { get; set; }
+
+
+    }
+    public class clickAction
+    {
+        public string title { get; set; }
+        public string type { get; set; }
+        public string data { get; set; }
+    }
+    public class titleModel
+    {
+        public string text { get; set; }
+        public string color { get; set; }
+    }
+
+    public class bigStyle
+    {
+        public string type { get; set; }
+        public string picture { get; set; }
+    }
+
+    public class orderDetailVM
+    {
+        public string orderID { get; set; }
+    }
+    public class sendDetailVM
+    {
+        public string status { get; set; }
+        public string netTotal { get; set; }
+        public string netPerTon { get; set; }
+        public List<string> typeOrderList { get; set; }
+        public newcity origing { get; set; }
+        public newcity destination { get; set; }
+        public string description { get; set; }
+        public string totalView { get; set; }
+        public string passedTime { get; set; }
+        public string clientStatus { get; set; }
+        public string clientName { get; set; }
+        public string clientMark { get; set; }
+        public string clientTotalComment { get; set; }
+        public string returnOrderCount { get; set; }
+        public List<orderCommentVM> comments { get; set; }
+    }
+    public class orderCommentVM
+    {
+        public string clientTitle { get; set; }
+        public string clientImage { get; set; }
+        public string clientMark { get; set; }
+        public string date { get; set; }
+        public string content { get; set; }
+    }
+
+    public class setOrderVM
+    {
+
+        public string originCityID { get; set; }
+        public string destinCityID { get; set; }
+        public string date { get; set; }
+        public string type { get; set; }
+        public string loadingStartHour { get; set; }
+        public string loadingFinishHour { get; set; }
+        public double loadAmount { get; set; }
+        public double pricePerTone { get; set; }
+        public double priceTotal { get; set; }
+        public string description { get; set; }
+        public string showPhone { get; set; }
+        public string recieveSMS { get; set; }
+        public string loadTypeID { get; set; }
+    }
+
+
+
+    // {"status":"Ok","rows":[{"elements":[{"status":"Ok","duration":{"value":38724,"text":"۱۰ ساعت ۴۵ دقیقه"},"distance":{"value":864431,"text":"۸۷۵ کیلومتر"}}]}],"origin_addresses":["35.723454,50.367155"],"destination_addresses":["37.476104,57.332076"]}
+    public class distancVM
+    {
+        public string status { get; set; }
+        public List<rowOBJ> rows { get; set; }
+
+    }
+    public class rowOBJ
+    {
+        public List<elementOBJ> elements { get; set; }
+        public object origin_addresses { get; set; }
+    }
+    public class elementOBJ
+    {
+        public string status { get; set; }
+        public durationOBJ duration { get; set; }
+        public durationOBJ distance { get; set; }
+
+    }
+
+    public class durationOBJ
+    {
+        public int value { get; set; }
+        public string text { get; set; }
+    }
+}
+
