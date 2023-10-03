@@ -1,0 +1,98 @@
+﻿@model jbar.ViewModel.sendTypeVM
+
+<style>
+    .typeParent {
+        background-color:black;
+       color:white;
+        padding: 25px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+    }
+    .typechild {
+        background-color: white;
+        padding: 15px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+        display:flex;
+        align-items:center;
+        
+    }
+
+    .activeParent {
+        background-color: #fff;
+        color: black;
+    }
+    .typechild{
+        display:flex;
+
+    }
+    .typechild div{
+        flex:1
+    }
+    .childFlexSection {
+        display:none;
+    }
+    .visibleSection{
+        display:block;
+    }
+    input{
+        box-shadow:none
+    }
+</style>
+<div style="display:flex; direction:rtl">
+    <div style="width:35%; background-color:white" >
+        @{
+            List<jbar.Model.cartype> parentList = Model.lst.Where(x => x.parentID == x.typeID).ToList();
+            foreach (var item in parentList)
+            {
+                int index = parentList.IndexOf(item);
+                if (index == 0)
+                {
+                    <div class="activeParent typeParent" idtoshow="@item.typeID">@item.title</div>
+                }
+                else
+                {
+                    <div idtoshow="@item.typeID" class="typeParent">@item.title</div>
+                }
+
+            }
+        }
+
+    </div>
+    @foreach (var parentitem in parentList)
+    {
+        List<jbar.Model.cartype> childList = Model.lst.Where(x => x.parentID != x.typeID && x.parentID == parentitem.typeID).ToList();
+
+        int index = parentList.IndexOf(parentitem);
+        string classname = "";
+        if (index == 0)
+        {
+            classname = "visibleSection";
+        }
+        <div id="@parentitem.typeID" class="childFlexSection @classname" style="width:65%">
+            @foreach (var item in childList)
+            {
+
+                <div class="typechild">
+                    <div style="flex:1; text-align:right">@item.title</div>
+                    <input texttoshow="@item.title" id="@item.typeID" style="box-shadow:none;width:30%" class="form-control typeinput" type="checkbox"/>
+                </div>
+            }
+        </div>
+    }
+
+</div>
+
+<script>
+    $(".typeParent").click(function () {
+        var sectionid = $(this).attr('idtoshow');
+       
+
+        $(".typeParent").removeClass("activeParent");
+        $(this).addClass("activeParent");
+
+        
+        $(".childFlexSection").removeClass("visibleSection");
+        $("#" + sectionid).addClass("visibleSection");
+    })
+</script>

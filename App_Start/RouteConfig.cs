@@ -12,7 +12,12 @@ namespace jbar
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-
+            routes.MapRoute(
+             name: "Special",
+             url: "{action}",
+             defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+             namespaces: new[] { "supect.Controllers" }
+             );
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

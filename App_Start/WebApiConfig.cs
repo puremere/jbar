@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.Web.Http.Cors;
 
 namespace jbar.App_Start
 {
@@ -11,6 +12,10 @@ namespace jbar.App_Start
     {
         public static void Register(HttpConfiguration config)
         {
+            string origin = "https://jbar.iran.liara.run";
+            EnableCorsAttribute cors = new EnableCorsAttribute(origin, "*", "GET,POST");
+            config.EnableCors(cors);
+            
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
@@ -24,6 +29,8 @@ namespace jbar.App_Start
                 routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
+
+           
         }
     }
 }

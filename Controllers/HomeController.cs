@@ -13,14 +13,14 @@ namespace jbar.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult driver()
         {
             ViewBag.Message = "Your application description page.";
 
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult loadowner()
         {
             ViewBag.Message = "Your contact page.";
 

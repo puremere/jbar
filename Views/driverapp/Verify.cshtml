@@ -1,0 +1,103 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_driverLayout.cshtml";
+}
+
+<style>
+    button:focus,
+    input:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
+    a,
+    a:hover {
+        text-decoration: none;
+    }
+
+    body {
+        font-family: "Roboto", sans-serif;
+    }
+
+    /*----------------------*/
+    .base-timer {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: auto;
+    }
+
+    .base-timer__svg {
+        transform: scaleX(-1);
+    }
+
+    .base-timer__circle {
+        fill: none;
+        stroke: none;
+    }
+
+    .base-timer__path-elapsed {
+        stroke-width: 6px;
+        stroke: #efefef;
+    }
+
+    .base-timer__path-remaining {
+        stroke-width: 4px;
+        stroke-linecap: round;
+        transform: rotate(90deg);
+        transform-origin: center;
+        transition: 1s linear all;
+        fill-rule: nonzero;
+        stroke: currentColor;
+    }
+
+        .base-timer__path-remaining.green {
+            color: #39b37d;
+        }
+
+        .base-timer__path-remaining.orange {
+            color: orange;
+        }
+
+        .base-timer__path-remaining.red {
+            color: red;
+        }
+
+    .base-timer__label {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        top: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+</style>
+<div class="parentsection">
+
+    <h3 class="headingone">تایید کد</h3>
+    <h4 class="headingtwo" style="">لطفا کدی که به شماره <span>@ViewBag.phone</span> ارسال شده را وارد نمایید</h4>
+
+    <div style="margin:30px 10px">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="revese-timer" data-minute="1"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <input id="userCode" style="" placeholder="کد" />
+    <div id="buttonParent">
+
+        <div phoneToSend="@ViewBag.phone" class="sendCode">تایید</div>
+    </div>
+
+</div>
+

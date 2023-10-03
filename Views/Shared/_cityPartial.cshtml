@@ -1,0 +1,16 @@
+﻿@model jbar.ViewModel.sendCityVM
+
+
+@if (Model.status == 200)
+{
+    if (Model.lst != null)
+    {
+        <div class="cityParent">
+            @foreach (var item in Model.lst)
+            {
+                <p onclick="cityClicked(this)" class="cityTitle" id="@item.userID">@item.title</p>
+            }
+        </div>
+
+    }
+}

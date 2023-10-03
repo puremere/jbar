@@ -31,8 +31,9 @@ namespace jbar.Model
         public DbSet<loadType> loadTypes { get; set; }
         public DbSet<ordertype> ordertypes { get; set; }
         public DbSet<orderResponse> orderResponses { get; set; }
+        public DbSet<Comment> comments { get; set; }
 
-
+        
 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -44,11 +45,13 @@ namespace jbar.Model
 
     public class Comment
     {
+        [Key]
+        public Guid CommentID { get; set; }
         public Guid orderID { get; set; }
         public Guid userID { get; set; }
         public Guid clientID { get; set; }
         public string clientMark { get; set; }
-        public string date { get; set; }
+        public DateTime date { get; set; }
         public string content { get; set; }
     }
     public class order
@@ -72,8 +75,9 @@ namespace jbar.Model
         public string description { get; set; }
         public string showPhone { get; set; }
         public string recieveSMS { get; set; }
-        public string viewCount { get; set; }
+        public int viewCount { get; set; }
         public Guid loadTypeID { get; set; }
+        public string orderStatus { get; set; }
 
     }
     public class loadType
@@ -92,7 +96,7 @@ namespace jbar.Model
     public class orderResponse
     {
         [Key]
-
+        public Guid orderresponseID { get; set; }
         public Guid orderID { get; set; }
         public Guid driverID { get; set; }
         public double price { get; set; }

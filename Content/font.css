@@ -1,0 +1,32 @@
+﻿@font-face {
+    font-family: IRANSans;
+    font-style: normal;
+    font-weight: normal;
+    src: url('../fonts/eot/IRANSansWeb(FaNum).eot');
+    src: url('../fonts/eot/IRANSansWeb(FaNum).eot?#iefix') format('embedded-opentype'), /* IE6-8 */
+    url('../fonts/woff2/IRANSansWeb(FaNum).woff2') format('woff2'), /* FF39+,Chrome36+, Opera24+*/
+    url('../fonts/woff/IRANSansWeb(FaNum).woff') format('woff'), /* FF3.6+, IE9, Chrome6+, Saf5.1+*/
+    url('../fonts/ttf/IRANSansWeb(FaNum).ttf') format('truetype');
+}
+
+@import url(fontiran.css); /* لینک فایلی که وظیفه بارگذاری فونت ها را برعهده دارد */
+html {
+    background-color: white;
+}
+body {
+    font-family: IRANSans !important;
+    font-weight: 300;
+    font-size: 13px;
+    background-color: white;
+    margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6, input, textarea,a,span {
+    font-family: IRANSans !important;
+}
+
+@media (max-width: 600px) {
+    .fieldholder {
+        width: 100% !important;
+    }
+}

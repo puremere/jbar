@@ -239,6 +239,9 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.Cors.5.2.9\lib\net45\System.Web.Cors.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -249,6 +252,9 @@
     </Reference>
     <Reference Include="System.Web.Http, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.WebApi.Core.5.2.9\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.Cors, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.AspNet.WebApi.Cors.5.2.9\lib\net45\System.Web.Http.Cors.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=5.2.9.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Microsoft.AspNet.WebApi.WebHost.5.2.9\lib\net45\System.Web.Http.WebHost.dll</HintPath>
@@ -301,7 +307,10 @@
     <Compile Include="Classes\methods.cs" />
     <Compile Include="Classes\TokenManager.cs" />
     <Compile Include="Controllers\appController.cs" />
+    <Compile Include="Controllers\driverappController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\loadownerappController.cs" />
+    <Compile Include="Controllers\OfflineController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -311,6 +320,103 @@
     <Compile Include="ViewModel\viewModelClasses.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\comments\feed\index.html" />
+    <Content Include="Assets\feed\index.html" />
+    <Content Include="Assets\img\bazar.png" />
+    <Content Include="Assets\img\direct.png" />
+    <Content Include="Assets\img\googlePlay.png" />
+    <Content Include="Assets\img\icon1.png" />
+    <Content Include="Assets\img\wpa.png" />
+    <Content Include="Assets\portfolios\beach-passage\index.html" />
+    <Content Include="Assets\portfolios\river-rafting\index.html" />
+    <Content Include="Assets\portfolios\speed-boat\index.html" />
+    <Content Include="Assets\portfolios\sunset-running\index.html" />
+    <Content Include="Assets\portfolios\surf-experience\index.html" />
+    <Content Include="Assets\portfolios\weekend-trek\index.html" />
+    <Content Include="Assets\scontent\plugins\instagram-feed-pro\css\sb-instagram.min77e1.css" />
+    <Content Include="Assets\scontent\plugins\instagram-feed-pro\img\sbi-sprite.png" />
+    <Content Include="Assets\scontent\plugins\instagram-feed-pro\js\sb-instagram.min77e1.js" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\animate-css\animate.mine1b2.css" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\css\all.mine1b2.css" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\css\v4-shims.mine1b2.css" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-brands-400.svg" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-regular-400.svg" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-solid-900.svg" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\vc_waypoints\vc-waypoints.mine1b2.js" />
+    <Content Include="Assets\scontent\themes\pulse\css\grabbing.html" />
+    <Content Include="Assets\scontent\themes\pulse\css\mainbafd.css" />
+    <Content Include="Assets\scontent\themes\pulse\css\mCSB_buttons.html" />
+    <Content Include="Assets\scontent\themes\pulse\images\flickr.html" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\address-book.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\alarm-clock.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\anchor.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\application-image.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\arrow.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\asterisk.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\auction-hammer.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\balloon-buzz.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\balloon-facebook.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\balloon-twitter.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\balloon.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\battery-full.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\binocular.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\blue-document-excel.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\blue-document-image.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\blue-document-music.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\blue-document-office.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\blue-document-pdf.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\blue-document-powerpoint.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\blue-document-word.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\bookmark.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\camcorder.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\camera.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\chart-pie.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\chart.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\clock.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\control.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\fire.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\heart.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\mail.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\plus-shield.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\icons\video.png" />
+    <Content Include="Assets\scontent\themes\pulse\images\toggle_close.html" />
+    <Content Include="Assets\scontent\themes\pulse\images\toggle_open.html" />
+    <Content Include="Assets\scontent\themes\pulse\inc\fonts\mdi\materialdesignicons-webfont364d.svg" />
+    <Content Include="Assets\scontent\themes\pulse\js\js_composer_front-min6aad.js" />
+    <Content Include="Assets\scontent\themes\pulse\js\main-mine1fd.js" />
+    <Content Include="Assets\scontent\themes\pulse\js\other-min6f44.js" />
+    <Content Include="Assets\scontent\themes\pulse\vc\alert.html" />
+    <Content Include="Assets\scontent\themes\pulse\vc\exclamation.html" />
+    <Content Include="Assets\scontent\themes\pulse\vc\info.html" />
+    <Content Include="Assets\scontent\themes\pulse\vc\tick.html" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\03\board-2560x1280.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\03\runner1-2560x1280.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\03\watery-2560x1280.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\06\amber-big.png" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\06\blonde-medium.png" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\06\bracer.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\06\explorer.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\06\greenie.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\06\man-big.png" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\06\red-hat.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\07\globe-shop.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\08\favaicon.ico" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\army-sign.png" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\comments-green.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\contact-bridge.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\hicker.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\lake-shifed.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\myth.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\orange-retina.png" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\rafters-2560x1280.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\shoes-2560x1280.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\sunset.png" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\surfers-2560x1280.jpg" />
+    <Content Include="Assets\scontent\uploads\sites\20\2015\09\whitey.png" />
+    <Content Include="Assets\sincludes\css\dist\block-library\style.min9b30.css" />
+    <Content Include="Assets\sincludes\js\jquery\jquery.min3088.js" />
+    <Content Include="Assets\wp-admin\admin-ajax.html" />
+    <Content Include="Assets\wp-json\index.html" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -329,16 +435,26 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\font.css" />
+    <Content Include="Content\homePageStyle.css" />
     <Content Include="Content\images\layers-2x.png" />
     <Content Include="Content\images\layers.png" />
     <Content Include="Content\images\marker-icon-2x.png" />
     <Content Include="Content\images\marker-icon.png" />
     <Content Include="Content\images\marker-shadow.png" />
     <Content Include="Content\leaflet.css" />
+    <Content Include="Content\fontawesome-all.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="fonts\webfonts\fa-brands-400.svg" />
+    <Content Include="fonts\webfonts\fa-duotone-900.svg" />
+    <Content Include="fonts\webfonts\fa-light-300.svg" />
+    <Content Include="fonts\webfonts\fa-regular-400.svg" />
+    <Content Include="fonts\webfonts\fa-solid.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\upload.png" />
+    <Content Include="images\user.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -361,6 +477,117 @@
     <Content Include="Content\bootstrap-grid.min.css.map" />
     <Content Include="Content\bootstrap-grid.css.map" />
     <Content Include="libman.json" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-brands-400.eot" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-brands-400.ttf" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-brands-400.woff" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-brands-400.woff2" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-brands-400d41d.eot" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-regular-400.eot" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-regular-400.ttf" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-regular-400.woff" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-regular-400.woff2" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-regular-400d41d.eot" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-solid-900.eot" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-solid-900.ttf" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-solid-900.woff" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-solid-900.woff2" />
+    <Content Include="Assets\scontent\plugins\js_composer\assets\lib\bower\font-awesome\webfonts\fa-solid-900d41d.eot" />
+    <Content Include="Assets\scontent\themes\pulse\inc\fonts\mdi\materialdesignicons-webfont364d.eot" />
+    <Content Include="Assets\scontent\themes\pulse\inc\fonts\mdi\materialdesignicons-webfont364d.ttf" />
+    <Content Include="Assets\scontent\themes\pulse\inc\fonts\mdi\materialdesignicons-webfont364d.woff" />
+    <Content Include="Assets\scontent\themes\pulse\inc\fonts\mdi\materialdesignicons-webfont364d.woff2" />
+    <Content Include="Assets\scontent\themes\pulse\inc\fonts\mdi\materialdesignicons-webfontd41d.eot" />
+    <Content Include="Assets\wp-json\oembed\1.0\embed5a7f.json" />
+    <Content Include="Assets\wp-json\oembed\1.0\embede736" />
+    <Content Include="Assets\wp-json\wp\v2\pages\8484.json" />
+    <Content Include="fonts\faNum\eot\IRANSansWeb%28FaNum%29_Black.eot" />
+    <Content Include="fonts\faNum\eot\IRANSansWeb%28FaNum%29_Bold.eot" />
+    <Content Include="fonts\faNum\eot\IRANSansWeb%28FaNum%29_Light.eot" />
+    <Content Include="fonts\faNum\eot\IRANSansWeb%28FaNum%29_Medium.eot" />
+    <Content Include="fonts\faNum\eot\IRANSansWeb%28FaNum%29_UltraLight.eot" />
+    <Content Include="fonts\faNum\ttf\IRANSansWeb%28FaNum%29.ttf" />
+    <Content Include="fonts\faNum\ttf\IRANSansWeb%28FaNum%29_Black.ttf" />
+    <Content Include="fonts\faNum\ttf\IRANSansWeb%28FaNum%29_Bold.ttf" />
+    <Content Include="fonts\faNum\ttf\IRANSansWeb%28FaNum%29_Light.ttf" />
+    <Content Include="fonts\faNum\ttf\IRANSansWeb%28FaNum%29_Medium.ttf" />
+    <Content Include="fonts\faNum\ttf\IRANSansWeb%28FaNum%29_UltraLight.ttf" />
+    <Content Include="fonts\faNum\woff2\IRANSansWeb%28FaNum%29.woff2" />
+    <Content Include="fonts\faNum\woff2\IRANSansWeb%28FaNum%29_Black.woff2" />
+    <Content Include="fonts\faNum\woff2\IRANSansWeb%28FaNum%29_Bold.woff2" />
+    <Content Include="fonts\faNum\woff2\IRANSansWeb%28FaNum%29_Light.woff2" />
+    <Content Include="fonts\faNum\woff2\IRANSansWeb%28FaNum%29_Medium.woff2" />
+    <Content Include="fonts\faNum\woff2\IRANSansWeb%28FaNum%29_UltraLight.woff2" />
+    <Content Include="fonts\faNum\woff\IRANSansWeb%28FaNum%29.woff" />
+    <Content Include="fonts\faNum\woff\IRANSansWeb%28FaNum%29_Black.woff" />
+    <Content Include="fonts\faNum\woff\IRANSansWeb%28FaNum%29_Bold.woff" />
+    <Content Include="fonts\faNum\woff\IRANSansWeb%28FaNum%29_Light.woff" />
+    <Content Include="fonts\faNum\woff\IRANSansWeb%28FaNum%29_Medium.woff" />
+    <Content Include="fonts\faNum\woff\IRANSansWeb%28FaNum%29_UltraLight.woff" />
+    <Content Include="fonts\lg.eot" />
+    <Content Include="fonts\lg.ttf" />
+    <Content Include="fonts\lg.woff" />
+    <Content Include="fonts\normalFont\eot\IRANSansWeb.eot" />
+    <Content Include="fonts\normalFont\eot\IRANSansWeb_Black.eot" />
+    <Content Include="fonts\normalFont\eot\IRANSansWeb_Bold.eot" />
+    <Content Include="fonts\normalFont\eot\IRANSansWeb_Light.eot" />
+    <Content Include="fonts\normalFont\eot\IRANSansWeb_Medium.eot" />
+    <Content Include="fonts\normalFont\eot\IRANSansWeb_UltraLight.eot" />
+    <Content Include="fonts\normalFont\ttf\IRANSansWeb.ttf" />
+    <Content Include="fonts\normalFont\ttf\IRANSansWeb_Black.ttf" />
+    <Content Include="fonts\normalFont\ttf\IRANSansWeb_Bold.ttf" />
+    <Content Include="fonts\normalFont\ttf\IRANSansWeb_Light.ttf" />
+    <Content Include="fonts\normalFont\ttf\IRANSansWeb_Medium.ttf" />
+    <Content Include="fonts\normalFont\ttf\IRANSansWeb_UltraLight.ttf" />
+    <Content Include="fonts\normalFont\woff2\IRANSansWeb.woff2" />
+    <Content Include="fonts\normalFont\woff2\IRANSansWeb_Black.woff2" />
+    <Content Include="fonts\normalFont\woff2\IRANSansWeb_Bold.woff2" />
+    <Content Include="fonts\normalFont\woff2\IRANSansWeb_Light.woff2" />
+    <Content Include="fonts\normalFont\woff2\IRANSansWeb_Medium.woff2" />
+    <Content Include="fonts\normalFont\woff2\IRANSansWeb_UltraLight.woff2" />
+    <Content Include="fonts\normalFont\woff\IRANSansWeb.woff" />
+    <Content Include="fonts\normalFont\woff\IRANSansWeb_Black.woff" />
+    <Content Include="fonts\normalFont\woff\IRANSansWeb_Bold.woff" />
+    <Content Include="fonts\normalFont\woff\IRANSansWeb_Light.woff" />
+    <Content Include="fonts\normalFont\woff\IRANSansWeb_Medium.woff" />
+    <Content Include="fonts\normalFont\woff\IRANSansWeb_UltraLight.woff" />
+    <Content Include="fonts\ttf\IRANSansWeb%28FaNum%29.ttf" />
+    <Content Include="fonts\ttf\IRANSansWeb%28FaNum%29_Black.ttf" />
+    <Content Include="fonts\ttf\IRANSansWeb%28FaNum%29_Bold.ttf" />
+    <Content Include="fonts\ttf\IRANSansWeb%28FaNum%29_Light.ttf" />
+    <Content Include="fonts\ttf\IRANSansWeb%28FaNum%29_Medium.ttf" />
+    <Content Include="fonts\ttf\IRANSansWeb%28FaNum%29_UltraLight.ttf" />
+    <Content Include="fonts\webfonts\fa-brands-400.eot" />
+    <Content Include="fonts\webfonts\fa-brands-400.ttf" />
+    <Content Include="fonts\webfonts\fa-brands-400.woff" />
+    <Content Include="fonts\webfonts\fa-brands-400.woff2" />
+    <Content Include="fonts\webfonts\fa-duotone-900.eot" />
+    <Content Include="fonts\webfonts\fa-duotone-900.ttf" />
+    <Content Include="fonts\webfonts\fa-duotone-900.woff" />
+    <Content Include="fonts\webfonts\fa-duotone-900.woff2" />
+    <Content Include="fonts\webfonts\fa-light-300.eot" />
+    <Content Include="fonts\webfonts\fa-light-300.ttf" />
+    <Content Include="fonts\webfonts\fa-light-300.woff" />
+    <Content Include="fonts\webfonts\fa-light-300.woff2" />
+    <Content Include="fonts\webfonts\fa-regular-400.eot" />
+    <Content Include="fonts\webfonts\fa-regular-400.ttf" />
+    <Content Include="fonts\webfonts\fa-regular-400.woff" />
+    <Content Include="fonts\webfonts\fa-regular-400.woff2" />
+    <Content Include="fonts\webfonts\fa-solid.eot" />
+    <Content Include="fonts\webfonts\fa-solid.ttf" />
+    <Content Include="fonts\webfonts\fa-solid.woff" />
+    <Content Include="fonts\webfonts\fa-solid.woff2" />
+    <Content Include="fonts\webfonts\ttf\IRANSansWeb%28FaNum%29.ttf" />
+    <Content Include="fonts\webfonts\ttf\IRANSansWeb%28FaNum%29_Black.ttf" />
+    <Content Include="fonts\webfonts\ttf\IRANSansWeb%28FaNum%29_Bold.ttf" />
+    <Content Include="fonts\webfonts\ttf\IRANSansWeb%28FaNum%29_Light.ttf" />
+    <Content Include="fonts\webfonts\ttf\IRANSansWeb%28FaNum%29_Medium.ttf" />
+    <Content Include="fonts\webfonts\ttf\IRANSansWeb%28FaNum%29_UltraLight.ttf" />
+    <Content Include="fonts\woff2\IRANSansWeb%28FaNum%29.woff2" />
+    <Content Include="fonts\woff2\IRANSansWeb%28FaNum%29_Black.woff2" />
+    <Content Include="fonts\woff2\IRANSansWeb%28FaNum%29_Bold.woff2" />
+    <Content Include="fonts\woff2\IRANSansWeb%28FaNum%29_Light.woff2" />
+    <Content Include="fonts\woff2\IRANSansWeb%28FaNum%29_Medium.woff2" />
+    <Content Include="fonts\woff2\IRANSansWeb%28FaNum%29_UltraLight.woff2" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <Content Include="Scripts\bootstrap.min.js.map" />
     <Content Include="Scripts\bootstrap.js.map" />
@@ -400,13 +627,24 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\driver.cshtml" />
+    <Content Include="Views\Home\loadowner.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Shared\_driverLayout.cshtml" />
+    <Content Include="Views\Shared\_loadLayout.cshtml" />
+    <Content Include="Views\driverapp\Index.cshtml" />
+    <Content Include="Views\driverapp\Verify.cshtml" />
+    <Content Include="Views\driverapp\Home.cshtml" />
+    <Content Include="Views\Shared\_statePartial.cshtml" />
+    <Content Include="Views\Shared\_cityPartial.cshtml" />
+    <Content Include="Views\Shared\_carTypePatial.cshtml" />
+    <Content Include="Views\Shared\_carTypePatial2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\app\" />
+    <Folder Include="Views\loadowner\" />
+    <Folder Include="Views\Offline\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

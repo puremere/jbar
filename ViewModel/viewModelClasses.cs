@@ -136,10 +136,16 @@ namespace jbar.ViewModel
         public string message { get; set; }
 
     }
+
+    public class newtype
+    {
+        public string title { get; set; }
+    }
     public class orderListVM
     {
         public string orderID { get; set; }
 
+        public string status { get; set; }
         public string origin { get; set; }
         public string destin { get; set; }
         public int priceTotal { get; set; }
@@ -163,6 +169,7 @@ namespace jbar.ViewModel
     }
 
 
+    
     public class newcity
     {
         public Guid userID { get; set; }
@@ -210,10 +217,18 @@ namespace jbar.ViewModel
         public List<List<double>> obb { get; set; }
     }
 
+    public class notifResultVM
+    {
+        public newcity origin { get; set; }
+        public newcity destination { get; set; }
+        public int netTotal { get; set; }
+        public string distance { get; set; }
+    }
     public class notifVM
     {
         public bigStyle big_style { get; set; }
         public titleModel title { get; set; }
+        public string data { get; set; }
         public int id { get; set; }
         public string direction { get; set; }
         public string sound { get; set; }
@@ -248,36 +263,73 @@ namespace jbar.ViewModel
     {
         public string orderID { get; set; }
     }
+
+    public class requestOrderVM
+    {
+        public string orderID { get; set; }
+        public  double  price { get; set; }
+    }
+    public class responseOrderVM
+    {
+        public string orderID { get; set; }
+        public string driverID { get; set; }
+    }
+
+    public class setCommentVM
+    {
+        public string  content { get; set; }
+        public string  mark { get; set; }
+        public string orderID { get; set; }
+    }
+    public class getCommentVM
+    {
+        public int status { get; set; }
+        public List<orderCommentVM> lst { get; set; }
+    }
+    public class responsToOrder
+    {
+        public string title { get; set; }
+        public string phone { get; set; }
+        public double price { get; set; }
+        public string driverID { get; set; }
+    }
     public class sendDetailVM
     {
-        public string status { get; set; }
-        public string netTotal { get; set; }
-        public string netPerTon { get; set; }
-        public List<string> typeOrderList { get; set; }
+        public int status { get; set; }
+        public string orderStatus { get; set; }
+        public string clientPhone { get; set; }
+        public int netTotal { get; set; }
+        public int netPerTon { get; set; }
+        public int pricePerKiloometre { get; set; }
+        public List<newtype> typeOrderList { get; set; }
+        public List<responsToOrder> orderRespons { get; set; }
         public newcity origing { get; set; }
         public newcity destination { get; set; }
+        public string distance { get; set; }
         public string description { get; set; }
-        public string totalView { get; set; }
+        public int totalView { get; set; }
         public string passedTime { get; set; }
         public string clientStatus { get; set; }
         public string clientName { get; set; }
-        public string clientMark { get; set; }
-        public string clientTotalComment { get; set; }
-        public string returnOrderCount { get; set; }
+        public double clientMark { get; set; }
+        public int clientTotalComment { get; set; }
+        public int returnOrderCount { get; set; }
         public List<orderCommentVM> comments { get; set; }
+        public string orderID { get; set; }
     }
     public class orderCommentVM
     {
         public string clientTitle { get; set; }
         public string clientImage { get; set; }
         public string clientMark { get; set; }
-        public string date { get; set; }
+        public DateTime date { get; set; }
+        public string srtdate { get; set; }
         public string content { get; set; }
     }
 
     public class setOrderVM
     {
-
+        public string status { get; set; }
         public string originCityID { get; set; }
         public string destinCityID { get; set; }
         public string date { get; set; }

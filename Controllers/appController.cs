@@ -143,33 +143,43 @@ namespace jbar.Controllers
                 }
                 else
                 {
-
-                    if (!string.IsNullOrEmpty(model.search))
+                    if (model.search == null &&  model.ID == null)
                     {
-
-                        List<city> cities = dbcontext.cities.ToList();
-                        List<newcity> afterSearch = (from u in dbcontext.cities
-                                                     join p in dbcontext.cities on u.parentID equals p.userID
-                                                     where u.userID != u.parentID && (p.title.Contains(model.search) || u.title.Contains(model.search))
-                                                     select new newcity { title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList();
-
-
-                        output.lst = afterSearch;
+                        List<newcity> cities = dbcontext.cities.Where(x => x.userID == x.parentID).Select(x => new newcity { title = x.title, parentID = x.parentID, userID = x.userID }).ToList();
+                        output.lst = cities;
                         output.status = 200;
-
                     }
                     else
                     {
-                        Guid myguid = new Guid(model.ID);
-                        List<newcity> afterSearch = (from u in dbcontext.cities
-                                                     join p in dbcontext.cities on u.parentID equals p.userID
-                                                     where u.parentID == myguid && u.userID != u.parentID
-                                                     select new newcity { title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList();
-                        output.lst = afterSearch;
-                        output.status = 200;
+                        if (!string.IsNullOrEmpty(model.search))
+                        {
+
+                            List<city> cities = dbcontext.cities.ToList();
+                            List<newcity> afterSearch = (from u in dbcontext.cities
+                                                         join p in dbcontext.cities on u.parentID equals p.userID
+                                                         where u.userID != u.parentID && (p.title.Contains(model.search) || u.title.Contains(model.search))
+                                                         select new newcity { title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList();
 
 
+                            output.lst = afterSearch;
+                            output.status = 200;
+
+                        }
+                        else
+                        {
+                            Guid myguid = new Guid(model.ID);
+                            List<newcity> afterSearch = (from u in dbcontext.cities
+                                                         join p in dbcontext.cities on u.parentID equals p.userID
+                                                         where u.parentID == myguid && u.userID != u.parentID
+                                                         select new newcity { title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList();
+                            output.lst = afterSearch;
+                            output.status = 200;
+
+
+                        }
                     }
+
+                    
 
 
                 }
@@ -198,13 +208,41 @@ namespace jbar.Controllers
                 }
                 else
                 {
-                    Guid myguid = new Guid(model.ID);
-                    List<cartype> types = dbcontext.cartypes.Where(x => x.parentID == myguid && x.typeID != myguid).ToList();
-                    output.lst = types;
-                    output.status = 200;
+                    if (model.ID == null)
+                    {
+                        List<cartype> types = dbcontext.cartypes.Where(x => x.typeID == x.parentID).ToList();
+                        output.lst = types;
+                        output.status = 200;
+
+                    }
+                    else
+                    {
+                        Guid myguid = new Guid(model.ID);
+                        List<cartype> types = dbcontext.cartypes.Where(x => x.parentID == myguid && x.typeID != myguid).ToList();
+                        output.lst = types;
+                        output.status = 200;
+
+                    }
+                   
                 }
 
 
+            }
+
+            return output;
+        }
+        [System.Web.Http.HttpPost]
+        public sendTypeVM getTypeFull([FromBody] getCityVM model)
+        {
+
+            sendTypeVM output = new sendTypeVM();
+            string modelstring = "";
+            using (Context dbcontext = new Context())
+            {
+
+                List<cartype> types = dbcontext.cartypes.ToList();
+                output.lst = types;
+                output.status = 200;
             }
 
             return output;
@@ -387,10 +425,15 @@ namespace jbar.Controllers
                     priceTotal = model.priceTotal,
                     recieveSMS = model.recieveSMS,
                     showPhone = model.showPhone,
+                    viewCount = 0,
+                    publishDate = orderdete,
+                    orderStatus = "0"
+                    
+                     
 
                 };
                 dbcontext.orders.Add(neworder);
-                dbcontext.SaveChanges();
+                
 
                 List<string> typeList = model.type.Trim(',').Split(',').ToList();
                 foreach (var type in typeList)
@@ -399,12 +442,13 @@ namespace jbar.Controllers
                     {
                         orderID = orderguid,
                         ordertypeID = Guid.NewGuid(),
-                        typeID = new Guid(type)
+                        typeID = new Guid(type),
+                        
                     };
                     dbcontext.ordertypes.Add(newtype);
                 }
 
-
+                dbcontext.SaveChanges();
 
             }
 
@@ -417,9 +461,10 @@ namespace jbar.Controllers
             return jObject;
         }
 
+
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public getOrderVM getOrder([FromBody] setOrderVM model)
+        public getOrderVM getOrderClient()
         {
             object someObject;
             Request.Properties.TryGetValue("UserToken", out someObject);
@@ -435,6 +480,64 @@ namespace jbar.Controllers
                                          p.originCityID equals c.userID
                                          join cc in dbcontext.cities on
                                          p.destinCityID equals cc.userID
+
+                                         where  p.clientID == userID
+                                         select new orderListVM
+                                         {
+                                             orderID = p.orderID.ToString(),
+                                             status = p.orderStatus,
+                                             origin = c.title,
+                                             destin = cc.title,
+                                             pricePerTon = (int)p.pricePerTone,
+                                             priceTotal = (int)p.priceTotal,
+                                             viewNumber = "0"
+
+                                         }).ToList();
+
+
+
+                foreach (var item in lst)
+                {
+                    if (item.status == "1")
+                    {
+                        Guid orid = new Guid(item.orderID);
+                        int count = dbcontext.orderResponses.Count(x => x.orderID == orid);
+                        item.viewNumber = count.ToString();
+                    }
+                }
+                mymodel.orderList = lst;
+            }
+
+            
+
+            mymodel.status = 200;
+            mymodel.message = "ok";
+
+
+            return mymodel;
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public getOrderVM getUserOrder([FromBody] setOrderVM model)
+        {
+            
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+
+            Guid userID = new Guid(someObject.ToString());
+
+            getOrderVM mymodel = new getOrderVM();
+
+            using (Context dbcontext = new Context())
+            {
+                List<order> lstorder = dbcontext.orders.ToList();
+                List<orderListVM> lst = (from p in dbcontext.orders
+                                         join c in dbcontext.cities on
+                                         p.originCityID equals c.userID
+                                         join cc in dbcontext.cities on
+                                         p.destinCityID equals cc.userID
+                                         where  p.orderStatus == "2" && p.driverID == userID
                                          select new orderListVM
                                          {
                                              orderID = p.orderID.ToString(),
@@ -462,7 +565,99 @@ namespace jbar.Controllers
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public async Task<sendDetailVM> getOrderDetail([FromBody] orderDetailVM model)
+        public getOrderVM getUnpublishOrder([FromBody] setOrderVM model)
+        {
+
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+
+            Guid userID = new Guid(someObject.ToString());
+
+            getOrderVM mymodel = new getOrderVM();
+
+            using (Context dbcontext = new Context())
+            {
+                List<order> lstorder = dbcontext.orders.ToList();
+                List<orderListVM> lst = (from p in dbcontext.orders
+                                         join c in dbcontext.cities on
+                                         p.originCityID equals c.userID
+                                         join cc in dbcontext.cities on
+                                         p.destinCityID equals cc.userID
+                                         where p.orderStatus == "0"
+                                         select new orderListVM
+                                         {
+                                             orderID = p.orderID.ToString(),
+                                             origin = c.title,
+                                             destin = cc.title,
+                                             pricePerTon = (int)p.pricePerTone,
+                                             priceTotal = (int)p.priceTotal,
+                                             viewNumber = "10"
+
+                                         }).ToList();
+
+
+
+
+                mymodel.orderList = lst;
+            }
+
+
+            mymodel.status = 200;
+            mymodel.message = "ok";
+
+
+            return mymodel;
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public getOrderVM getOrder([FromBody] setOrderVM model)
+        {
+            
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+
+            Guid userID = new Guid(someObject.ToString());
+
+            getOrderVM mymodel = new getOrderVM();
+
+            using (Context dbcontext = new Context())
+            {
+                List<order> lstorder = dbcontext.orders.ToList();
+                List<orderListVM> lst = (from p in dbcontext.orders
+                                         join c in dbcontext.cities on
+                                         p.originCityID equals c.userID
+                                         join cc in dbcontext.cities on
+                                         p.destinCityID equals cc.userID
+                                         where p.orderStatus == "1"
+                                         select new orderListVM
+                                         {
+                                             orderID = p.orderID.ToString(),
+                                             origin = c.title,
+                                             destin = cc.title,
+                                             pricePerTon = (int)p.pricePerTone,
+                                             priceTotal = (int)p.priceTotal,
+                                             viewNumber = "10"
+
+                                         }).ToList();
+
+
+
+
+                mymodel.orderList = lst;
+            }
+
+
+            mymodel.status = 200;
+            mymodel.message = "ok";
+
+
+            return mymodel;
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public sendDetailVM getOrderDetail([FromBody] orderDetailVM model)
         {
             sendDetailVM result = new sendDetailVM();
             using (Context dbcontext = new Context())
@@ -471,22 +666,161 @@ namespace jbar.Controllers
                 {
                     Guid orderGuid = new Guid(model.orderID);
                     order myorder = dbcontext.orders.SingleOrDefault(c => c.orderID == orderGuid);
-
+                    user client = dbcontext.users.SingleOrDefault(x => x.userID == myorder.clientID);
                     newcity origin = (from u in dbcontext.cities
-                                     join p in dbcontext.cities on u.parentID equals p.userID
-                                     where u.userID != u.parentID && u.userID == myorder.originCityID
-                                     select new newcity { lat = u.lat, lon=u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
+                                      join p in dbcontext.cities on u.parentID equals p.userID
+                                      where u.userID != u.parentID && u.userID == myorder.originCityID
+                                      select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
                     newcity destination = (from u in dbcontext.cities
-                                        join p in dbcontext.cities on u.parentID equals p.userID
-                                        where u.userID != u.parentID && u.userID == myorder.destinCityID
-                                        select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
+                                           join p in dbcontext.cities on u.parentID equals p.userID
+                                           where u.userID != u.parentID && u.userID == myorder.destinCityID
+                                           select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
 
+
+                    List<newtype> types = (from o in dbcontext.cartypes
+                                           join ot in dbcontext.ordertypes on o.typeID equals ot.typeID
+                                           join otp in dbcontext.cartypes on o.parentID equals otp.typeID
+                                           where ot.orderID == orderGuid
+                                           select new newtype { title = otp.title + " - " + o.title }).ToList();
+
+                    List<orderCommentVM> comments = (from c in dbcontext.comments
+                                                     join u in dbcontext.users on c.userID equals u.userID 
+                                                      where c.orderID == orderGuid 
+                                                     select new orderCommentVM { clientImage = "https://www.jbar.app/Uploads/"+u.profileImage, clientMark = c.clientMark, clientTitle = u.name, content = c.content, date = c.date }).ToList();
+
+
+
+                    foreach (var item in comments)
+                    {
+                        item.srtdate = dateTimeConvert.ToPersianDateString(item.date);
+                    }
+                    var sb = new StringBuilder();
+                    sb.Append(Math.Ceiling(myorder.distance / 1000).ToString());
+                    sb.Append("کیلومتر ");
+                  
                     result.origing = origin;
+                    result.clientPhone = client.phone;
+                    result.orderStatus = myorder.orderStatus;
                     result.destination = destination;
                     result.description = myorder.description;
-                    result.distance = myorder.distance;
+                    result.distance = sb.ToString();
+                    result.typeOrderList = types;
+                    result.netTotal = (int)myorder.priceTotal == 0 ? (int)myorder.pricePerTone * (int)myorder.loadAmount : (int)myorder.priceTotal;
+                    result.netPerTon = (int)myorder.pricePerTone;
+                    result.pricePerKiloometre = (int)((int)myorder.priceTotal / (myorder.distance / 1000));
+                    result.comments = comments;
+                    result.returnOrderCount = 5;
+                    result.clientTotalComment = 28;
+                    result.clientMark = 4.2;
+                    result.clientName = client.name;
+                    result.clientStatus = client.status;
+                    result.totalView = 0; // myorder.viewCount;
+                    result.status = 200;
 
-                     
+                    var sb2 = new StringBuilder();
+                    sb2.Append((DateTime.Now - myorder.date).TotalHours);
+                    sb2.Append(" ساعت پیش ");
+
+                    var sb3 = new StringBuilder();
+                    sb3.Append((DateTime.Now - myorder.date).Minutes);
+                    sb3.Append("  دقیقه پیش ");
+                    result.passedTime = (int)(DateTime.Now - myorder.date).TotalHours > 1 ? sb2.ToString() : sb3.ToString();
+
+
+
+                }
+                catch (Exception e)
+                {
+
+
+                }
+
+                
+            }
+            return result;
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public sendDetailVM getOrderDetailClient([FromBody] orderDetailVM model)
+        {
+            sendDetailVM result = new sendDetailVM();
+            using (Context dbcontext = new Context())
+            {
+                try
+                {
+                    Guid orderGuid = new Guid(model.orderID);
+                    order myorder = dbcontext.orders.SingleOrDefault(c => c.orderID == orderGuid);
+                    user client = dbcontext.users.SingleOrDefault(x => x.userID == myorder.clientID);
+                    newcity origin = (from u in dbcontext.cities
+                                      join p in dbcontext.cities on u.parentID equals p.userID
+                                      where u.userID != u.parentID && u.userID == myorder.originCityID
+                                      select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
+                    newcity destination = (from u in dbcontext.cities
+                                           join p in dbcontext.cities on u.parentID equals p.userID
+                                           where u.userID != u.parentID && u.userID == myorder.destinCityID
+                                           select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
+
+
+                    List<newtype> types = (from o in dbcontext.cartypes
+                                           join ot in dbcontext.ordertypes on o.typeID equals ot.typeID
+                                           join otp in dbcontext.cartypes on o.parentID equals otp.typeID
+                                           where ot.orderID == orderGuid
+                                           select new newtype { title = otp.title + " - " + o.title }).ToList();
+
+                    List<orderCommentVM> comments = (from c in dbcontext.comments
+                                                     join u in dbcontext.users on c.userID equals u.userID
+                                                     where c.orderID == orderGuid
+                                                     select new orderCommentVM { clientImage = "https://www.jbar.app/Uploads/" + u.profileImage, clientMark = c.clientMark, clientTitle = u.name, content = c.content, date = c.date }).ToList();
+
+
+                    var qResponse = (from c in dbcontext.orderResponses
+                                                          join u in dbcontext.users on c.driverID equals u.userID
+                                                          where c.orderID == orderGuid
+                                                          select new responsToOrder { driverID = c.driverID.ToString(), phone = u.phone, price = c.price, title = u.name });
+
+                    if (myorder.orderStatus == "2")
+                    {
+                        qResponse = qResponse.Where(x => x.driverID == myorder.driverID.ToString());
+                    }
+
+                    List<responsToOrder> orderResponse = qResponse.ToList();
+                    result.orderRespons = orderResponse;
+                    foreach (var item in comments)
+                    {
+                        item.srtdate = dateTimeConvert.ToPersianDateString(item.date);
+                    }
+                    var sb = new StringBuilder();
+                    sb.Append(Math.Ceiling(myorder.distance / 1000).ToString());
+                    sb.Append("کیلومتر ");
+
+
+                    result.origing = origin;
+                    result.orderStatus = myorder.orderStatus;
+                    result.destination = destination;
+                    result.description = myorder.description;
+                    result.distance = sb.ToString();
+                    result.typeOrderList = types;
+                    result.netTotal = (int)myorder.priceTotal == 0 ? (int)myorder.pricePerTone * (int)myorder.loadAmount : (int)myorder.priceTotal;
+                    result.netPerTon = (int)myorder.pricePerTone;
+                    result.pricePerKiloometre = (int)((int)myorder.priceTotal / (myorder.distance / 1000));
+                    result.comments = comments;
+                    result.returnOrderCount = 5;
+                    result.clientTotalComment = 28;
+                    result.clientMark = 4.2;
+                    result.clientName = client.name;
+                    result.clientStatus = client.status;
+                    result.totalView = 0; // myorder.viewCount;
+                    result.status = 200;
+                    var sb2 = new StringBuilder();
+                    sb2.Append((DateTime.Now - myorder.date).TotalHours);
+                    sb2.Append(" ساعت پیش ");
+
+                    var sb3 = new StringBuilder();
+                    sb3.Append((DateTime.Now - myorder.date).Minutes);
+                    sb3.Append("  دقیقه پیش ");
+                    result.passedTime = (int)(DateTime.Now - myorder.date).TotalHours > 1 ? sb2.ToString() : sb3.ToString();
+
 
 
                 }
@@ -497,11 +831,10 @@ namespace jbar.Controllers
                 }
 
 
-
-                result.Keloometr = "0";
             }
             return result;
         }
+
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
@@ -537,9 +870,342 @@ namespace jbar.Controllers
             return obj;
         }
 
+        public async Task<JObject> verifyOrder([FromBody] requestOrderVM model)
+        {
+            responseModel mymodel = new responseModel();
+            string result = "";
+            using (Context dbcontext = new Context()){
+                Guid orderID = new Guid(model.orderID);
+                order selectedOrder = dbcontext.orders.SingleOrDefault(x => x.orderID == orderID);
+                selectedOrder.orderStatus = "1";
+                dbcontext.SaveChanges();
+
+
+                sendDetailVM modeltosend = new sendDetailVM();
+                newcity origin = (from u in dbcontext.cities
+                                  join p in dbcontext.cities on u.parentID equals p.userID
+                                  where u.userID != u.parentID && u.userID == selectedOrder.originCityID
+                                  select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
+                newcity destination = (from u in dbcontext.cities
+                                       join p in dbcontext.cities on u.parentID equals p.userID
+                                       where u.userID != u.parentID && u.userID == selectedOrder.destinCityID
+                                       select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
+
+
+                var sb = new StringBuilder();
+                sb.Append(Math.Ceiling(selectedOrder.distance / 1000).ToString());
+                sb.Append("کیلومتر ");
+                modeltosend.netTotal = (int)selectedOrder.priceTotal == 0 ? (int)selectedOrder.pricePerTone * (int)selectedOrder.loadAmount : (int)selectedOrder.priceTotal;
+                modeltosend.distance = sb.ToString();
+                modeltosend.origing = origin;
+                modeltosend.destination = destination;
+                modeltosend.orderID = model.orderID;
+                string notifString = JsonConvert.SerializeObject(modeltosend);
 
 
 
+
+                city ordercity = dbcontext.cities.SingleOrDefault(x => x.userID == selectedOrder.originCityID);
+                DbGeography point = ordercity.citypoint;
+
+
+                List<user> useddrs = (from u in dbcontext.users
+                                      where u.userType == "1" && u.point.Distance(point) < 2000000
+                                      select u).ToList();
+                string src = HostingEnvironment.ApplicationPhysicalPath + "\\File\\key.json";
+                if (FirebaseApp.DefaultInstance == null)
+                {
+                    FirebaseApp.Create(new AppOptions()
+                    {
+                        Credential = GoogleCredential.FromFile(src),
+                    });
+                }
+               
+
+                foreach (var item in useddrs)
+                {
+
+
+                    notifVM fm = new notifVM();
+                    fm.data = notifString;
+                    bigStyle big_style = new bigStyle();
+                    big_style.type = "";
+                    titleModel title = new titleModel();
+                    title.text = "productDetail";
+                    clickAction click_action = new clickAction();
+                    click_action.title = "";
+                    click_action.type = "openapp";
+                    click_action.data = "/home/viewDetail?q=" + orderID;
+                    fm.big_style = big_style;
+                    fm.title = title;
+                    fm.click_action = click_action;
+
+                    string mdljson = JsonConvert.SerializeObject(fm);
+                    Dictionary<string, string> dat = new Dictionary<string, string>();
+                    dat.Add("mydata", mdljson);
+                    var message = new Message()
+                    {
+
+                        Data = dat,
+                        Notification = new Notification
+                        {
+                            Title = "درخواست جدید انتقال بار",
+                            Body = "",
+
+
+                        },
+                        Token = item.firebaseToken
+                    };
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                    var response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+                    mymodel.status = 200;
+                }
+
+
+                 
+
+                
+               
+            }
+            result = JsonConvert.SerializeObject(mymodel);
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+
+        }
+        public async Task<JObject> verifyOrderrResponse([FromBody] responseOrderVM model)
+        {
+            responseModel mymodel = new responseModel();
+            string result = "";
+            using (Context dbcontext = new Context())
+            {
+                Guid orderID = new Guid(model.orderID);
+                Guid driverID = new Guid(model.driverID);
+                order selectedOrder = dbcontext.orders.SingleOrDefault(x => x.orderID == orderID);
+                selectedOrder.orderStatus = "2";
+                selectedOrder.driverID = driverID;
+                dbcontext.SaveChanges();
+
+
+                sendDetailVM modeltosend = new sendDetailVM();
+                
+                
+                modeltosend.orderID = model.orderID;
+                string notifString = JsonConvert.SerializeObject(modeltosend);
+
+
+
+
+                city ordercity = dbcontext.cities.SingleOrDefault(x => x.userID == selectedOrder.originCityID);
+                DbGeography point = ordercity.citypoint;
+
+
+                user driver = dbcontext.users.SingleOrDefault(x => x.userID == driverID);
+                string src = HostingEnvironment.ApplicationPhysicalPath + "\\File\\key.json";
+                if (FirebaseApp.DefaultInstance == null)
+                {
+                    FirebaseApp.Create(new AppOptions()
+                    {
+                        Credential = GoogleCredential.FromFile(src),
+                    });
+                }
+
+
+                notifVM fm = new notifVM();
+                fm.data = notifString;
+                bigStyle big_style = new bigStyle();
+                big_style.type = "";
+                titleModel title = new titleModel();
+                title.text = "orderVerify";
+                clickAction click_action = new clickAction();
+                click_action.title = "";
+                click_action.type = "openapp";
+                click_action.data = "/home/viewDetail?q=" + orderID;
+                fm.big_style = big_style;
+                fm.title = title;
+                fm.click_action = click_action;
+
+                string mdljson = JsonConvert.SerializeObject(fm);
+                Dictionary<string, string> dat = new Dictionary<string, string>();
+                dat.Add("mydata", mdljson);
+                var message = new Message()
+                {
+
+                    Data = dat,
+                    Notification = new Notification
+                    {
+                        Title = "بار شما جدید شما تایید شد",
+                        Body = "",
+                    },
+                    Token = driver.firebaseToken
+                };
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                var response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+                mymodel.status = 200;
+
+
+
+
+
+
+            }
+            result = JsonConvert.SerializeObject(mymodel);
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<JObject> requestOrder([FromBody] requestOrderVM model)
+        {
+            responseModel mymodel = new responseModel();
+
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+
+            Guid userID = new Guid(someObject.ToString());
+            Guid orderID = new Guid(model.orderID);
+            using (Context dbcontext = new Context())
+            {
+                orderResponse lastorder = dbcontext.orderResponses.SingleOrDefault(x => x.driverID == userID && x.orderID == orderID);
+                if (lastorder == null)
+                {
+                    orderResponse rsp = new orderResponse()
+                    {
+                        orderresponseID = Guid.NewGuid(),
+                        driverID = userID,
+                        orderID = orderID,
+                        price = model.price,
+                    };
+                    dbcontext.orderResponses.Add(rsp);
+                }
+                else
+                {
+                    lastorder.price = model.price;
+                }
+                
+                dbcontext.SaveChanges();
+                sendDetailVM modeltosend = new sendDetailVM();
+                modeltosend.orderID = model.orderID;
+                string notifString = JsonConvert.SerializeObject(modeltosend);
+                order order = dbcontext.orders.SingleOrDefault(x => x.orderID == orderID);
+                user orderclient = dbcontext.users.SingleOrDefault(x => x.userID == order.clientID);
+                string src = HostingEnvironment.ApplicationPhysicalPath + "\\File\\key.json";
+                if (FirebaseApp.DefaultInstance == null)
+                {
+                    FirebaseApp.Create(new AppOptions()
+                    {
+                        Credential = GoogleCredential.FromFile(src),
+                    });
+                }
+
+
+                notifVM fm = new notifVM();
+                fm.data = notifString;
+                bigStyle big_style = new bigStyle();
+                big_style.type = "";
+                titleModel title = new titleModel();
+                title.text = "orderVerify";
+                clickAction click_action = new clickAction();
+                click_action.title = "";
+                click_action.type = "openapp";
+                click_action.data = "/home/viewDetail?q=" + orderID;
+                fm.big_style = big_style;
+                fm.title = title;
+                fm.click_action = click_action;
+
+                string mdljson = JsonConvert.SerializeObject(fm);
+                Dictionary<string, string> dat = new Dictionary<string, string>();
+                dat.Add("mydata", mdljson);
+                var message = new Message()
+                {
+
+                    Data = dat,
+                    Notification = new Notification
+                    {
+                        Title = "درخواست جدید برای بار شما",
+                        Body = "",
+                    },
+                    Token = orderclient.firebaseToken
+                };
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                var response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+           
+                mymodel.status = 200;
+                mymodel.message = "ok";
+            }
+
+           
+            string result = JsonConvert.SerializeObject(mymodel);
+
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+        }
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public JObject addComment([FromBody] setCommentVM model)
+        {
+            getDashbaord obj = new getDashbaord();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+
+            Guid userID = new Guid(someObject.ToString());
+            Guid orderID = new Guid(model.orderID);
+            using (Context dbcontext = new Context())
+            {
+                user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
+                order order = dbcontext.orders.SingleOrDefault(x => x.orderID == orderID);
+                Comment comment = new Comment()
+                {
+                    CommentID = Guid.NewGuid(),
+                    clientID = order.clientID,
+                    orderID = order.orderID,
+                    clientMark = model.mark,
+                    content = model.content,
+                    date = DateTime.Now,
+                    userID = userID
+                };
+                dbcontext.comments.Add(comment);
+                dbcontext.SaveChanges();
+            }
+            responseModel mymodel = new responseModel();
+            mymodel.status = 200;
+            mymodel.message = "ok";
+            string result = JsonConvert.SerializeObject(mymodel);
+
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public getCommentVM getAllComment([FromBody] setCommentVM model)
+        {
+            getCommentVM result = new getCommentVM();
+
+            using (Context dbcontext = new Context())
+            {
+                
+                Guid orderID = new Guid(model.orderID);
+
+                List<orderCommentVM> comments = (from c in dbcontext.comments
+                                                 join u in dbcontext.users on c.userID equals u.userID
+                                                 where c.orderID == orderID
+                                                 select new orderCommentVM { clientImage = "https://www.jbar.app/Uploads/" + u.profileImage, clientMark = c.clientMark, clientTitle = u.name, content = c.content, date = c.date }).ToList();
+
+
+                foreach (var item in comments)
+                {
+                    item.srtdate = dateTimeConvert.ToPersianDateString(item.date);
+                }
+                result.lst = comments;
+                result.status = 200;
+            }
+            return result;
+        }
 
 
         [BasicAuthentication]
@@ -740,76 +1406,78 @@ namespace jbar.Controllers
         {
             using (Context dbcontext = new Context())
             {
-                //dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [cities]");
-                //dbcontext.SaveChanges();
-                List<city> lst = dbcontext.cities.ToList();
+                dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [orders]");
+                dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [ordertypes]");
+                dbcontext.SaveChanges();
+                List<ordertype> lst0 = dbcontext.ordertypes.ToList();
+                List<order> lst = dbcontext.orders.ToList();
 
                 Guid tguid = Guid.NewGuid();
 
 
 
-                string textFile = "E:\\cities.txt";
-                if (File.Exists(textFile))
-                {
-                    // Read a text file line by line.
-                    string[] lines = File.ReadAllLines(textFile);
+                //string textFile = "E:\\cities.txt";
+                //if (File.Exists(textFile))
+                //{
+                //    // Read a text file line by line.
+                //    string[] lines = File.ReadAllLines(textFile);
 
-                    foreach (var city in lst)
-                    {
-                        string cityCode = city.title;
-                        foreach (string line in lines)
-                        {
-                            List<string> line0 = line.Replace("(", "").Replace("),", "").Split('\t').ToList();
-                            string code = line0[0];
-                            if (code == cityCode)
-                            {
-                                string title = line0[1];
-                                string titleEN = "";
-                                string lat = line0[4];
-                                string lon = line0[5];
-                                string rcode = "";
-                                if (lat == "")
-                                {
+                //    foreach (var city in lst)
+                //    {
+                //        string cityCode = city.title;
+                //        foreach (string line in lines)
+                //        {
+                //            List<string> line0 = line.Replace("(", "").Replace("),", "").Split('\t').ToList();
+                //            string code = line0[0];
+                //            if (code == cityCode)
+                //            {
+                //                string title = line0[1];
+                //                string titleEN = "";
+                //                string lat = line0[4];
+                //                string lon = line0[5];
+                //                string rcode = "";
+                //                if (lat == "")
+                //                {
 
-                                }
-                                Guid id = Guid.NewGuid();
-                                city newcity = dbcontext.cities.SingleOrDefault(x => x.title == title && x.userID != x.parentID);
-                                if (newcity == null)
-                                {
-                                    newcity = new city()
-                                    {
-                                        code = rcode,
-                                        lat = lat,
-                                        lon = lon,
-                                        title = title,
-                                        userID = id,
-                                        parentID = city.userID,
-                                    };
-                                    dbcontext.cities.Add(newcity);
-                                }
-                                else
-                                {
-                                    newcity.lat = lat;
-                                    newcity.lon = lon;
-                                }
-
-
-
-
-                            }
+                //                }
+                //                Guid id = Guid.NewGuid();
+                //                city newcity = dbcontext.cities.SingleOrDefault(x => x.title == title && x.userID != x.parentID);
+                //                if (newcity == null)
+                //                {
+                //                    newcity = new city()
+                //                    {
+                //                        code = rcode,
+                //                        lat = lat,
+                //                        lon = lon,
+                //                        title = title,
+                //                        userID = id,
+                //                        parentID = city.userID,
+                //                    };
+                //                    dbcontext.cities.Add(newcity);
+                //                }
+                //                else
+                //                {
+                //                    newcity.lat = lat;
+                //                    newcity.lon = lon;
+                //                }
 
 
 
 
-
-                        }
-                        int index = lst.IndexOf(city);
-                    }
+                //            }
 
 
 
-                }
-                dbcontext.SaveChanges();
+
+
+                //        }
+                //        int index = lst.IndexOf(city);
+                //    }
+
+
+
+                //}
+                //dbcontext.SaveChanges();
             }
 
         }
