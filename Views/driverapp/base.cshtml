@@ -1,0 +1,66 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_driverLayout.cshtml";
+}
+
+<style>
+    #holdersection {
+        
+    }
+    .parentsection {
+        text-align: center;
+    }
+    .imgparent {
+        text-align: center;
+        margin: 5px 0  55px 0
+    }
+        .imgparent img {
+            max-width: 30%
+        }
+    .headingone {
+        color: #a06509;
+        font-weight: 600;
+        margin: 25px;
+    }
+    .headingtwo{
+        margin: 25px;
+        line-height:2
+    }
+    .parentsection input {
+        border: 1px solid #ddd;
+        background-color: transparent;
+        padding: 20px;
+        margin: 15px auto;
+        border-radius: 20px;
+        width:85%;
+        max-width:unset !important;
+        direction:rtl;
+        font-size:18px
+        
+    }
+    .btnsubmit {
+        background-color: #a06509;
+        color: white;
+        padding: 20px;
+        border-radius: 30px;
+        width: 85%;
+        margin: 5px auto;
+        font-size: 18px
+    }
+</style>
+<div id="holdersection" >
+    <div class="parentsection">
+
+       <script>
+           $.post(
+               "/driverapp/setCode",
+               function (response) {
+                   $("#holdersection").html(response);
+               });
+       </script>
+       
+    </div>
+     
+</div>
+

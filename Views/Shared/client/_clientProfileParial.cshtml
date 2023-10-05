@@ -1,0 +1,401 @@
+﻿@model jbar.ViewModel.sendProfileVM
+
+@{ 
+    string url = "";
+}
+
+<div onclick="profileSectionClicked()" class="buttonFigure" style="background-color:white">
+    <div style="font-size:14px; width:75%;text-align:right;margin-right:30px;display:flex;direction: rtl;align-items: center;">
+        <div style="flex:1">
+            <p class="profilePhone">09194594505</p>
+            <p id="profileName" class="lbl">مهرداد منصوری</p>
+        </div>
+        <i style="font-size:20px" class="fa fa-chevron-left"></i>
+
+    </div>
+
+    @if (Model.user.profileImage != null)
+    {
+         url = "/uploads/" + Model.user.profileImage;
+    }
+    else
+    {
+        url = "/images/user.png";
+    }
+    <img style="width:25%" id="profileImage" src="@url" />
+
+</div>
+
+<div class="userprofilesection slideSection" style="display: none ">
+    <div style="max-height:95vh; overflow:scroll;padding:25px 0">
+        <div class="sectionHeader">
+            <i id="backToHomeFromProfile" class="fa fa-arrow-left" style="margin:0 20px"></i> <span style="flex:1">پروفایل کاربری</span>
+
+
+
+        </div>
+
+
+
+        <div style="display:flex; align-items:center;justify-content:center">
+            <div style="text-align:center; margin-top:25px">
+                <img style="width:100px" id="UserProfileImage" src="@url" />
+                <div id="profileImageInputTrigger" style="padding:10px; border-radius:8px;background-color:#a06509; width:100%; margin:auto; color:white">آپلود عکس پروفایل</div>
+                <input type="file" id="profileImageInput" style="display:none" />
+                <p id="profileImageInputFinal" style="display:none"></p>
+            </div>
+        </div>
+
+
+        <div class="inputHolder">
+            <input id="fullname" value="@Model.user.name" required='' type='text'>
+            <label alt='نام و نام خانوادگی' placeholder='نام و نام خانوادگی'></label>
+
+        </div>
+        <div class="inputHolder">
+            <input id="codemeli" value="@Model.user.codeMelli"  required='' type='text'>
+            <label alt='کد ملی شما' placeholder='کد ملی شما'></label>
+
+        </div>
+        <div class="inputHolder">
+            <input id="mobile"  value="@Model.user.phone" required='' type='text'>
+            <label alt='شماره موبایل' placeholder='شماره موبایل'></label>
+
+        </div>
+        <div class="cityprofileholder " style="" onclick="profileCityClicked()">
+            @{ 
+                string citytity = "شهر محل سکونت";
+                if (Model.city != null)
+                {
+                    citytity = Model.city;
+
+                }
+
+              }
+            <span id="profileCity" style="margin:0; text-align:right">@citytity</span>
+            <input value="@Model.user.cityID" id="profileCityInput" style="display:none"/>
+        </div>
+        <div class="inputHolder" style="margin-top:20px">
+            <input id="address"  value="@Model.user.address" required='' type='text'>
+            <label alt='آدرس محل سکونت' placeholder='آدرس محل سکونت'></label>
+
+        </div>
+
+        <div class="inputHolder">
+            <input id="emphone" value="@Model.user.emPhone" required='' type='text'>
+            <label alt='شماره تماس اضطراری' placeholder='شماره تماس اضطراری'></label>
+
+        </div>
+        <div class="cityprofileholder typeProfileHolder" style="align-items:center" onclick="searchTypeClickedProfile(this)">
+            <span style="margin:0; text-align:right"> نوع ناوگان </span>
+            <p style="margin-right:20px" id="profileTypestring">
+                @if (Model.type != null)
+                {
+                <p style="margin:25px 5px;display:inline-block" id="typeName"><span class="typenameTitle"> @Model.type</span></p>
+            }
+                </p>
+                <input value="@Model.user.typeID" id="profileTypestringInput" style="display:none" />
+            </div>
+        <div class="inputHolder">
+            <input id="hooshmandMashin" value="@Model.user.hooshmandMashin" required='' type='text'>
+            <label alt='شماره هوشمند ماشین' placeholder='شماره هوشمند ماشین'></label>
+        </div>
+
+        <div style="margin: 35px 10px;text-align:right">
+            <span style="margin:10px; font-weight:600">شماره پلاک ماشین</span>
+
+            <div style="direction:rtl; border:1px solid #ddd;display:flex;justify-content:space-around;border-radius: 20px;padding: 15px 0;margin-top:20px">
+                <div class="plakParent" style="border-left:1px solid #eee">
+                    <p style="text-align:center">ایران</p>
+                    <input id="pelakIran" value="@Model.user.pelakIran" class="plak" type="number" />
+                </div>
+
+                <div class="plakParent">
+                    <p></p>
+                    <input id="pelak1" value="@Model.user.pelak1" style=" margin-top: 18px;" class="plak" type="number" />
+                </div>
+                <div class="plakParent">
+                    <p></p>
+                    <select id="pelakHarf" style=" margin-top: 18px;" class="plak">
+                        <option>الف</option>
+                        <option>ب</option>
+                        <option>پ</option>
+                    </select>
+
+                </div>
+                <div class="plakParent">
+                    <p></p>
+                    <input id="pelak2" value="@Model.user.pelak2" style=" margin-top: 18px;" class="plak" type="number" />
+                </div>
+
+            </div>
+
+
+        </div>
+        <div onclick="" class="downloaddSec">
+            @{
+                string karteNagan = "/images/upload.png";
+                string karteRanande = "/images/upload.png";
+
+                if (Model.user.cartNavgan != null)
+                {
+                    karteNagan = "/uploads/" + Model.user.cartNavgan;
+                }
+                if (Model.user.cartDriver != null)
+                {
+                    karteRanande = "/uploads/" + Model.user.cartDriver;
+                }
+            }
+
+            <img style="width:50px; " id="navganTitle" src="@karteNagan" />
+            <p id="navganTitle" style="flex:1; margin-right:10px" class="lbl">کارت هوشمند ناوگان</p>
+            <input type="file" id="kartenavgan" style="display:none" />
+            <p  id="kartenavganFinal" style="display:none">@Model.user.cartNavgan</p>
+            <p id="kartenavganTrriger" class="lbl">انتخاب تصویر</p>
+        </div>
+        <p style="margin:10px; text-align:right">لطفا تصیر کارت هوشمند خود را انتخاب کنید</p>
+        <div onclick="" class="downloaddSec">
+            <img style="width:50px" id="hoshmandTitle" src="@karteRanande" />
+            <p id="" style="flex:1; margin-right:10px" class="lbl">کارت هوشمند راننده</p>
+            <input type="file" id="kartehosshman" style="display:none" />
+            <p id="kartehoshmandFinal" style="display:none">@Model.user.cartDriver</p>
+            <p id="kartehoshmandTrigger" class="lbl">انتخاب تصویر</p>
+        </div>
+        <p style="margin:10px; text-align:right">لطفا تصیر کارت هوشمند رانندگی خود را انتخاب کنید</p>
+        <div style="padding:15px">
+            <div id="btnprofilesubmit" style="text-align:center">تایید</div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
+
+<script>
+    $("#profileImageInputTrigger").click(function () {
+        $("#profileImageInput").click();
+    })
+    $("#kartehoshmandTrigger").click(function () {
+        $("#kartehosshman").click();
+    })
+    $("#kartenavganTrriger").click(function () {
+        $("#kartenavgan").click();
+    })
+
+    $("#profileImageInput").change(function () {
+        var file = $("#profileImageInput").get(0).files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                $("#UserProfileImage").attr("src", reader.result);
+            }
+
+            reader.readAsDataURL(file);
+        }
+    })
+    $("#kartehosshman").change(function () {
+        var file = $("#kartehosshman").get(0).files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                $("#hoshmandTitle").attr("src", reader.result);
+                $("#hoshmandTitle").show();
+            }
+
+            reader.readAsDataURL(file);
+        }
+
+        // $("#hoshmandTitle").text($("#kartehosshman").val().split('\\').pop());
+    })
+    $("#kartenavgan").change(function () {
+        var file = $("#kartenavgan").get(0).files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                $("#navganTitle").attr("src", reader.result);
+                $("#navganTitle").show();
+            }
+
+            reader.readAsDataURL(file);
+        }
+        //$("#navganTitle").text($("#kartenavgan").val().split('\\').pop());
+    })
+</script>
+<script>
+
+
+    function sendkart(sendnavgan, sendprofileImage, sendProfileForm) {
+        var fd = new FormData();
+        var files = $('#kartehosshman')[0].files[0];
+        if (files != null) {
+            fd.append('file', files);
+            $.ajax({
+                url: 'setImage',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#kartehoshmandFinal").text(response);
+                    if (response != 0) {
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                    sendnavgan(sendprofileImage, sendProfileForm)
+                },
+            });
+        }
+        else {
+            sendnavgan(sendprofileImage, sendProfileForm)
+        }
+    }
+
+    function sendnavgan(sendprofileImage, sendProfileForm) {
+
+        var fd = new FormData();
+        var files = $('#kartenavgan')[0].files[0];
+        if (files != null) {
+            fd.append('file', files);
+            $.ajax({
+                url: 'setImage',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#kartenavganFinal").text(response);
+                    console.log(response);
+                    if (response != 0) {
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                    sendprofileImage(sendProfileForm);
+                },
+            });
+
+        }
+        else {
+            sendprofileImage(sendProfileForm);
+        }
+    }
+
+    function sendprofileImage(sendProfileForm) {
+        var fd = new FormData();
+        var files = $('#profileImageInput')[0].files[0];
+        if (files != null) {
+            fd.append('file', files);
+            $.ajax({
+                url: 'setImage',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#profileImageInputFinal").text(response)
+                    console.log(response);
+                    if (response != 0) {
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                    sendProfileForm();
+                },
+            });
+        }
+        else {
+            sendProfileForm();
+        }
+    }
+
+    function sendProfileForm() {
+        var cartNavgan = $("#kartenavganFinal").text();
+        var cartDriver = $("#kartehoshmandFinal").text();
+        var userprof = $("#profileImageInputFinal").text();
+        var name = $("#fullname").text();
+        var codeMelli = $("#codemeli").text();
+        var mobile = $("#mobile").text();
+        var address = $("#address").text();
+        var emPhone = $("#emphone").text();
+        var pelakIran = $("#pelakIran").text();
+        var pelak1 = $("#pelak1").text();
+        var pelakHarf = $("#pelakHarf").text();
+        var pelak2 = $("#pelak2").text();
+        var typeID = $("#profileTypestringInput").val();
+        var cityID = $("#profileCityInput").val();
+        var hooshmandMashin = $("#hooshmandMashin").val();
+
+
+
+
+
+
+        $.post(
+            "setProfile",
+            {
+                cartDriver: cartDriver,
+                cartNavgan: cartNavgan,
+                profileImage: userprof,
+                name: name,
+                hooshmandMashin: hooshmandMashin,
+                codeMelli: codeMelli,
+                cityID: cityID,
+                typeID: typeID,
+                address: address,
+                emPhone: emPhone,
+                pelakIran: pelakIran,
+                pelak1: pelak1,
+                pelakHarf: pelakHarf,
+                pelak2: pelak2
+
+            },
+            function (response) {
+                if (response == "200") {
+                    $.ajax({
+                        url: "DriverPartial",
+                        success: function (data) {
+                            if (data == "400") {
+                                window.location.href = "/driverapp/index";
+                            }
+                            else {
+                                $("#loading").hide();
+                                $("#proparent").html(data);
+                                toastr.options = {
+                                    "debug": false,
+                                    "positionClass": "toast-top-center",
+                                    "onclick": null,
+                                    "fadeIn": 300,
+                                    "fadeOut": 1000,
+                                    "timeOut": 10000,
+                                    "extendedTimeOut": 1000,
+                                };
+                                toastr.success('با موفقیت انجام شد');
+
+                            }
+
+                        }
+
+                    })
+
+                }
+            });
+    }
+    $("#btnprofilesubmit").click(function () {
+        $("#loading").show();
+        sendkart(sendnavgan, sendprofileImage, sendProfileForm);
+
+
+    });
+    $("#backToHomeFromProfile").click(function () {
+
+        $('.userprofilesection').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
+            $('.userprofilesection').hide();
+
+        });
+
+    })
+</script>

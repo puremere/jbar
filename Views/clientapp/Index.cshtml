@@ -1,0 +1,70 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_clientLayout.cshtml";
+}
+
+<style>
+    #holdersection {
+        
+    }
+    .parentsection {
+        text-align: center;
+    }
+    .imgparent {
+        text-align: center;
+        margin: 5px 0  55px 0
+    }
+        .imgparent img {
+            max-width: 30%
+        }
+    .headingone {
+        color: #a06509;
+        font-weight: 600;
+        margin: 25px;
+    }
+    .headingtwo{
+        margin: 25px;
+        line-height:2
+    }
+    .parentsection input {
+        border: 1px solid #ddd;
+        background-color: transparent;
+        padding: 20px;
+        margin: 15px auto;
+        border-radius: 20px;
+        width:85%;
+        max-width:unset !important;
+        direction:rtl;
+        font-size:18px
+        
+    }
+    .btnsubmit {
+        background-color: #a06509;
+        color: white;
+        padding: 20px;
+        border-radius: 30px;
+        width: 85%;
+        margin: 5px auto;
+        font-size: 18px
+    }
+</style>
+<div id="holdersection" >
+    <div class="parentsection">
+
+        <div style="padding:10% 0">
+            <div class="imgparent" style="">
+                <img style="" src="~/Assets/img/icon1.png" />
+            </div>
+            <h3 class="headingone" style="">شماره موبایل خود را وارد کنید</h3>
+            <h4 class="headingtwo" style="">لطفا برای دریافت رمز عبور یکبارمصرف ، شماره همراه خود را وارد نمایید</h4>
+            <form id="sendphone" method="post" action="Verify">
+                <input name="phone" id="userphone" style="" placeholder="شماره همراه" />
+            </form>
+            <div class="btnsubmit">ورود</div>
+        </div>
+       
+    </div>
+     
+</div>
+

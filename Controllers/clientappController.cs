@@ -13,9 +13,9 @@ using System.Web.Mvc;
 namespace jbar.Controllers
 {
    
-    public class driverappController : Controller
+    public class clientappController : Controller
     {
-        string baseServer = "https://jbar.app/api/app";
+        string baseServer = "https://localhost:44389/api/app";
         // GET: driverapp
         public ActionResult Index()
         {
@@ -68,7 +68,7 @@ namespace jbar.Controllers
             {
                 var collection = new NameValueCollection();
                 collection.Add("phone", phone);
-                collection.Add("userType", "1");
+                collection.Add("userType", "0");
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
                 byte[] response = client.UploadValues(baseServer + "/register", collection);
@@ -100,7 +100,7 @@ namespace jbar.Controllers
 
                     result = System.Text.Encoding.UTF8.GetString(response);
                     sendProfileVM model = JsonConvert.DeserializeObject<sendProfileVM>(result);
-                    return PartialView("/Views/Shared/driver/_driverProfileParial.cshtml", model);
+                    return PartialView("/Views/Shared/_driverProfileParial.cshtml",model);
                 }
             }
             catch (Exception e)
@@ -114,86 +114,6 @@ namespace jbar.Controllers
             }
             
             
-        }
-
-        public ActionResult getHome()
-        {
-            return PartialView("/Views/Shared/driver/_driverHomePartial.cshtml");
-        }
-
-
-        [HttpPost]
-        public ActionResult getOrderList(string originCityID, string destinCityID, string type)
-        {
-            if (Request.Cookies["token"] == null)
-            {
-                return Content("400");
-            }
-            string token = Request.Cookies["token"].Value;
-            string result = "";
-            try
-            {
-                using (WebClient client = new WebClient())
-                {
-                    client.Headers.Set("Authorization", "Basic " + token);
-                    var collection = new NameValueCollection();
-                    collection.Add("originCityID", originCityID);
-                    collection.Add("destinCityID", destinCityID);
-                    collection.Add("type", type);
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
-                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
-                    byte[] response = client.UploadValues(baseServer + "/getOrder", collection);
-
-                    result = System.Text.Encoding.UTF8.GetString(response);
-                    getOrderVM model = JsonConvert.DeserializeObject<getOrderVM>(result);
-                    return PartialView("/Views/Shared/driver/_driverOrderlistParial.cshtml", model);
-                }
-            }
-            catch (Exception e)
-            {
-
-
-                HttpCookie nameCookie = Request.Cookies["token"];
-                nameCookie.Expires = DateTime.Now.AddDays(-1);
-                Response.Cookies.Add(nameCookie);
-                return Content("400");
-            }
-        }
-
-        [HttpPost]
-        public ActionResult getOrderDetail(string orderID)
-        {
-            if (Request.Cookies["token"] == null)
-            {
-                return Content("400");
-            }
-            string token = Request.Cookies["token"].Value;
-            string result = "";
-            try
-            {
-                using (WebClient client = new WebClient())
-                {
-                    client.Headers.Set("Authorization", "Basic " + token);
-                    var collection = new NameValueCollection();
-                    collection.Add("orderID", orderID);
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
-                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
-                    byte[] response = client.UploadValues(baseServer + "/getOrderDetail", collection);
-
-                    result = System.Text.Encoding.UTF8.GetString(response);
-                    sendDetailVM model = JsonConvert.DeserializeObject<sendDetailVM>(result);
-                    return PartialView("/Views/Shared/driver/_driverOrderDetailParial.cshtml", model);
-                }
-            }
-            catch (Exception e)
-            {
-
-
-                HttpCookie nameCookie = Request.Cookies["token"];
-                nameCookie.Expires = DateTime.Now.AddDays(-1);
-                Response.Cookies.Add(nameCookie);
-                return Content("400");
-            }
         }
 
         [HttpPost]

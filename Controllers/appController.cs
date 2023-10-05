@@ -731,8 +731,6 @@ namespace jbar.Controllers
                 }
                 catch (Exception e)
                 {
-
-
                 }
 
                 
@@ -1208,6 +1206,7 @@ namespace jbar.Controllers
         }
 
 
+
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
         public JObject setProfile([FromBody] setProfileVM model)
@@ -1223,7 +1222,7 @@ namespace jbar.Controllers
                 if (user != null)
                 {
                     if (!string.IsNullOrEmpty(model.hooshmandMashin))
-                        user.hooshmandMashin = user.hooshmandMashin;
+                        user.hooshmandMashin = model.hooshmandMashin;
                     if (!string.IsNullOrEmpty(model.address))
                         user.address = model.address;
                     if (!string.IsNullOrEmpty(model.clientType))
@@ -1281,6 +1280,7 @@ namespace jbar.Controllers
         }
 
 
+
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
         public sendProfileVM getProfile()
@@ -1309,8 +1309,10 @@ namespace jbar.Controllers
                     citystring = dbcontext.cities.SingleOrDefault(x => x.userID == cityguid).title;
 
                 }
-
+                user.point = null;
+                user.firebaseToken = null;
                 mymodel.user = user;
+
                 mymodel.status = 200;
                 mymodel.baseURL = "https://jbar.app/Uploads/";
                 mymodel.city = citystring;

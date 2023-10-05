@@ -1,0 +1,511 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_clientLayout.cshtml";
+}
+
+<style>
+    .homeFooter {
+        position: absolute;
+        background-color: white;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        text-align: center;
+        line-height: 2;
+        font-size: 13px;
+        direction: rtl;
+        height: 10vh
+    }
+
+        .homeFooter > .active {
+            color: #a06509;
+            font-weight: 600;
+        }
+
+    .sectionParent > .sections {
+        display: none;
+    }
+
+    .sectionParent > .active {
+        display: block
+    }
+
+    .sectionHeader {
+        background-color: #a06509;
+        text-align: center;
+        height: 10vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .mainContent {
+        height: 90vh;
+        background-color: #fcfcfc;
+        padding: 30px 0;
+    }
+
+    .slideSection {
+        height: 95vh;
+        background-color: white;
+        border-radius: 5px 5px 0 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99;
+        margin-bottom: -95vh;
+    }
+
+    .paperone {
+        z-index: 100;
+    }
+
+    .paperTwo {
+        z-index: 999;
+    }
+
+    .userprofilesection {
+        z-index: 99;
+        height: 95vh;
+        margin-bottom: -95vh;
+    }
+
+    .carTypeSectionP {
+        height: 100%;
+    }
+
+    .chooseType {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .typeList {
+        height: calc(85vh);
+    }
+
+    .buttonVerif {
+    }
+
+    .typenameTitle {
+        background-color: #a06509;
+        border-radius: 10px;
+        padding: 10px 15px;
+        position: relative;
+        text-align: center;
+        color: white;
+    }
+
+    .plak {
+        width: 100%;
+        background-color: #eee;
+        border: none;
+        height: 4em;
+        padding: 5px
+    }
+
+    .plakParent {
+        max-width: 24%;
+        padding: 5px;
+    }
+
+    .downloaddSec {
+        padding: 15px;
+        border: 1px dashed #ccc;
+        display: flex;
+        margin: 25px 15px 0;
+        border-radius: 15px;
+        direction: rtl;
+        align-items:center
+    }
+
+    .cityprofileholder {
+        direction: rtl;
+        border: 1px solid #ddd;
+        display: flex;
+        border-radius: 20px;
+        padding: 25px;
+        margin-top: 20px;
+        margin: 35px 10px;
+        text-align: right;
+        margin-bottom: 20px;
+    }
+
+    .typeProfileHolder {
+    }
+
+    #btnprofilesubmit {
+        background-color: #a06509;
+        color: white;
+        padding: 20px;
+        border-radius: 30px;
+        width: 85%;
+        margin: 5px auto;
+        font-size: 18px
+    }
+</style>
+
+
+<div id="holdersection">
+
+    <div class="sectionParent">
+        <div id="homeSection" class="sections active">
+            <div class="sectionHeader">
+                جستجوی بار
+            </div>
+            <div class="mainContent">
+                <div class="dataHolderSection">
+                    <div onclick="searchOriginClicked()" class="buttonFigure">
+                        <i class="fal fa-map-marker icon"></i>
+                        <p id="searchOrigin" class="lbl">مبدا</p>
+                    </div>
+                    <div onclick="searchDestinClicked()" class="buttonFigure">
+                        <i class="fal fa-map-marker icon"></i>
+                        <p id="searchDestin" class="lbl">مقصد</p>
+                    </div>
+                    <div onclick="searchTypeClicked()" class="buttonForType">
+                        <div class="buttonForTypeText">
+                            <i class="fal fa-truck icon"></i>
+                            <p class="lbl">نوع ماشین </p>
+                        </div>
+                        <div id="typetextholder" style=" direction: rtl">
+
+                        </div>
+
+
+                    </div>
+                    <div class="buttonVerif">
+                        <p class="lbl">جستجوی بار</p>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div id="listSection" class="sections ">
+            <div class="sectionHeader">
+                بارهای من
+            </div>
+            <div class="mainContent">
+
+            </div>
+        </div>
+        <div id="profileSection" class="sections">
+            <div class="sectionHeader">
+                پروفایل
+            </div>
+            <div class="mainContent">
+                <div id="proparent" style="text-align :center">
+                    <img src="~/images/loading.gif" style="margin-top:50%" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="homeFooter">
+        <div itemToShow="homeSection" class="active bottonToGo">
+            <i class="fa fa-home "></i>
+            <p>خانه</p>
+        </div>
+        <div itemToShow="listSection" class="bottonToGo">
+            <i class="fa fa-truck-container"></i>
+            <p>بارهای من</p>
+        </div>
+        <div itemToShow="profileSection" class="bottonToGo">
+            <i class="fa fa-user"></i>
+            <p>پروفایل</p>
+        </div>
+    </div>
+
+
+
+    <div class="orderList slideSection" style="display: none ">
+        <div style="max-height:95vh; overflow:scroll; padding:25px 0">
+            <h5 style="text-align:center; margin:20px"><i id="backToHomeFromOrder" class="fa fa-arrow-left"></i> <span class="titleCentre">لیست بار</span> </h5>
+            <div id="orderList"></div>
+        </div>
+
+    </div>
+    <div class="paperone slideSection" style="display: none ">
+        <div style="max-height:95vh; overflow:scroll; padding:25px 0">
+            <h5 style="text-align:center; margin:20px"><i id="backToHome" class="fa fa-arrow-left"></i> <span class="titleCentre"></span> </h5>
+            <div class="inputFigure">
+                <input id="searchCityInput" class="lbl" placeholder="جستجو" />
+                <i id="searchCity" class="fa fa-search icon"></i>
+            </div>
+
+            <div id="countyList"></div>
+        </div>
+
+    </div>
+    <div class="paperTwo slideSection" style="display:none">
+        <div style="max-height:95vh; overflow:scroll; padding:25px 0">
+            <h5 style="text-align:center; margin:20px" id="backToState" class="titleCentreCity"> <i class="fa fa-arrow-left" style="margin-right:20px"></i> <span>بازگشت</span> </h5>
+
+            <div id="cityListSection"></div>
+        </div>
+
+    </div>
+
+    <div class="carTypeSection slideSection" style="display:none; z-index:100">
+        <div style="max-height:95vh; overflow:scroll; padding:25px 0">
+            <div class="carTypeSectionP">
+                <div class="chooseType">
+
+                    <div id="typeList" class="typeList">
+
+                    </div>
+                    <div class="buttonVerif" style="margin:0; position:absolute; width:100%; bottom:0">
+                        <p id="verifyType" class="lbl">تایید</p>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+<script>
+    var itemtoChange;
+    var typeseleccted;
+    var profileType;
+
+
+    $.ajax({
+        url: "DriverPartial",
+        success: function (data) {
+            if (data == "400") {
+                window.location.href = "/driverapp/index";
+            }
+            else {
+                $("#proparent").html(data);
+            }
+
+        }
+
+    })
+
+
+
+
+
+
+
+    $("#searchCity").click(function () {
+        var search = $("#searchCityInput").val();
+        $('.paperTwo').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            data: {
+                search: search,
+            },
+            success: function (data) {
+                $('.paperone').hide();
+                $("#cityListSection").html(data);
+
+            }
+
+        })
+    })
+    $(".bottonToGo").click(function () {
+        var id = $(this).attr('itemToShow');
+        $(".bottonToGo").removeClass('active');
+        $(".sections").removeClass('active');
+        $(this).addClass('active')
+        $("#" + id).addClass('active')
+
+    })
+    function searchDestinClicked() {
+        $('.paperone').show();
+        itemtoChange = "searchDestin";
+        $(".titleCentre").text("انتخاب شهر مقصد")
+        $('.paperone').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            success: function (data) {
+
+                $("#countyList").html(data);
+            }
+
+        })
+    }
+
+
+    function searchOriginClicked() {
+        $('.paperone').show();
+        itemtoChange = "searchOrigin";
+        $(".titleCentre").text("انتخاب شهر مبدا")
+        $('.paperone').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            success: function (data) {
+
+                $("#countyList").html(data);
+            }
+
+        })
+    }
+    function profileCityClicked() {
+
+        $('.paperone').show();
+        itemtoChange = "profileCity";
+        $(".titleCentre").text("شهر محل سکونت")
+        $('.paperone').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            success: function (data) {
+
+                $("#countyList").html(data);
+            }
+
+        })
+    }
+
+
+    function profileSectionClicked() {
+        $('.userprofilesection').show();
+        $('.userprofilesection').animate({ 'margin-bottom': '+=95vh' }, 200);
+    }
+    function searchTypeClickedProfile() {
+        $('.userprofilesection').hide();
+        $('.carTypeSection').show();
+        $('.carTypeSection').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $.ajax({
+            url: "getType2",
+            success: function (data) {
+
+                $("#typeList").html(data);
+            }
+
+        })
+    }
+    function searchTypeClicked(el) {
+        $('.carTypeSection').show();
+        $('.carTypeSection').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $.ajax({
+            url: "getType",
+            success: function (data) {
+
+                $("#typeList").html(data);
+            }
+
+        })
+    }
+
+
+    $("#backToState").click(function () {
+        $('.paperone').show();
+        $('.paperTwo').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
+            $("#cityListSection").html("");
+            $('.paperTwo').hide();
+        });
+
+    })
+    $("#backToHome").click(function () {
+        $('.paperone').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
+            $('.paperone').hide();
+            $("#countyList").html("");
+        });
+
+
+    })
+
+
+
+    $("#verifyType").click(function () {
+        typeseleccted = "";
+
+        $("#typetextholder").html('');
+
+        $(".typeinput").each(function () {
+
+            if ($(this).is(":checked")) {
+                var id = $(this).attr('id');
+                var txt = $(this).attr('texttoshow');
+                typeseleccted += id + ",";
+                $("#typetextholder").append('<p style="margin:25px 5px;display:inline-block" id="typeName"><span class="typenameTitle"> ' + txt + ' </span></p>');
+            }
+
+
+        })
+        $('.carTypeSection').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
+            $('.carTypeSection').hide();
+        });
+
+    })
+
+    function typeinputProfileClicked() {
+        profileType = "";
+        $("#profileTypestring").html('');
+        $(".typeinputProfile").each(function () {
+
+            if ($(this).is(":checked")) {
+                var id = $(this).attr('id');
+                var txt = $(this).attr('texttoshow');
+                profileType = id;
+                $("#profileTypestringInput").val(id);
+                $("#profileTypestring").append('<p style="margin:25px 5px;display:inline-block" id="typeName"><span class="typenameTitle"> ' + txt + ' </span></p>');
+            }
+        })
+        $(".typeProfileHolder").css("padding", "5px 25px")
+        $('.userprofilesection').show();
+        $('.carTypeSection').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
+
+            $('.carTypeSection').hide();
+        });
+    }
+
+    function cityClicked(el) {
+
+        var title = $(el).text();
+        var id =$(el).attr('id');
+        var idsring = itemtoChange + "Input";
+        $("#" + itemtoChange).text(title);
+        $("#" + itemtoChange).val(title);
+        $("#" + idsring).val(id);
+        $('.paperone').animate({ 'margin-bottom': '-=95vh' }, 200);
+        $('.paperTwo').animate({ 'margin-bottom': '-=95vh' }, 200);
+        $('.paperone').hide();
+        $('.paperTwo').hide();
+        $("#countyList").html("");
+        $("#cityListSection").html("");
+
+        //$('.paperone').css("margin-bottom", '-95vh')
+        //$('.paperTwo').css("margin-bottom", '-95vh')
+    };
+    function stateClicked(el) {
+        $('.paperTwo').show();
+        var ID = $(el).attr('id');
+
+        $('.paperTwo').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            data: {
+                ID: ID,
+            },
+            success: function (data) {
+                $('.paperone').hide();
+                $("#cityListSection").html(data);
+
+            }
+
+        })
+        return false;
+    }
+
+
+</script>

@@ -1,0 +1,83 @@
+﻿
+@model jbar.ViewModel.sendDetailVM 
+
+
+<div id="Map" class="buttonFigure" style="background-color:white; height:250px">
+
+</div>
+
+<div class="buttonFigure white">
+    <div style="width:100%">
+        <div class="section">
+            <div style="flex:1; text-align:left">@Model.origing.title</div>
+            <div class="sectionRLT" style="font-weight:600">مبدا بارگیری: </div>
+            <i class="fal fa-map-marker icon"></i>
+        </div>
+        <div class="section">
+            <div style="flex:1; text-align:left">@Model.destination.title</div>
+            <div class="sectionRLT" style="font-weight:600">مقصد بارگیری: </div>
+            <i class="fal fa-map-marker icon"></i>
+        </div>
+        <div class="section" style="border:none">
+            <div  class="price" style="text-align:left">@string.Format("{0:n0}", Model.netTotal)</div>
+            <div class="sectionRLT" style="font-weight:600">صافی کل: </div>
+            <i class="fal fa-money-bill-alt icon"></i>
+        </div>
+    </div>
+   
+</div>
+
+<div  class="buttonFigure white">
+    <div style="padding:20px ; width:100%">
+        <div class="section" style="justify-content:space-around">
+            <div>
+                <p>مسافت</p>
+                <p style="text-align:right">@Model.distance</p>
+            </div>
+            <div style="width:2px;background-color:#ddd"></div>
+            <div>
+                <p>صافی هر کیلومتر</p>
+                <p>@Model.pricePerKiloometre</p>
+            </div>
+        </div>
+        <p class="descRow secTitle">ناوگان</p>
+        @{
+            string typ = "";
+            foreach (var item in @Model.typeOrderList)
+            {
+                typ = item.title + " - ";
+            }
+        }
+        <p class="descRow">@typ</p>
+        <p class="descRow secTitle">توضیحات بار</p>
+       
+        <p class="descRow">@Model.description</p>
+    </div>
+</div>
+
+<div  class="buttonFigure white"> 
+    <div style="width:100%">
+        <p class="descRow secTitle">اطلاعات صاحب بار</p>
+        <div class="section sectionRLT flexcentre noborder" style="padding:15px 0">
+            <img style="width:70px" src="~/images/user.png" />
+            <div style="">
+                <p style="padding:0 15px; text-align:right">@Model.clientName</p>
+                <div class="section noborder" style="padding:0 15px;">
+                    <i class="fa fa-star " style="margin-left:15px"></i>
+                    <p>@Model.clientMark</p>
+                </div>
+            </div>
+            <div>
+                <div class="section sectionRLT noborder" style="padding:0 15px;margin-top:20px">
+                    <i class="fa fa-star " style="margin-left:15px"></i>
+                    <p>تعداد کل  : </p>
+                    <p>@Model.clientMark</p>
+                </div>
+              
+            </div>
+        </div>
+    </div>
+  
+
+</div>
+

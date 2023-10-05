@@ -1,16 +1,14 @@
 ﻿
 @{
     ViewBag.Title = "Index";
-    Layout = "~/Views/Shared/_driverLayout.cshtml";
+    //Layout = "~/Views/Shared/_driverLayout.cshtml";
 }
 
 <style>
     .homeFooter {
         position: absolute;
         background-color: white;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        bottom: 0px;
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -18,7 +16,8 @@
         line-height: 2;
         font-size: 13px;
         direction: rtl;
-        height: 10vh
+        width: 100%;
+        padding-top: 7px;
     }
 
         .homeFooter > .active {
@@ -44,16 +43,34 @@
         font-size: 18px;
         font-weight: 600;
         color: white;
+        position: absolute;
+        width: 100%;
+        top: 0;
     }
+    .secondSection {
+        background-color: #a06509;
+        text-align: center;
+        height: 10vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+    }
+
 
     .mainContent {
         height: 90vh;
         background-color: #fcfcfc;
         padding: 30px 0;
+        position: absolute;
+        width: 100%;
+        top: 10vh;
     }
 
     .slideSection {
-        height: 95vh;
+        height: 100vh;
         background-color: white;
         border-radius: 5px 5px 0 0;
         position: absolute;
@@ -61,7 +78,7 @@
         right: 0;
         bottom: 0;
         z-index: 99;
-        margin-bottom: -95vh;
+        margin-bottom: -100vh;
     }
 
     .paperone {
@@ -74,8 +91,8 @@
 
     .userprofilesection {
         z-index: 99;
-        height: 95vh;
-        margin-bottom: -95vh;
+        height: 100vh;
+        margin-bottom: -100vh;
     }
 
     .carTypeSectionP {
@@ -123,7 +140,7 @@
         margin: 25px 15px 0;
         border-radius: 15px;
         direction: rtl;
-        align-items:center
+        align-items: center
     }
 
     .cityprofileholder {
@@ -150,392 +167,261 @@
         margin: 5px auto;
         font-size: 18px
     }
+
+    #homeSection, #holdersection {
+    }
+
+    #holdersection {
+        position: fixed;
+        inset: 0;
+        overflow: auto;
+        display: grid;
+        place-items: center;
+        height:100vh;
+    }
+
+    html, body {
+        overflow: hidden;
+        height: 100%;
+    }
 </style>
 
 
-<div id="holdersection">
-
-    <div class="sectionParent">
-        <div id="homeSection" class="sections active">
-            <div class="sectionHeader">
-                جستجوی بار
-            </div>
-            <div class="mainContent">
-                <div class="dataHolderSection">
-                    <div onclick="searchOriginClicked()" class="buttonFigure">
-                        <i class="fal fa-map-marker icon"></i>
-                        <p id="searchOrigin" class="lbl">مبدا</p>
-                    </div>
-                    <div onclick="searchDestinClicked()" class="buttonFigure">
-                        <i class="fal fa-map-marker icon"></i>
-                        <p id="searchDestin" class="lbl">مقصد</p>
-                    </div>
-                    <div onclick="searchTypeClicked()" class="buttonForType">
-                        <div class="buttonForTypeText">
-                            <i class="fal fa-truck icon"></i>
-                            <p class="lbl">نوع ماشین </p>
-                        </div>
-                        <div id="typetextholder" style=" direction: rtl">
-
-                        </div>
-
-
-                    </div>
-                    <div class="buttonVerif">
-                        <p class="lbl">جستجوی بار</p>
-                    </div>
-                </div>
-
-
-            </div>
+<div class="sectionParent" style="width:100%">
+    <div id="homeSection" class="sections active">
+        <div class="sectionHeader">
+            جستجوی بار
         </div>
-        <div id="listSection" class="sections ">
-            <div class="sectionHeader">
-                بارهای من
+        <div class="mainContent">
+
+            <div id="orderparent" style="text-align :center">
+
+                <img src="~/images/loading.gif" style="margin-top:50%" />
             </div>
-            <div class="mainContent">
 
-            </div>
-        </div>
-        <div id="profileSection" class="sections">
-            <div class="sectionHeader">
-                پروفایل
-            </div>
-            <div class="mainContent">
-                <div onclick="profileSectionClicked()" class="buttonFigure" style="background-color:white">
-                    <div style="font-size:14px; width:75%;text-align:right;margin-right:30px;display:flex;direction: rtl;align-items: center;">
-                        <div style="flex:1">
-                            <p class="profilePhone">09194594505</p>
-                            <p id="profileName" class="lbl">مهرداد منصوری</p>
-                        </div>
-                        <i style="font-size:20px" class="fa fa-chevron-left"></i>
-
-                    </div>
-
-                    <img style="width:25%" id="profileImage" src="~/images/user.png" />
-
-                </div>
-
-            </div>
         </div>
     </div>
+    <div id="listSection" class="sections ">
+        <div class="sectionHeader">
+            بارهای من
+        </div>
+        <div class="mainContent">
 
-    <div class="homeFooter">
-        <div itemToShow="homeSection" class="active bottonToGo">
-            <i class="fa fa-home "></i>
-            <p>خانه</p>
         </div>
-        <div itemToShow="listSection" class="bottonToGo">
-            <i class="fa fa-truck-container"></i>
-            <p>بارهای من</p>
+    </div>
+    <div id="profileSection" class="sections">
+        <div class="sectionHeader">
+            پروفایل
         </div>
-        <div itemToShow="profileSection" class="bottonToGo">
-            <i class="fa fa-user"></i>
-            <p>پروفایل</p>
+        <div class="mainContent">
+            <div id="proparent" style="text-align :center">
+                <img src="~/images/loading.gif" style="margin-top:50%" />
+            </div>
+
         </div>
     </div>
 
 
 
-    <div class="paperone slideSection" style="display: none ">
-        <div style="max-height:95vh; overflow:scroll; padding:25px 0">
-            <h5 style="text-align:center; margin:20px"><i id="backToHome" class="fa fa-arrow-left"></i> <span class="titleCentre"></span> </h5>
-            <div class="inputFigure">
-                <input id="searchCityInput" class="lbl" placeholder="جستجو" />
-                <i id="searchCity" class="fa fa-search icon"></i>
-            </div>
-
-            <div id="countyList"></div>
-        </div>
-
-    </div>
-    <div class="paperTwo slideSection" style="display:none">
-        <div style="max-height:95vh; overflow:scroll; padding:25px 0">
-            <h5 style="text-align:center; margin:20px" id="backToState" class="titleCentreCity"> <i class="fa fa-arrow-left" style="margin-right:20px"></i> <span>بازگشت</span> </h5>
-
-            <div id="cityListSection"></div>
-        </div>
-
-    </div>
-
-    <div class="carTypeSection slideSection" style="display:none; z-index:100">
-        <div style="max-height:95vh; overflow:scroll; padding:25px 0">
-            <div class="carTypeSectionP">
-                <div class="chooseType">
-
-                    <div id="typeList" class="typeList">
-
-                    </div>
-                    <div class="buttonVerif" style="margin:0; position:absolute; width:100%; bottom:0">
-                        <p id="verifyType" class="lbl">تایید</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
-    <div class="userprofilesection slideSection" style="display: none ">
-        <div style="max-height:95vh; overflow:scroll;padding:25px 0">
-            <div class="sectionHeader">
-                <i id="backToHomeFromProfile" class="fa fa-arrow-left" style="margin:0 20px"></i> <span style="flex:1">پروفایل کاربری</span>
-
-
-
-            </div>
-
-
-            <div style="display:flex; align-items:center;justify-content:center">
-                <div style="text-align:center; margin-top:25px">
-                    <img style="width:100px" id="UserProfileImage" src="~/images/user.png" />
-                    <div id="profileImageInputTrigger" style="padding:10px; border-radius:8px;background-color:#a06509; width:100%; margin:auto; color:white">آپلود عکس پروفایل</div>
-                    <input type="file" id="profileImageInput" style="display:none" />
-                    <p id="profileImageInputFinal" style="display:none"></p>
-                </div>
-                
-            </div>
-
-
-            <div class="inputHolder">
-                <input required='' type='text'>
-                <label alt='نام و نام خانوادگی' placeholder='نام و نام خانوادگی'></label>
-
-            </div>
-            <div class="inputHolder">
-                <input required='' type='text'>
-                <label alt='کد ملی شما' placeholder='کد ملی شما'></label>
-
-            </div>
-            <div class="inputHolder">
-                <input required='' type='text'>
-                <label alt='شماره موبایل' placeholder='شماره موبایل'></label>
-
-            </div>
-            <div class="cityprofileholder " style="" onclick="profileCityClicked()">
-                <span id="profileCity" style="margin:0; text-align:right">شهر محل سکونت</span>
-
-            </div>
-            <div class="inputHolder" style="margin-top:20px">
-                <input required='' type='text'>
-                <label alt='آدرس محل سکونت' placeholder='آدرس محل سکونت'></label>
-
-            </div>
-
-            <div class="inputHolder">
-                <input required='' type='text'>
-                <label alt='شماره تماس اضطراری' placeholder='شماره تماس اضطراری'></label>
-
-            </div>
-            <div class="cityprofileholder typeProfileHolder" style="align-items:center" onclick="searchTypeClickedProfile(this)">
-                <span style="margin:0; text-align:right"> نوع ناوگان </span>
-                <p style="margin-right:20px" id="profileTypestring"></p>
-            </div>
-            <div class="inputHolder">
-                <input required='' type='text'>
-                <label alt='شماره هوشمند ماشین' placeholder='شماره هوشمند ماشین'></label>
-            </div>
-
-            <div style="margin: 35px 10px;text-align:right">
-                <span style="margin:10px; font-weight:600">شماره پلاک ماشین</span>
-
-                <div style="direction:rtl; border:1px solid #ddd;display:flex;justify-content:space-around;border-radius: 20px;padding: 15px 0;margin-top:20px">
-                    <div class="plakParent" style="border-left:1px solid #eee">
-                        <p style="text-align:center">ایران</p>
-                        <input class="plak" type="number" />
-                    </div>
-
-                    <div class="plakParent">
-                        <p></p>
-                        <input style=" margin-top: 18px;" class="plak" type="number" />
-                    </div>
-                    <div class="plakParent">
-                        <p></p>
-                        <select style=" margin-top: 18px;" class="plak">
-                            <option>الف</option>
-                            <option>ب</option>
-                            <option>پ</option>
-                        </select>
-
-                    </div>
-                    <div class="plakParent">
-                        <p></p>
-                        <input style=" margin-top: 18px;" class="plak" type="number" />
-                    </div>
-
-                </div>
-
-
-            </div>
-            <div onclick="" class="downloaddSec">
-                <img style="width:50px; " id="navganTitle" src="~/images/upload.png" />
-                
-                
-                <p id="navganTitle" style="flex:1; margin-right:10px" class="lbl">کارت هوشمند ناوگان</p>
-                <input type="file" id="kartenavgan" style="display:none" />
-                <p id="kartenavganFinal" style="display:none"></p>
-                <p id="kartenavganTrriger" class="lbl">انتخاب تصویر</p>
-            </div>
-            <p style="margin:10px; text-align:right">لطفا تصیر کارت هوشمند خود را انتخاب کنید</p>
-            <div onclick="" class="downloaddSec">
-                <img style="width:50px" id="hoshmandTitle" src="~/images/upload.png"  />
-               
-                <p id="" style="flex:1; margin-right:10px" class="lbl">کارت هوشمند راننده</p>
-                <input type="file" id="kartehosshman" style="display:none" />
-                <p id="kartehoshmandFinal" style="display:none"></p>
-                <p id="kartehoshmandTrigger" class="lbl">انتخاب تصویر</p>
-            </div>
-            <p style="margin:10px; text-align:right">لطفا تصیر کارت هوشمند رانندگی خود را انتخاب کنید</p>
-            <div style="padding:15px">
-                <div id="btnprofilesubmit" style="text-align:center">تایید</div>
-
-            </div>
-        </div>
-
-
-    </div>
 </div>
 
+
+
+
+
+
+<div class="paperone slideSection" style="display: none ">
+    <div style="max-height:100vh; overflow:scroll; padding:25px 0">
+        <h5 style="text-align:center; margin:20px"><i id="backToHome" class="fa fa-arrow-left"></i> <span class="titleCentre"></span> </h5>
+        <div class="inputFigure">
+            <input id="searchCityInput" class="lbl" placeholder="جستجو" />
+            <i id="searchCity" class="fa fa-search icon"></i>
+        </div>
+
+        <div id="countyList"></div>
+    </div>
+
+</div>
+<div class="paperTwo slideSection" style="display:none">
+    <div style="max-height:100vh; overflow:scroll; padding:25px 0">
+        <h5 style="text-align:center; margin:20px" id="backToState" class="titleCentreCity"> <i class="fa fa-arrow-left" style="margin-right:20px"></i> <span>بازگشت</span> </h5>
+
+        <div id="cityListSection"></div>
+    </div>
+
+</div>
+
+<div class="carTypeSection slideSection" style="display:none; z-index:100">
+    <div style="max-height:100vh; overflow:scroll; padding:25px 0">
+        <div class="carTypeSectionP">
+            <div class="chooseType">
+
+                <div id="typeList" class="typeList">
+
+                </div>
+                <div class="buttonVerif" style="margin:0; position:absolute; width:100%; bottom:0">
+                    <p id="verifyType" class="lbl">تایید</p>
+                </div>
+            </div>
+        </div>
+
+
+
+
+    </div>
+
+
+</div>
+<script type="text/javascript">
+    var myMap;
+    var theMarker = {};
+    var greenIcon;
+
+    function showLocation(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+
+        myMap = L.map('Map', { attributionControl: false }).setView([35.75453394917301, 51.37116999302821], 13);
+
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoibWVyaW9saSIsImEiOiJja2p6dXhmdngwYmVvMnZwY2lyc2htNGxhIn0.Y9t__Bll6Fw9b9amb_rcHg',
+
+        }).addTo(myMap);
+        myMap.panTo(new L.LatLng(lat, lon));
+
+
+
+
+
+        myMap.on('click', function (e) {
+
+            $("#checkmap").show();
+            lat = e.latlng.lat;
+            lon = e.latlng.lng;
+
+            console.log("You clicked the map at LAT: " + lat + " and LONG: " + lon);
+            //Clear existing marker,
+
+            if (theMarker != undefined) {
+                myMap.removeLayer(theMarker);
+            };
+
+            //Add a marker to show where you clicked.
+            theMarker = L.marker([lat, lon]).addTo(myMap);
+            $("#lat").val(lat);
+            $("#lon").val(lon);
+        });
+        theMarker = L.marker([lat, lon]).addTo(myMap);
+        $("#lat").val(lat);
+        $("#lon").val(lon);
+
+
+
+
+
+
+    }
+    function errorHandler(err) {
+        if (err.code == 1) {
+            //alert("Error: Access is denied!");
+        } else if (err.code == 2) {
+            //alert("Error: Position is unavailable!");
+        }
+
+
+        myMap = L.map('Map', { attributionControl: false }).setView([35.75453394917301, 51.37116999302821], 13);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoibWVyaW9saSIsImEiOiJja2p6dXhmdngwYmVvMnZwY2lyc2htNGxhIn0.Y9t__Bll6Fw9b9amb_rcHg',
+
+        }).addTo(myMap);
+
+        myMap.panTo(new L.LatLng(35.73598454240641, 51.48437862217327));
+
+
+
+
+        myMap.on('click', function (e) {
+            $("#checkmap").show();
+            lat = e.latlng.lat;
+            lon = e.latlng.lng;
+
+            console.log("You clicked the map at LAT: " + lat + " and LONG: " + lon);
+            //Clear existing marker,
+
+            if (theMarker != undefined) {
+                myMap.removeLayer(theMarker);
+            };
+
+            //Add a marker to show where you clicked.
+            theMarker = L.marker([lat, lon]).addTo(myMap);
+
+            $("#lat").val(lat);
+            $("#lon").val(lon);
+        });
+
+
+    }
+    function getLocation() {
+        if (navigator.geolocation) {
+            // timeout at 60000 milliseconds (60 seconds)
+            var options = { timeout: 60000 };
+            navigator.geolocation.getCurrentPosition
+                (showLocation, errorHandler, options);
+        } else {
+            alert("Sorry, browser does not support geolocation!");
+        }
+    };
+
+
+
+
+</script>
 <script>
     var itemtoChange;
     var typeseleccted;
     var profileType;
 
-    $("#btnprofilesubmit").click(function () {
-        var fd = new FormData();
-        var files = $('#kartehosshman')[0].files[0];
-        fd.append('file', files);
-        $.ajax({
-            url: 'setImage',
-            type: 'post',
-            data: fd,
-            contentType: false,
-            processData: false,
-            success: function (response) {
 
-                if (response != 0) {
-                    $("#kartehoshmandFinal").text(response);
-                    console.log(response);
-                    var fd = new FormData();
-                    var files = $('#kartenavgan')[0].files[0];
-                    fd.append('file', files);
-                    $.ajax({
-                        url: 'setImage',
-                        type: 'post',
-                        data: fd,
-                        contentType: false,
-                        processData: false,
-                        success: function (response) {
-                            $("#kartenavganFinal").text(response);
-                            console.log(response);
-                            if (response != 0) {
-
-
-                                var fd = new FormData();
-                                var files = $('#profileImageInput')[0].files[0];
-                                fd.append('file', files);
-                                $.ajax({
-                                    url: 'setImage',
-                                    type: 'post',
-                                    data: fd,
-                                    contentType: false,
-                                    processData: false,
-                                    success: function (response) {
-                                        $("#profileImageInputFinal").text(response);
-                                        console.log(response);
-                                        if (response != 0) {
-                                            var cartNavgan = alert($("#kartenavganFinal").text());
-                                            var hoshmand = alert($("#kartehoshmandFinal").text());
-                                            var userprof = alert($("#profileImageInputFinal").text());
-
-                                            $.post(
-                                                "setProfile",
-                                                {
-                                                    hooshmandMashin: hoshmand,
-                                                    cartNavgan: cartNavgan,
-                                                    profileImage: userprof
-                                                },
-                                                function (response) {
-                                                    
-                                                });
-
-
-
-                                        } else {
-                                            alert('file not uploaded');
-                                        }
-                                    },
-                                });
-
-
-
-
-
-                            } else {
-                                alert('file not uploaded');
-                            }
-                        },
-                    });
-                } else {
-                    alert('file not uploaded');
-                }
-            },
-        });
-    });
-
-
-    $("#profileImageInputTrigger").click(function () {
-        $("#profileImageInput").click();
-    })
-    $("#kartehoshmandTrigger").click(function () {
-        $("#kartehosshman").click();
-    })
-    $("#kartenavganTrriger").click(function () {
-        $("#kartenavgan").click();
-    })
-
-    $("#profileImageInput").change(function () {
-        var file = $("#profileImageInput").get(0).files[0];
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function () {
-                $("#UserProfileImage").attr("src", reader.result);
+    $.ajax({
+        url: "DriverPartial",
+        success: function (data) {
+            if (data == "400") {
+                window.location.href = "/driverapp/index";
+            }
+            else {
+                $("#proparent").html(data);
             }
 
-            reader.readAsDataURL(file);
         }
+
     })
-    $("#kartehosshman").change(function () {
-        var file = $("#kartehosshman").get(0).files[0];
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function () {
-                $("#hoshmandTitle").attr("src", reader.result);
-                $("#hoshmandTitle").show();
+    $.ajax({
+        url: "getHome",
+        success: function (data) {
+            if (data == "400") {
+                window.location.href = "/driverapp/index";
+            }
+            else {
+                $("#orderparent").html(data);
             }
 
-            reader.readAsDataURL(file);
         }
 
-        // $("#hoshmandTitle").text($("#kartehosshman").val().split('\\').pop());
     })
-    $("#kartenavgan").change(function () {
-        var file = $("#kartenavgan").get(0).files[0];
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function () {
-                $("#navganTitle").attr("src", reader.result);
-                $("#navganTitle").show();
-            }
-
-            reader.readAsDataURL(file);
-        }
-        //$("#navganTitle").text($("#kartenavgan").val().split('\\').pop());
-    })
-
 
     $("#searchCity").click(function () {
         var search = $("#searchCityInput").val();
-        $('.paperTwo').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $('.paperTwo').animate({ 'margin-bottom': '+=100vh' }, 200);
         $.ajax({
             url: "getCity",
             data: {
@@ -551,17 +437,19 @@
     })
     $(".bottonToGo").click(function () {
         var id = $(this).attr('itemToShow');
+
         $(".bottonToGo").removeClass('active');
         $(".sections").removeClass('active');
         $(this).addClass('active')
         $("#" + id).addClass('active')
 
     })
+
     function searchDestinClicked() {
         $('.paperone').show();
         itemtoChange = "searchDestin";
         $(".titleCentre").text("انتخاب شهر مقصد")
-        $('.paperone').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $('.paperone').animate({ 'margin-bottom': '+=100vh' }, 200);
         $.ajax({
             url: "getCity",
             success: function (data) {
@@ -571,13 +459,11 @@
 
         })
     }
-
-
     function searchOriginClicked() {
         $('.paperone').show();
         itemtoChange = "searchOrigin";
         $(".titleCentre").text("انتخاب شهر مبدا")
-        $('.paperone').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $('.paperone').animate({ 'margin-bottom': '+=100vh' }, 200);
         $.ajax({
             url: "getCity",
             success: function (data) {
@@ -587,12 +473,30 @@
 
         })
     }
+    function searchOrderClicked() {
+        $('.orderListSection').show();
+        $('.orderListSection').animate({ 'margin-bottom': '0' }, 200);
+        $.post(
+            "/driverapp/getOrderList",
+            { originCityID: "", destinCityID: "", type: "" },
+            function (data) {
+                if (data == "400") {
+                    window.location.href = "/driverapp/index";
+                }
+                else {
+                    $("#orderListparent").html(data);
+                }
+            });
+
+
+    }
+
     function profileCityClicked() {
 
         $('.paperone').show();
         itemtoChange = "profileCity";
         $(".titleCentre").text("شهر محل سکونت")
-        $('.paperone').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $('.paperone').animate({ 'margin-bottom': '+=100vh' }, 200);
         $.ajax({
             url: "getCity",
             success: function (data) {
@@ -602,16 +506,33 @@
 
         })
     }
+    function orderDetialClicked(el) {
+        var id = $(el).attr('id');
+        $('.orderDetailSection').show();
+        $('.orderDetailSection').animate({ 'margin-bottom': '+=100vh' }, 200);
+        $.post(
+            "getOrderDetail",
+            { orderID: id },
+            function (data) {
+                if (data == "400") {
+                    window.location.href = "/driverapp/index";
+                }
+                else {
+                    $("#orderDetailParent").html(data);
+                    getLocation();
+                }
+            });
+    }
 
 
     function profileSectionClicked() {
         $('.userprofilesection').show();
-        $('.userprofilesection').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $('.userprofilesection').animate({ 'margin-bottom': '+=100vh' }, 200);
     }
     function searchTypeClickedProfile() {
         $('.userprofilesection').hide();
         $('.carTypeSection').show();
-        $('.carTypeSection').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $('.carTypeSection').animate({ 'margin-bottom': '+=100vh' }, 200);
         $.ajax({
             url: "getType2",
             success: function (data) {
@@ -623,7 +544,7 @@
     }
     function searchTypeClicked(el) {
         $('.carTypeSection').show();
-        $('.carTypeSection').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $('.carTypeSection').animate({ 'margin-bottom': '+=100vh' }, 200);
         $.ajax({
             url: "getType",
             success: function (data) {
@@ -637,28 +558,21 @@
 
     $("#backToState").click(function () {
         $('.paperone').show();
-        $('.paperTwo').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
+        $('.paperTwo').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
             $("#cityListSection").html("");
             $('.paperTwo').hide();
         });
 
     })
     $("#backToHome").click(function () {
-        $('.paperone').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
+        $('.paperone').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
             $('.paperone').hide();
             $("#countyList").html("");
         });
 
 
     })
-    $("#backToHomeFromProfile").click(function () {
 
-        $('.userprofilesection').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
-            $('.userprofilesection').hide();
-
-        });
-
-    })
 
 
     $("#verifyType").click(function () {
@@ -677,7 +591,7 @@
 
 
         })
-        $('.carTypeSection').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
+        $('.carTypeSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
             $('.carTypeSection').hide();
         });
 
@@ -692,12 +606,13 @@
                 var id = $(this).attr('id');
                 var txt = $(this).attr('texttoshow');
                 profileType = id;
+                $("#profileTypestringInput").val(id);
                 $("#profileTypestring").append('<p style="margin:25px 5px;display:inline-block" id="typeName"><span class="typenameTitle"> ' + txt + ' </span></p>');
             }
         })
         $(".typeProfileHolder").css("padding", "5px 25px")
         $('.userprofilesection').show();
-        $('.carTypeSection').animate({ 'margin-bottom': '-=95vh' }, 200, function () {
+        $('.carTypeSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
 
             $('.carTypeSection').hide();
         });
@@ -706,23 +621,26 @@
     function cityClicked(el) {
 
         var title = $(el).text();
+        var id = $(el).attr('id');
+        var idsring = itemtoChange + "Input";
         $("#" + itemtoChange).text(title);
         $("#" + itemtoChange).val(title);
-        $('.paperone').animate({ 'margin-bottom': '-=95vh' }, 200);
-        $('.paperTwo').animate({ 'margin-bottom': '-=95vh' }, 200);
+        $("#" + idsring).val(id);
+        $('.paperone').animate({ 'margin-bottom': '-=100vh' }, 200);
+        $('.paperTwo').animate({ 'margin-bottom': '-=100vh' }, 200);
         $('.paperone').hide();
         $('.paperTwo').hide();
         $("#countyList").html("");
         $("#cityListSection").html("");
 
-        //$('.paperone').css("margin-bottom", '-95vh')
-        //$('.paperTwo').css("margin-bottom", '-95vh')
+        //$('.paperone').css("margin-bottom", '-100vh')
+        //$('.paperTwo').css("margin-bottom", '-100vh')
     };
     function stateClicked(el) {
         $('.paperTwo').show();
         var ID = $(el).attr('id');
 
-        $('.paperTwo').animate({ 'margin-bottom': '+=95vh' }, 200);
+        $('.paperTwo').animate({ 'margin-bottom': '+=100vh' }, 200);
         $.ajax({
             url: "getCity",
             data: {

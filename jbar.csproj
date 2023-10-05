@@ -307,6 +307,7 @@
     <Compile Include="Classes\methods.cs" />
     <Compile Include="Classes\TokenManager.cs" />
     <Compile Include="Controllers\appController.cs" />
+    <Compile Include="Controllers\clientappController.cs" />
     <Compile Include="Controllers\driverappController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\loadownerappController.cs" />
@@ -444,6 +445,7 @@
     <Content Include="Content\images\marker-shadow.png" />
     <Content Include="Content\leaflet.css" />
     <Content Include="Content\fontawesome-all.css" />
+    <Content Include="Content\toastr.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\webfonts\fa-brands-400.svg" />
@@ -453,8 +455,10 @@
     <Content Include="fonts\webfonts\fa-solid.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="images\loading.gif" />
     <Content Include="images\upload.png" />
     <Content Include="images\user.png" />
+    <Content Include="images\down.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.esm.js" />
@@ -616,6 +620,7 @@
     <Content Include="Scripts\leaflet-0.7.3.js" />
     <Content Include="Scripts\leaflet-0.7.3.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\toastr.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -639,6 +644,18 @@
     <Content Include="Views\Shared\_cityPartial.cshtml" />
     <Content Include="Views\Shared\_carTypePatial.cshtml" />
     <Content Include="Views\Shared\_carTypePatial2.cshtml" />
+    <Content Include="Views\Shared\_driverProfileParial.cshtml" />
+    <Content Include="Views\driverapp\base.cshtml" />
+    <Content Include="Views\clientapp\base.cshtml" />
+    <Content Include="Views\clientapp\Home.cshtml" />
+    <Content Include="Views\clientapp\Index.cshtml" />
+    <Content Include="Views\clientapp\Verify.cshtml" />
+    <Content Include="Views\Shared\_clientLayout.cshtml" />
+    <Content Include="Views\Shared\driver\_driverProfileParial.cshtml" />
+    <Content Include="Views\Shared\client\_clientProfileParial.cshtml" />
+    <Content Include="Views\Shared\driver\_driverHomePartial.cshtml" />
+    <Content Include="Views\Shared\driver\_driverOrderlistParial.cshtml" />
+    <Content Include="Views\Shared\driver\_driverOrderDetailParial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
