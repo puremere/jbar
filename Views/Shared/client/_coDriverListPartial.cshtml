@@ -1,0 +1,12 @@
+﻿@model jbar.ViewModel.getCoDriverResponse
+
+
+@if (Model.codrivers != null)
+{
+    foreach(var item in Model.codrivers)
+    {
+        <div class="buttonFigure">
+            <p>@item.dname</p>
+        </div>
+    }
+}

@@ -1,0 +1,175 @@
+﻿@model jbar.ViewModel.getOrderVM
+
+@{
+    Layout = "~/Views/Shared/_panelLayout.cshtml";
+}
+
+
+<div class="">
+    <div class="border">
+        <div class="bg-gray-300 nav-bg" style="border-radius:6px; margin:0 30px">
+            <nav class="nav nav-tabs">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">منتشر نشده </a>
+                <a class="nav-link " data-bs-toggle="tab" href="#tabCont2">منتشر شده </a>
+                <a class="nav-link" data-bs-toggle="tab" href="#tabCont3">پذیرفته شده</a>
+            </nav>
+        </div>
+        <div class="card-body tab-content">
+            <div class="tab-pane active show" id="tabCont1">
+                <div class="col-lg-12">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <div>
+                                <h6 class="main-content-label mb-1">جدول سفارشات منتشر نشده</h6>
+                                <p class="text-muted card-sub-title">تمامی سفارشات قبل از انتشار در اینجا لیست میشوند</p>
+                            </div>
+                            <div class="table-responsive border">
+                                <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
+                                    <thead>
+                                        <tr>
+
+
+                                            <th>مبدا</th>
+                                            <th>مقصد</th>
+                                            <th>تعداد نمایش داده شده</th>
+                                            <th>صافی کل</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var item in Model.orderList.Where(x => x.status == "0"))
+                                        {
+
+                                        <tr>
+
+                                            <td>@item.origin</td>
+                                            <td>@item.destin</td>
+                                            <th scope="row">@item.viewNumber</th>
+                                            <td>@string.Format("{0:n0}", item.priceTotal)</td>
+                                            <td>
+                                                <button id="@item.orderID" onclick="orderDetialClicked(this)" type="button" class="btn ripple btn-primary btn-sm">مشاهده جزئیات</button>
+                                            </td>
+                                        </tr>
+                                        }
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-pane " id="tabCont2">
+                <div class="col-lg-12">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <div>
+                                <h6 class="main-content-label mb-1">جدول سفارشات منتشر شده</h6>
+                                <p class="text-muted card-sub-title">تمامی سفارشات بعد از انتشار در اینجا لیست میشوند</p>
+                            </div>
+                            <div class="table-responsive border">
+                                <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
+                                    <thead>
+                                        <tr>
+
+
+                                            <th>مبدا</th>
+                                            <th>مقصد</th>
+                                            <th>تعداد نمایش داده شده</th>
+                                            <th>صافی کل</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var item in Model.orderList.Where(x => x.status == "1"))
+                                        {
+
+                                        <tr>
+
+                                            <td>@item.origin</td>
+                                            <td>@item.destin</td>
+                                            <th scope="row">@item.viewNumber</th>
+                                            <td>@string.Format("{0:n0}", item.priceTotal)</td>
+                                            <td>
+                                                <button id="@item.orderID" onclick="orderDetialClicked(this)" type="button" class="btn ripple btn-primary btn-sm">مشاهده جزئیات</button>
+                                            </td>
+                                        </tr>
+                                        }
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane" id="tabCont3">
+                <div class="col-lg-12">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <div>
+                                <h6 class="main-content-label mb-1">جدول سفارشات پذیرفته شده</h6>
+                                <p class="text-muted card-sub-title">تمامی سفارشات بعد از تایید پذیرش  در اینجا لیست میشوند</p>
+                            </div>
+                            <div class="table-responsive border">
+                                <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
+                                    <thead>
+                                        <tr>
+
+
+                                            <th>مبدا</th>
+                                            <th>مقصد</th>
+                                            <th>تعداد نمایش داده شده</th>
+                                            <th>صافی کل</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @foreach (var item in Model.orderList.Where(x => x.status == "2"))
+                                        {
+
+                                        <tr>
+
+                                            <td>@item.origin</td>
+                                            <td>@item.destin</td>
+                                            <th scope="row">@item.viewNumber</th>
+                                            <td>@string.Format("{0:n0}", item.priceTotal)</td>
+                                            <td>
+                                                <button id="@item.orderID" onclick="orderDetialClicked(this)" type="button" class="btn ripple btn-primary btn-sm">مشاهده جزئیات</button>
+                                            </td>
+                                        </tr>
+                                        }
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script>
+        var orderDetialClicked = function (el) {
+            var id = $(el).attr('id');
+           
+            window.location.href = "/Panel/OrderDetail/" + id;
+
+        }
+
+        $("#orders").addClass("active");
+        
+    </script>
+}

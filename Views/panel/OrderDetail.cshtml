@@ -1,0 +1,597 @@
+﻿@model jbar.ViewModel.sendDetailVM
+@using jbar.Classes
+@{
+    Layout = "~/Views/Shared/_panelLayout.cshtml";
+}
+
+
+<div class="row row-sm">
+    <div class="col-sm-12 col-lg-12 col-xl-8">
+        <div class="row row-sm" style="padding:10px">
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div class="card-item-icon card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 4c-4.41 0-8 3.59-8 8 0 1.82.62 3.49 1.64 4.83 1.43-1.74 4.9-2.33 6.36-2.33s4.93.59 6.36 2.33C19.38 15.49 20 13.82 20 12c0-4.41-3.59-8-8-8zm0 9c-1.94 0-3.5-1.56-3.5-3.5S10.06 6 12 6s3.5 1.56 3.5 3.5S13.94 13 12 13z" opacity=".3"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"></path></svg>
+                            </div>
+                            <div class="card-item-title mb-2">
+                                <label class="main-content-label tx-13 font-weight-bold mb-1">مبدا بارگیری </label>
+                                <span class="d-block tx-12 mb-0 text-muted">مبدا مکانی سفارش</span>
+                            </div>
+                            <div class="card-item-body">
+                                <div class="card-item-stat">
+                                    <h4 class="font-weight-bold">@Model.origing.title</h4>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div class="card-item-icon card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 4c-4.41 0-8 3.59-8 8 0 1.82.62 3.49 1.64 4.83 1.43-1.74 4.9-2.33 6.36-2.33s4.93.59 6.36 2.33C19.38 15.49 20 13.82 20 12c0-4.41-3.59-8-8-8zm0 9c-1.94 0-3.5-1.56-3.5-3.5S10.06 6 12 6s3.5 1.56 3.5 3.5S13.94 13 12 13z" opacity=".3"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"></path></svg>
+                            </div>
+                            <div class="card-item-title mb-2">
+                                <label class="main-content-label tx-13 font-weight-bold mb-1">مقصد بارگیری </label>
+                                <span class="d-block tx-12 mb-0 text-muted">مقصد مکانی سفارش</span>
+                            </div>
+                            <div class="card-item-body">
+                                <div class="card-item-stat">
+                                    <h4 class="font-weight-bold">@Model.destination.title</h4>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div class="card-item-icon card-icon">
+                                <svg class="text-primary" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm1.23 13.33V19H10.9v-1.69c-1.5-.31-2.77-1.28-2.86-2.97h1.71c.09.92.72 1.64 2.32 1.64 1.71 0 2.1-.86 2.1-1.39 0-.73-.39-1.41-2.34-1.87-2.17-.53-3.66-1.42-3.66-3.21 0-1.51 1.22-2.48 2.72-2.81V5h2.34v1.71c1.63.39 2.44 1.63 2.49 2.97h-1.71c-.04-.97-.56-1.64-1.94-1.64-1.31 0-2.1.59-2.1 1.43 0 .73.57 1.22 2.34 1.67 1.77.46 3.66 1.22 3.66 3.42-.01 1.6-1.21 2.48-2.74 2.77z" opacity=".3"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"></path></svg>
+                            </div>
+                            <div class="card-item-title  mb-2">
+                                <label class="main-content-label tx-13 font-weight-bold mb-1">صافی کل </label>
+                                <span class="d-block tx-12 mb-0 text-muted">کل خالص پرداختی</span>
+                            </div>
+                            <div class="card-item-body">
+                                <div class="card-item-stat">
+                                    <h4 class="font-weight-bold">@string.Format("{0:n0}", Model.netTotal) تومان</h4>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-sm-12 col-lg-12 col-xl-12">
+            <div class="card custom-card" style="padding:20px">
+                <div id="Map" class="buttonFigure" style="background-color:white; height:400px;z-index:0">
+
+                </div>
+            </div>
+
+        </div>
+        <div class="row row-sm" style="padding:10px">
+         
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div class="card-item-icon card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 4c-4.41 0-8 3.59-8 8 0 1.82.62 3.49 1.64 4.83 1.43-1.74 4.9-2.33 6.36-2.33s4.93.59 6.36 2.33C19.38 15.49 20 13.82 20 12c0-4.41-3.59-8-8-8zm0 9c-1.94 0-3.5-1.56-3.5-3.5S10.06 6 12 6s3.5 1.56 3.5 3.5S13.94 13 12 13z" opacity=".3"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"></path></svg>
+                            </div>
+                            <div class="card-item-title mb-2">
+                                <label class="main-content-label tx-13 font-weight-bold mb-1">ناوگان </label>
+                                <span class="d-block tx-12 mb-0 text-muted">نوع خودرو مد نظر</span>
+                            </div>
+                            <div class="card-item-body">
+                                <div class="card-item-stat">
+                                    <h4 class="font-weight-bold">
+                                        @{
+                                            string typ = "";
+                                            if (Model.typeOrderList != null)
+                                            {
+                                                foreach (var item in @Model.typeOrderList)
+                                                {
+                                                    typ = item.title + " - ";
+                                                }
+                                            }
+                                            @typ
+                                        }
+                                    </h4>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-4">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div class="card-item-icon card-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 4c-4.41 0-8 3.59-8 8 0 1.82.62 3.49 1.64 4.83 1.43-1.74 4.9-2.33 6.36-2.33s4.93.59 6.36 2.33C19.38 15.49 20 13.82 20 12c0-4.41-3.59-8-8-8zm0 9c-1.94 0-3.5-1.56-3.5-3.5S10.06 6 12 6s3.5 1.56 3.5 3.5S13.94 13 12 13z" opacity=".3"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zM7.07 18.28c.43-.9 3.05-1.78 4.93-1.78s4.51.88 4.93 1.78C15.57 19.36 13.86 20 12 20s-3.57-.64-4.93-1.72zm11.29-1.45c-1.43-1.74-4.9-2.33-6.36-2.33s-4.93.59-6.36 2.33C4.62 15.49 4 13.82 4 12c0-4.41 3.59-8 8-8s8 3.59 8 8c0 1.82-.62 3.49-1.64 4.83zM12 6c-1.94 0-3.5 1.56-3.5 3.5S10.06 13 12 13s3.5-1.56 3.5-3.5S13.94 6 12 6zm0 5c-.83 0-1.5-.67-1.5-1.5S11.17 8 12 8s1.5.67 1.5 1.5S12.83 11 12 11z"></path></svg>
+                            </div>
+                            <div class="card-item-title mb-2">
+                                <label class="main-content-label tx-13 font-weight-bold mb-1">مسافت </label>
+                                <span class="d-block tx-12 mb-0 text-muted">مصافت کل سفارش</span>
+                            </div>
+                            <div class="card-item-body">
+                                <div class="card-item-stat">
+                                    <h4 class="font-weight-bold">@Model.distance</h4>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-4">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div class="card-item">
+                            <div class="card-item-icon card-icon">
+                                <svg class="text-primary" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M12 4c-4.41 0-8 3.59-8 8s3.59 8 8 8 8-3.59 8-8-3.59-8-8-8zm1.23 13.33V19H10.9v-1.69c-1.5-.31-2.77-1.28-2.86-2.97h1.71c.09.92.72 1.64 2.32 1.64 1.71 0 2.1-.86 2.1-1.39 0-.73-.39-1.41-2.34-1.87-2.17-.53-3.66-1.42-3.66-3.21 0-1.51 1.22-2.48 2.72-2.81V5h2.34v1.71c1.63.39 2.44 1.63 2.49 2.97h-1.71c-.04-.97-.56-1.64-1.94-1.64-1.31 0-2.1.59-2.1 1.43 0 .73.57 1.22 2.34 1.67 1.77.46 3.66 1.22 3.66 3.42-.01 1.6-1.21 2.48-2.74 2.77z" opacity=".3"></path><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"></path></svg>
+                            </div>
+                            <div class="card-item-title  mb-2">
+                                <label class="main-content-label tx-13 font-weight-bold mb-1">صافی هر کیلومتر </label>
+                                <span class="d-block tx-12 mb-0 text-muted">مبلغ خالص به ازای هر کیلومتر</span>
+                            </div>
+                            <div class="card-item-body">
+                                <div class="card-item-stat">
+                                    <h4 class="font-weight-bold">@string.Format("{0:n0}", Model.pricePerKiloometre) تومان</h4>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <div class="card-item">
+
+                            <div class="card-item-title  mb-2">
+                                <label class="main-content-label tx-13 font-weight-bold mb-1">توضیحات </label>
+                                <span class="d-block tx-12 mb-0 text-muted">توضیحات ارائه شده برای این سفارش</span>
+                            </div>
+                            <div class="card-item-body">
+                                <div class="card-item-stat">
+                                    <h6 class="font-weight-bold">@Model.description</h6>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-lg-12 col-xl-4 mt-xl-4">
+        @if (Model.orderStatus == "2")
+        {
+            <div class="card custom-card">
+                <div class="card-header border-bottom-0 pb-0 d-flex pl-3 ml-1">
+                    <div>
+                        <label class="main-content-label mb-2 pt-2">پیشنهاد قیمتی </label>
+                        <span class="d-block tx-12 mb-2 text-muted">لیست پیشنهاد های مطرح شده برای این سفارش</span>
+                    </div>
+                </div>
+                <div class="card-body pt-2 mt-0">
+                    @foreach (var item in Model.orderRespons)
+                    {
+                        string phoneID = "phone" + Model.orderRespons.IndexOf(item);
+                        <div class="list-card">
+
+                            <div style="width:100%; ">
+                                <div class="pricepr">
+
+                                    <div class="">نام راننده </div>
+                                    <div class="card-item-stat" style="flex:1; text-align:left; ">
+                                        <h4 class="font-weight-bold">@item.title</h4>
+
+                                    </div>
+
+                                </div>
+                                <div class="pricepr">
+
+                                    <div class="">قیمت پیشنهادی </div>
+                                    <div class="card-item-stat" style="flex:1; text-align:left; ">
+                                        <h4 class="font-weight-bold">@string.Format("{0:n0}", item.price) تومان</h4>
+
+                                    </div>
+
+                                </div>
+                                <div class="buttpr" style="margin-top:15px">
+                                    <button style="margin-left:5px; " aria-controls="collapseExample" aria-expanded="true" data-bs-toggle="collapse" href="#@phoneID" role="button" class="btn ripple btn-secondary buttonVerif"> نمایش شماره <i class="fe fe-phone"></i></button>
+                                </div>
+                                <div class="mg-t-5 collapse" id="@phoneID" style="">
+                                    <div class="card card-body" style="padding:15px">
+                                        @item.phone
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+
+
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="card custom-card">
+                <div class="card-header border-bottom-0 pb-0 d-flex pl-3 ml-1">
+                    <div>
+                        <label class="main-content-label mb-2 pt-2">پیشنهاد قیمتی </label>
+                        <span class="d-block tx-12 mb-2 text-muted">لیست پیشنهاد های مطرح شده برای این سفارش</span>
+                    </div>
+                </div>
+                <div class="card-body pt-2 mt-0">
+                    @foreach (var item in Model.orderRespons)
+                    {
+                        string phoneID = "phone" + Model.orderRespons.IndexOf(item);
+                        <div class="list-card">
+
+                            <div style="width:100%; ">
+
+                                <div class="pricepr">
+
+                                    <div class="">قیمت پیشنهادی </div>
+                                    <div class="card-item-stat" style="flex:1; text-align:left; ">
+                                        <h4 class="font-weight-bold">@string.Format("{0:n0}", item.price) تومان</h4>
+
+                                    </div>
+
+                                </div>
+                                <div class="buttpr" style="margin-top:15px">
+                                    <button style="margin-left:5px; " aria-controls="collapseExample" aria-expanded="true" data-bs-toggle="collapse" href="#@phoneID" role="button" class="btn ripple btn-secondary buttonVerif"> نمایش شماره <i class="fe fe-phone"></i></button>
+
+                                    <button onclick="verrifyOrderResponseModalTrriger('@Model.orderID','@item.driverID')" class="btn ripple btn-success buttonVerif"> تایید درخواست <i class="fe fe-file"></i></button>
+
+
+                                </div>
+                                <div class="mg-t-5 collapse" id="@phoneID" style="">
+                                    <div class="card card-body" style="padding:15px">
+                                        @item.phone
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    }
+
+
+                </div>
+            </div>
+        }
+
+
+        <div class="card custom-card card-dashboard-calendar pb-0">
+            <label class="main-content-label mb-2 pt-1">نظرات کاربران </label>
+            <span class="d-block tx-12 mb-2 text-muted">نظرات کاربران  در مورد این سفارش</span>
+            <table class="table table-hover m-b-0 transcations mt-2">
+                <tbody>
+                    @if (Model.comments != null)
+                    {
+                        foreach (var comm in Model.comments)
+                        {
+                            string src = "/images/user.png";
+                            if (!string.IsNullOrEmpty(comm.clientImage))
+                            {
+                                src = comm.clientImage;
+                            }
+                            string name = methods.RandomString();
+
+                            <tr aria-controls="collapseExample" aria-expanded="true" data-bs-toggle="collapse" href="#collapseExample" role="button">
+                                <td class="wd-5p" style="border-bottom:none">
+                                    <div class="main-img-user avatar-md">
+                                        <img alt="آواتار" class="rounded-circle ml-3" src="@src">
+                                    </div>
+                                </td>
+                                <td style="border-bottom:none">
+                                    <div class="d-flex align-middle mr-3">
+                                        <div class="d-inline-block">
+                                            <h6 class="mb-1">@comm.clientTitle</h6>
+
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-left" style="border-bottom:none">
+                                    <div class="d-inline-block">
+                                        <p class="mb-0 tx-11 text-muted">@dateTimeConvert.ToPersianDateString(@comm.date)</p>
+                                    </div>
+                                </td>
+
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <div>
+                                        <div class="mg-t-5 collapse" id="collapseExample" style="">
+                                            <div class="card card-body" style="padding:15px">
+                                                @comm.content
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .pricepr {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        direction: rtl;
+        margin: 10px 20px 0;
+    }
+
+        .pricepr p {
+            width: 100%
+        }
+
+    .buttpr {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        direction: rtl
+    }
+
+    buttpr div {
+        width: 100%
+    }
+
+    .buttonVerif a {
+        color: white;
+        text-decoration: none
+    }
+
+    .buttonVerif {
+        width: 100%
+    }
+</style>
+
+
+@section scripts{
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <script src="~/Scripts/lcurv.js"></script>
+    <script type="text/javascript">
+        var myMap;
+        var theMarker = {};
+        var greenIcon;
+
+
+        function showTwoPoin(orlat, orlon, deslat, deslon) {
+
+
+            var Mapnik = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 21,
+                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            });
+            const myIcon = L.icon({
+                iconUrl: '/images/marker.png',
+
+
+            });
+
+
+            var mymiddlex = (orlat + deslat) / 2;
+            var mymiddley = (orlon + deslon) / 2;
+
+            var mymap = L.map('Map', {
+                layers: [Mapnik]
+            }).setView([mymiddlex, mymiddley], 6);
+
+            //var marker = L.marker([orlat, orlon], { icon: myIcon }).addTo(mymap);
+            //var marker2 = L.marker([deslat, deslon], { icon: myIcon }).addTo(mymap);
+
+
+            var latlngs = [];
+
+            var latlng1 = [orlat, orlon],
+                latlng2 = [deslat, deslon];
+
+            var offsetX = latlng2[1] - latlng1[1],
+                offsetY = latlng2[0] - latlng1[0];
+
+            var r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)),
+                theta = Math.atan2(offsetY, offsetX);
+
+            var thetaOffset = (3.14 / 10);
+
+            var r2 = (r / 2) / (Math.cos(thetaOffset)),
+                theta2 = theta + thetaOffset;
+
+            var midpointX = (r2 * Math.cos(theta2)) + latlng1[1],
+                midpointY = (r2 * Math.sin(theta2)) + latlng1[0];
+
+            var midpointLatLng = [midpointY, midpointX];
+
+            latlngs.push(latlng1, midpointLatLng, latlng2);
+
+            var pathOptions = {
+                color: 'rgba(255,255,255,0.5)',
+                weight: 2
+            }
+
+            if (typeof document.getElementById('Map').animate === "function") {
+                var durationBase = 2000;
+                var duration = Math.sqrt(Math.log(r)) * durationBase;
+                // Scales the animation duration so that it's related to the line length
+                // (but such that the longest and shortest lines' durations are not too different).
+                // You may want to use a different scaling factor.
+                pathOptions.animate = {
+                    duration: duration,
+                    iterations: Infinity,
+                    easing: 'ease-in-out',
+                    direction: 'alternate'
+                }
+            }
+            var curved_line = L.curve(['M', latlng1,
+                'Q', midpointLatLng,
+                latlng2
+            ], {
+                fillColor: 'green',
+                weight: 4,
+                opacity: 1,
+                color: 'green',
+                fillOpacity: 1,
+                lineCap: 'round'
+            });
+            mymap.addLayer(curved_line);
+            //var curvedPath = L.curve(
+            //    [
+            //        'M', latlng1,
+            //        'Q', midpointLatLng,
+            //        latlng2
+            //    ], pathOptions).addTo(myMap);
+        };
+        function showLocation(position) {
+            var lat = position.coords.latitude;
+            var lon = position.coords.longitude;
+
+            myMap = L.map('Map', { attributionControl: false }).setView([35.75453394917301, 51.37116999302821], 13);
+
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoibWVyaW9saSIsImEiOiJja2p6dXhmdngwYmVvMnZwY2lyc2htNGxhIn0.Y9t__Bll6Fw9b9amb_rcHg',
+
+            }).addTo(myMap);
+            myMap.panTo(new L.LatLng(lat, lon));
+
+
+
+
+
+            myMap.on('click', function (e) {
+
+                $("#checkmap").show();
+                lat = e.latlng.lat;
+                lon = e.latlng.lng;
+
+                console.log("You clicked the map at LAT: " + lat + " and LONG: " + lon);
+                //Clear existing marker,
+
+                if (theMarker != undefined) {
+                    myMap.removeLayer(theMarker);
+                };
+
+                //Add a marker to show where you clicked.
+                theMarker = L.marker([lat, lon]).addTo(myMap);
+                $("#lat").val(lat);
+                $("#lon").val(lon);
+            });
+            theMarker = L.marker([lat, lon]).addTo(myMap);
+            $("#lat").val(lat);
+            $("#lon").val(lon);
+
+
+
+
+
+
+        }
+        function errorHandler(err) {
+            if (err.code == 1) {
+                //alert("Error: Access is denied!");
+            } else if (err.code == 2) {
+                //alert("Error: Position is unavailable!");
+            }
+
+
+            myMap = L.map('Map', { attributionControl: false }).setView([35.75453394917301, 51.37116999302821], 13);
+            L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                maxZoom: 18,
+                id: 'mapbox/streets-v11',
+                tileSize: 512,
+                zoomOffset: -1,
+                accessToken: 'pk.eyJ1IjoibWVyaW9saSIsImEiOiJja2p6dXhmdngwYmVvMnZwY2lyc2htNGxhIn0.Y9t__Bll6Fw9b9amb_rcHg',
+
+            }).addTo(myMap);
+
+            myMap.panTo(new L.LatLng(35.73598454240641, 51.48437862217327));
+
+
+
+
+            myMap.on('click', function (e) {
+                $("#checkmap").show();
+                lat = e.latlng.lat;
+                lon = e.latlng.lng;
+
+                console.log("You clicked the map at LAT: " + lat + " and LONG: " + lon);
+                //Clear existing marker,
+
+                if (theMarker != undefined) {
+                    myMap.removeLayer(theMarker);
+                };
+
+                //Add a marker to show where you clicked.
+                theMarker = L.marker([lat, lon]).addTo(myMap);
+
+                $("#lat").val(lat);
+                $("#lon").val(lon);
+            });
+
+
+        }
+        function getLocation() {
+            if (navigator.geolocation) {
+                // timeout at 60000 milliseconds (60 seconds)
+                var options = { timeout: 60000 };
+                navigator.geolocation.getCurrentPosition
+                    (showLocation, errorHandler, options);
+            } else {
+                alert("Sorry, browser does not support geolocation!");
+            }
+        };
+
+
+
+        showTwoPoin(@Model.origing.lat,@Model.origing.lon,@Model.destination.lat,@Model.destination.lon);
+
+    </script>
+    <script>
+
+
+        $("#orders").addClass("active");
+
+    </script>
+}

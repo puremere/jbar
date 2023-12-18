@@ -32,6 +32,7 @@ namespace jbar.Model
         public DbSet<ordertype> ordertypes { get; set; }
         public DbSet<orderResponse> orderResponses { get; set; }
         public DbSet<Comment> comments { get; set; }
+        public DbSet<coDriver> coDrivers { get; set; }
 
         
 
@@ -43,6 +44,14 @@ namespace jbar.Model
 
     }
 
+
+    public class coDriver
+    {
+        [Key]
+        public Guid DriverID { get; set; }
+        public Guid coDriverID { get; set; }
+       
+    }
     public class Comment
     {
         [Key]
@@ -63,6 +72,7 @@ namespace jbar.Model
         public Guid clientID { get; set; }
         public Guid originCityID { get; set; }
         public Guid destinCityID { get; set; }
+        public DateTime orderdate { get; set; }
         public DateTime date { get; set; }
         public DateTime publishDate { get; set; }
 
@@ -109,6 +119,7 @@ namespace jbar.Model
         public Guid userID { get; set; }
         public string firebaseToken { get; set; }
         public string userType { get; set; }
+        public string username { get; set; }
         public string name { get; set; }
         public string profileImage { get; set; }
         public string coName { get; set; }

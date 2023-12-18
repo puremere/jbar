@@ -14,7 +14,7 @@
     </div>
     <div onclick="searchTypeClicked()" class="buttonForType">
         <div class="buttonForTypeText">
-            <i class="fal fa-truck icon"></i>
+            <i class="fa fa-truck icon"></i>
             <p class="lbl">نوع ماشین </p>
         </div>
         <div id="typetextholder" style=" direction: rtl">
@@ -27,53 +27,3 @@
 </div>
 
 
-
-
-<div class="orderDetailSection slideSection" style="display: none ; z-index:100;background-color:#fcfcfc">
-    <div style="height:100vh; overflow:scroll;">
-        <div class="secondSection">
-            <i id="backToHomeFromDetail" class="fa fa-arrow-left" style="margin:0 20px"></i> <span style="flex:1">جزئیات سفارش</span>
-        </div>
-        <div id="orderDetailParent" style="text-align :center">
-            <img src="~/images/loading.gif" style="margin-top:50%" />
-        </div>
-       
-    </div>
-
-</div>
-
-<div class="orderListSection slideSection" style="display: none;background-color:#fcfcfc ">
-    <div style="height:100vh; overflow:scroll; ">
-        <div class="secondSection">
-            <i id="backToHomeFromOrder" class="fa fa-arrow-left" style="margin: 0 20px"></i> <span style="flex:1">لیست سفارشات</span>
-
-        </div>
-
-        <div id="orderList">
-          
-            <div id="orderListparent" style="text-align :center">
-                <img src="~/images/loading.gif" style="margin-top:50%" />
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<script>
-   
-    $("#backToHomeFromOrder").click(function () {
-
-        $('.orderListSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
-            $('.orderListSection').hide();
-        });
-
-    })
-    $("#backToHomeFromDetail").click(function () {
-
-        $('.orderDetailSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
-            $('.orderDetailSection').hide();
-        });
-
-    })
-    
-</script>

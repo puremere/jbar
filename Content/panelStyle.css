@@ -1,0 +1,12 @@
+﻿.l1 {
+    display: flex
+}
+
+    .l1 input {
+        flex: 1;
+        margin-left: 10px
+    }
+
+    .l1 button {
+        width: 20%
+    }

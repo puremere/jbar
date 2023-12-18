@@ -54,7 +54,11 @@
 
        <script>
            $.post(
-               "/driverapp/setCode",
+               "/clientapp/setCode",
+               {
+                   phone: "",
+                   code: ""
+               },
                function (response) {
                    $("#holdersection").html(response);
                });

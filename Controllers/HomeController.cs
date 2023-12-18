@@ -26,5 +26,16 @@ namespace jbar.Controllers
 
             return View();
         }
+
+        public ActionResult help()
+        {
+            return View();
+        }
+        public ActionResult support()
+        {
+            return View();
+        }
+
+       
     }
 }

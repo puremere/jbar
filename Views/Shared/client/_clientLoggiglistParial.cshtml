@@ -1,0 +1,37 @@
+﻿@model jbar.ViewModel.sendLoadTypeVM
+
+<style>
+
+    .loadType {
+        display: flex;
+        direction: rtl;
+        align-items: center;
+        margin:5px;
+    }
+</style>
+
+<div style="background-color:white">
+    @if (Model.lst != null)
+    {
+        foreach (var item in Model.lst)
+        {
+            int index = Model.lst.IndexOf(item);
+            string classname = "";
+            if (index == 0)
+            {
+                classname = "visibleSection";
+            }
+            <div class="typechild loadType">
+                <div style="flex:1; text-align:right">@item.title</div>
+                <input onclick="loadTypeInputClicked(this)" name="profileRadio" texttoshow="@item.title" id="@item.loadTypeID" style="box-shadow:none;width:30%" class="form-control loadTypeInput " type="radio" />
+            </div>
+        }
+    }
+</div>
+
+
+
+
+
+
+

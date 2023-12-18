@@ -13,7 +13,137 @@
     <link href="~/Content/font.css" rel="stylesheet" />
     <script src="~/Scripts/toastr.js"></script>
     <meta name="theme-color" content="#2196f3" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+
+    <script src="~/Scripts/lcurv.js"></script>
     <style>
+        .topboxshadow {
+            box-shadow: 0px -2px 4px -1px rgba(0,0,0,0.43);
+            -webkit-box-shadow: 0px -2px 4px -1px rgba(0,0,0,0.43);
+            -moz-box-shadow: 0px -2px 4px -1px rgba(0,0,0,0.43);
+        }
+
+        .bottomShadow {
+            box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.43);
+            -webkit-box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.43);
+            -moz-box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.43);
+        }
+        .sectionShadow {
+            box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.75);
+            -webkit-box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.75);
+            -moz-box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.75);
+        }
+        .loaderholder {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 70vh;
+        }
+
+        .loader {
+            transform: rotateZ(45deg);
+            perspective: 1000px;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            color: #000;
+        }
+
+            .loader:before,
+            .loader:after {
+                content: '';
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: inherit;
+                height: inherit;
+                border-radius: 50%;
+                transform: rotateX(70deg);
+                animation: 1s spin linear infinite;
+            }
+
+            .loader:after {
+                color: #FF3D00;
+                transform: rotateY(70deg);
+                animation-delay: .4s;
+            }
+
+        @@keyframes rotate {
+            0% {
+                transform: translate(-50%, -50%) rotateZ(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotateZ(360deg);
+            }
+        }
+
+        @@keyframes rotateccw {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(-360deg);
+            }
+        }
+
+        @@keyframes spin {
+            0%, 100% {
+                box-shadow: .4em 0px 0 0px currentcolor;
+            }
+
+            12% {
+                box-shadow: .4em .4em 0 0 currentcolor;
+            }
+
+            25% {
+                box-shadow: 0 .4em 0 0px currentcolor;
+            }
+
+            37% {
+                box-shadow: -.4em .4em 0 0 currentcolor;
+            }
+
+            50% {
+                box-shadow: -.4em 0 0 0 currentcolor;
+            }
+
+            62% {
+                box-shadow: -.4em -.4em 0 0 currentcolor;
+            }
+
+            75% {
+                box-shadow: 0px -.4em 0 0 currentcolor;
+            }
+
+            87% {
+                box-shadow: .4em -.4em 0 0 currentcolor;
+            }
+        }
+        .flexSection {
+            direction: rtl;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+
+        .borderbottom {
+            border-bottom: 1px solid #eee;
+        }
+
+        .noborder {
+            border: none;
+        }
+
         #holdersection {
             /*height:100vh;*/
         }
@@ -42,10 +172,22 @@
             line-height: 2
         }
 
+        .inputStyle {
+            border: 1px solid #ddd;
+            background-color: transparent;
+            padding: 10px;
+            margin: 15px auto;
+            border-radius: 20px;
+            width: 85%;
+            max-width: unset !important;
+            direction: rtl;
+            font-size: 18px
+        }
+
         .parentsection input {
             border: 1px solid #ddd;
             background-color: transparent;
-            padding: 20px;
+            padding: 10px;
             margin: 15px auto;
             border-radius: 20px;
             width: 85%;
@@ -57,11 +199,23 @@
         .btnsubmit, .btnResend, .sendCode {
             background-color: #a06509;
             color: white;
-            padding: 20px;
+            padding: 10px;
             border-radius: 30px;
             width: 85%;
             margin: 5px auto;
             font-size: 18px
+        }
+
+        .dataHolderSectionClient {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 15px;
+            width: 92%;
+            margin: auto;
+            box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.75);
+            -webkit-box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.75);
+            -moz-box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.75);
         }
 
         .dataHolderSection {
@@ -69,14 +223,17 @@
             border: 1px solid #ddd;
             border-radius: 15px;
             padding: 15px;
-            width: 95%;
+            width: 92%;
             margin: auto;
+            box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.75);
+            -webkit-box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.75);
+            -moz-box-shadow: 1px 1px 4px -1px rgba(0,0,0,0.75);
         }
 
         .buttonVerif {
             border: 1px solid #4d4d4d;
             border-radius: 15px;
-            padding: 10px;
+            padding: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -108,6 +265,7 @@
             align-items: center;
             justify-content: center;
             margin: 20px 5px;
+            background-color: #F7FBFC
         }
 
         .buttonForTypeText {
@@ -123,8 +281,19 @@
             }
 
             .buttonForTypeText > .icon {
-                font-size: 20px
+                font-size: 15px
             }
+
+        .buttonFigureClient {
+            border-bottom: 1px solid #ccc;
+            padding: 10px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0px;
+            direction: rtl;
+            background-color: #F7FBFC;
+        }
 
         .buttonFigure {
             border: 1px solid #ccc;
@@ -133,7 +302,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 20px 5px;
+            margin: 20px 10px;
+            background-color: #F7FBFC;
         }
 
         .inputFigure {
@@ -193,7 +363,7 @@
             margin: 35px 10px
         }
 
-        input[type="text"] {
+        input[type="text"], input[type="number"] {
             box-sizing: border-box;
             width: 100%;
             height: calc(5em + 2px);
@@ -201,11 +371,12 @@
             padding: 2em;
             border: 1px solid #ccc;
             border-radius: 1.5em;
-            background: #fff;
+            background: #F7FBFC;
             resize: none;
             outline: none;
             max-width: unset;
-            text-align: right
+            text-align: right;
+            direction: rtl
         }
 
             input[type="text"][required]:focus {
@@ -247,7 +418,10 @@
                     background-size: 100% 5px;
                     background-repeat: no-repeat;
                     background-position: center;
+                    background-color: #F7FBFC;
+                    padding: 0 10px
                 }
+
         .loadingPrnt {
             padding: 15px 35px;
             background-color: rgba(255,255,255,0.5);
@@ -266,29 +440,46 @@
             justify-content: center;
         }
     </style>
+    <link rel="manifest" href="/manifest.json">
 </head>
 <body style="padding:0">
+    @*<script>
+            $(document).ready(function () {
+                if (navigator.userAgent.indexOf('iPhone') != -1) {//test for other iOS devices?
+                    if (window.navigator.standalone == true) {
+                        alert("stand alone")
+                    } else {
+                        //show message telling user to add to their home screen...
+                    }
+                } else {
+                    //show message that this must be run on device X/Y/Z...
+                }
+            });
+        </script>*@
     <div id="loading" style="display:none">
         <div class="loadingPrnt" style="">
-
-            <img src="/images/loading.gif" style="display:block;" alt="لودینگ" />
+            <img src="~/images/JOP.gif" style="width:150px" />
+            @*<img src="/images/loading.gif" style="display:block;" alt="لودینگ" />*@
         </div>
     </div>
-   
-
-    @RenderBody()
-
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
 
 
+
+
+    <div>
+        @RenderBody()
+
+        @Scripts.Render("~/bundles/bootstrap")
+        @RenderSection("scripts", required: false)
+
+    </div>
 
     <script>
 
 
-        $(".sendCode").click(function () {
+        $("#sendVerificationCode").click(function () {
             $("#loading").show();
-            onTimesUp();
+            //onTimesUp();
             var phone = $(this).attr('phoneToSend');
             var code = $("#userCode").val();
 
@@ -296,6 +487,7 @@
                 "/clientapp/setCode",
                 { phone: phone, code: code },
                 function (response) {
+                    
                     $("#holdersection").html(response);
                     $("#loading").hide();
                 });
@@ -316,7 +508,9 @@
             // });
             $.post(
                 "/clientapp/getCode",
-                { phone: phone },
+                {
+                    phone: phone,
+                },
                 function (response) {
                     $("#holdersection").html(response);
                     $("#loading").hide();
@@ -338,8 +532,8 @@
         };
     </script>
     <script>
-    // --------Reveser-timer-----------
-    if ($("#revese-timer").length) {
+               // --------Reveser-timer-----------
+            if ($("#revese-timer").length) {
         const FULL_DASH_ARRAY = 283;
         const WARNING_THRESHOLD = 20;
         const ALERT_THRESHOLD = 15;
@@ -393,8 +587,9 @@
         startTimer();
 
         function onTimesUp() {
-            //clearInterval(timerInterval);
-            //document.getElementById("buttonParent").innerHTML = '<div onclick="resendCode(this)" phoneToSend="@ViewBag.phone" class="btnResend">ارسال مجدد پیام</div>';
+            //window.location.reload();
+            clearInterval(timerInterval);
+            document.getElementById("buttonParent").innerHTML = '<div onclick="resendCode(this)" phoneToSend="@ViewBag.phone" class="btnResend">ارسال مجدد پیام</div>';
         }
 
         function startTimer() {
@@ -463,8 +658,60 @@
         }
     }
 
+
+    </script>
+
+    <script>
+
+
     </script>
 
 
+
+
+
+    <div id="statusModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div id="userStatusHolder" class="modal-content" style="direction:rtl">
+
+
+
+            </div>
+
+        </div>
+    </div>
+    <div id="sendOrderResponse" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div id="userStatusHolder" class="modal-content" style="direction:rtl">
+
+                <div class="modal-header">
+                    <button style="float:left" type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">تایید درخواست</h4>
+                </div>
+                <div class="modal-body">
+                    <p>آیا از تایید درخواست مورد نظر اطمینان دارید؟ </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">لغو</button>
+                    <button onclick="verifyOrderrResponse()" type="button" class="btn btn-success" data-dismiss="modal">تایید</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            window.history.pushState(null, "", window.location.href);
+            window.onpopstate = function () {
+                window.history.pushState(null, "", window.location.href);
+            };
+        });
+    </script>
 </body>
+
 </html>

@@ -4,11 +4,21 @@
     //Layout = "~/Views/Shared/_driverLayout.cshtml";
 }
 
+<link rel="manifest" href="/manifest.json">
+
+
 <style>
+    .tabsec {
+        display: none;
+    }
+
+        .tabsec.active {
+            display: block
+        }
+
     .homeFooter {
         position: absolute;
         background-color: white;
-        bottom: 0px;
         display: flex;
         justify-content: space-around;
         align-items: center;
@@ -17,11 +27,12 @@
         font-size: 13px;
         direction: rtl;
         width: 100%;
-        padding-top: 7px;
+        height: 10vh;
+        z-index: 98
     }
 
         .homeFooter > .active {
-            color: #a06509;
+            color: #312974;
             font-weight: 600;
         }
 
@@ -34,7 +45,7 @@
     }
 
     .sectionHeader {
-        background-color: #a06509;
+        background-color: #312974;
         text-align: center;
         height: 10vh;
         display: flex;
@@ -43,12 +54,15 @@
         font-size: 18px;
         font-weight: 600;
         color: white;
-        position: absolute;
         width: 100%;
         top: 0;
+        box-shadow: 0px 4px 4px -1px rgba(0,0,0,0.43);
+        -webkit-box-shadow: 0px 5px 4px -1px rgba(0,0,0,0.43);
+        -moz-box-shadow: 0px 5px 4px -1px rgba(0,0,0,0.43);
     }
+
     .secondSection {
-        background-color: #a06509;
+        background-color: #312974;
         text-align: center;
         height: 10vh;
         display: flex;
@@ -61,12 +75,12 @@
 
 
     .mainContent {
-        height: 90vh;
-        background-color: #fcfcfc;
-        padding: 30px 0;
-        position: absolute;
+        height: 80vh;
+        background-color: #F7FBFC;
         width: 100%;
         top: 10vh;
+        overflow: scroll;
+        padding-top: 20px
     }
 
     .slideSection {
@@ -79,6 +93,7 @@
         bottom: 0;
         z-index: 99;
         margin-bottom: -100vh;
+        padding-bottom: 10vh;
     }
 
     .paperone {
@@ -112,7 +127,7 @@
     }
 
     .typenameTitle {
-        background-color: #a06509;
+        background-color: #312974;
         border-radius: 10px;
         padding: 10px 15px;
         position: relative;
@@ -153,13 +168,14 @@
         margin: 35px 10px;
         text-align: right;
         margin-bottom: 20px;
+        background: #F7FBFC
     }
 
     .typeProfileHolder {
     }
 
     #btnprofilesubmit {
-        background-color: #a06509;
+        background-color: #312974;
         color: white;
         padding: 20px;
         border-radius: 30px;
@@ -177,58 +193,160 @@
         overflow: auto;
         display: grid;
         place-items: center;
-        height:100vh;
+        height: 100vh;
     }
 
     html, body {
         overflow: hidden;
         height: 100%;
     }
+    .icon{font-size:17px}
+    .orderParent {
+        border-radius: 8px;
+        border: 1px solid #eee;
+        background-color: white;
+        margin: 20px;
+        box-shadow: 1px 1px 2px -1px rgba(0,0,0,0.75);
+        -webkit-box-shadow: 1px 1px 2px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 1px 1px 2px -1px rgba(0,0,0,0.75);
+    }
+
+    .section {
+        display: flex;
+        padding: 5px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .icon {
+        margin: 0 15px
+    }
+
+    .sectionRLT {
+        direction: rtl;
+    }
+
+    .flexcentre {
+        align-items: center;
+    }
+
+        .flexcentre div {
+            margin: 0 5px
+        }
+
+    .noborder {
+        border: none;
+    }
+
+    .viewcounter {
+        font-size: 12px
+    }
+
+    .descRow {
+        text-align: right;
+        direction: rtl;
+        margin: 20px;
+    }
+
+    .lable {
+        padding: 4px;
+        background-color: #312974;
+        color: white;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    .white {
+        background-color: white;
+    }
+
+    .price {
+        flex: 1;
+        color: #312974;
+        text-align: left;
+        font-size: 15px;
+        font-weight: 600
+    }
+
+    .secTitle {
+        font-weight: 600;
+        font-size: 14px
+    }
 </style>
 
+<div class="sectionParent" style="width:100%; position:absolute; top:0; height:100vh">
 
-<div class="sectionParent" style="width:100%">
-    <div id="homeSection" class="sections active">
-        <div class="sectionHeader">
-            جستجوی بار
-        </div>
-        <div class="mainContent">
+    <div style="position:relative;">
+        <div>
+            <div id="homeSection" class="sections active tabsec">
+                <div class="sectionHeader" style="overflow-y: scroll">
+                    جستجوی بار
 
-            <div id="orderparent" style="text-align :center">
 
-                <img src="~/images/loading.gif" style="margin-top:50%" />
+                </div>
+
+                <div class="mainContent">
+
+                    <div id="orderparent" style="text-align :center">
+                        <div class="loaderholder">
+                            <span class="loader"></span>
+                        </div>
+
+                        @*<img src="~/images/loading.gif" style="margin-top:50%" />*@
+                    </div>
+
+                </div>
+
+
             </div>
-
-        </div>
-    </div>
-    <div id="listSection" class="sections ">
-        <div class="sectionHeader">
-            بارهای من
-        </div>
-        <div class="mainContent">
-
-        </div>
-    </div>
-    <div id="profileSection" class="sections">
-        <div class="sectionHeader">
-            پروفایل
-        </div>
-        <div class="mainContent">
-            <div id="proparent" style="text-align :center">
-                <img src="~/images/loading.gif" style="margin-top:50%" />
+            <div id="listSection" class="sections tabsec">
+                <div class="sectionHeader">
+                    بارهای من
+                </div>
+                <div class="mainContent">
+                    <div id="userOrderList" style="text-align :center">
+                        <div class="loaderholder">
+                            <span class="loader"></span>
+                        </div>
+                        @*<img src="~/images/loading.gif" style="margin-top:50%" />*@
+                    </div>
+                </div>
             </div>
+            <div id="profileSection" class="sections tabsec">
+                <div class="sectionHeader">
+                    پروفایل
+                </div>
+                <div class="mainContent">
+                    <div id="proparent" style="text-align :center">
+                        <div class="loaderholder">
+                            <span class="loader"></span>
+                        </div>
+                    </div>
 
+                </div>
+            </div>
         </div>
+
+        <div class="homeFooter topboxshadow" style="display:none">
+            <div itemToShow="homeSection" class="active bottonToGo">
+                <i class="fa fa-home icon "></i>
+                <p style="margin:0">خانه</p>
+            </div>
+            <div itemToShow="listSection" class="bottonToGo">
+                <i class="fa fa-truck-container icon"></i>
+                <p style="margin:0">بارهای من</p>
+            </div>
+            <div itemToShow="profileSection" class="bottonToGo">
+                <i class="fa fa-user icon"></i>
+                <p style="margin:0">پروفایل</p>
+            </div>
+        </div>
+
     </div>
+
 
 
 
 </div>
-
-
-
-
-
 
 <div class="paperone slideSection" style="display: none ">
     <div style="max-height:100vh; overflow:scroll; padding:25px 0">
@@ -237,7 +355,6 @@
             <input id="searchCityInput" class="lbl" placeholder="جستجو" />
             <i id="searchCity" class="fa fa-search icon"></i>
         </div>
-
         <div id="countyList"></div>
     </div>
 
@@ -251,7 +368,7 @@
 
 </div>
 
-<div class="carTypeSection slideSection" style="display:none; z-index:100">
+<div class="carTypeSection slideSection" style="display:none; z-index:200">
     <div style="max-height:100vh; overflow:scroll; padding:25px 0">
         <div class="carTypeSectionP">
             <div class="chooseType">
@@ -259,24 +376,165 @@
                 <div id="typeList" class="typeList">
 
                 </div>
-                <div class="buttonVerif" style="margin:0; position:absolute; width:100%; bottom:0">
+                <div class="buttonVerif" style="margin:0; position:absolute; width:90%; bottom:15px; margin-left:5%">
                     <p id="verifyType" class="lbl">تایید</p>
                 </div>
             </div>
         </div>
-
-
-
-
     </div>
 
 
 </div>
+
+
+
+<div class="orderDetailSection slideSection" style="display: none ; z-index:100;background-color:#F7FBFC;z-index:100">
+    <div style="height:100vh; overflow:scroll;">
+        <div class="secondSection">
+            <i id="backToHomeFromDetail" class="fa fa-arrow-left" style="margin:0 20px"></i> <span style="flex:1">جزئیات سفارش</span>
+        </div>
+        <div id="orderDetailParent" style="text-align :center">
+            <div class="loaderholder">
+                <span class="loader"></span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="orderListSection slideSection" style="display: none;background-color:#F7FBFC; z-index:99 ">
+    <div style="height:100vh; overflow:scroll; ">
+        <div class="secondSection">
+            <i id="backToHomeFromOrder" class="fa fa-arrow-left" style="margin: 0 20px"></i> <span style="flex:1">لیست سفارشات</span>
+
+        </div>
+
+        <div id="orderList">
+
+            <div id="orderListparent" style="text-align :center">
+                <div class="loaderholder">
+                    <span class="loader"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+
+    $("#backToHomeFromOrder").click(function () {
+
+        $('.orderListSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $('.orderListSection').hide();
+        });
+
+    })
+    $("#backToHomeFromDetail").click(function () {
+
+        $('.orderDetailSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $('.orderDetailSection').hide();
+        });
+
+    })
+
+</script>
+
+<script src="~/Scripts/lcurv.js"></script>
 <script type="text/javascript">
     var myMap;
     var theMarker = {};
     var greenIcon;
 
+
+    function showTwoPoin(orlat, orlon, deslat, deslon) {
+
+
+        var Mapnik = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+        const myIcon = L.icon({
+            iconUrl: '/images/marker.png',
+
+
+        });
+
+
+        var mymiddlex = (orlat + deslat) / 2;
+        var mymiddley = (orlon + deslon) / 2;
+
+        var mymap = L.map('Map', {
+            layers: [Mapnik]
+        }).setView([mymiddlex, mymiddley], 5);
+
+        //var marker = L.marker([orlat, orlon], { icon: myIcon }).addTo(mymap);
+        //var marker2 = L.marker([deslat, deslon], { icon: myIcon }).addTo(mymap);
+
+
+        var latlngs = [];
+
+        var latlng1 = [orlat, orlon],
+            latlng2 = [deslat, deslon];
+
+        var offsetX = latlng2[1] - latlng1[1],
+            offsetY = latlng2[0] - latlng1[0];
+
+        var r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)),
+            theta = Math.atan2(offsetY, offsetX);
+
+        var thetaOffset = (3.14 / 10);
+
+        var r2 = (r / 2) / (Math.cos(thetaOffset)),
+            theta2 = theta + thetaOffset;
+
+        var midpointX = (r2 * Math.cos(theta2)) + latlng1[1],
+            midpointY = (r2 * Math.sin(theta2)) + latlng1[0];
+
+        var midpointLatLng = [midpointY, midpointX];
+
+        latlngs.push(latlng1, midpointLatLng, latlng2);
+
+        var pathOptions = {
+            color: 'rgba(255,255,255,0.5)',
+            weight: 2
+        }
+
+        if (typeof document.getElementById('Map').animate === "function") {
+            var durationBase = 2000;
+            var duration = Math.sqrt(Math.log(r)) * durationBase;
+            // Scales the animation duration so that it's related to the line length
+            // (but such that the longest and shortest lines' durations are not too different).
+            // You may want to use a different scaling factor.
+            pathOptions.animate = {
+                duration: duration,
+                iterations: Infinity,
+                easing: 'ease-in-out',
+                direction: 'alternate'
+            }
+        }
+        var curved_line = L.curve(['M', latlng1,
+            'Q', midpointLatLng,
+            latlng2
+        ], {
+            fillColor: 'green',
+            weight: 4,
+            opacity: 1,
+            color: 'green',
+            fillOpacity: 1,
+            lineCap: 'round'
+        });
+        mymap.addLayer(curved_line);
+        //var curvedPath = L.curve(
+        //    [
+        //        'M', latlng1,
+        //        'Q', midpointLatLng,
+        //        latlng2
+        //    ], pathOptions).addTo(myMap);
+    };
     function showLocation(position) {
         var lat = position.coords.latitude;
         var lon = position.coords.longitude;
@@ -392,6 +650,20 @@
     var profileType;
 
 
+
+    $.ajax({
+        url: "getHome",
+        success: function (data) {
+            if (data == "400") {
+                window.location.href = "/driverapp/index";
+            }
+            else {
+                $("#orderparent").html(data);
+            }
+
+        }
+
+    })
     $.ajax({
         url: "DriverPartial",
         success: function (data) {
@@ -406,13 +678,13 @@
 
     })
     $.ajax({
-        url: "getHome",
+        url: "getUserOrder",
         success: function (data) {
             if (data == "400") {
                 window.location.href = "/driverapp/index";
             }
             else {
-                $("#orderparent").html(data);
+                $("#userOrderList").html(data);
             }
 
         }
@@ -519,15 +791,42 @@
                 }
                 else {
                     $("#orderDetailParent").html(data);
-                    getLocation();
+
                 }
             });
     }
 
 
     function profileSectionClicked() {
+
+
         $('.userprofilesection').show();
         $('.userprofilesection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function walletTrigger() {
+
+        $('.walletsection').show();
+        $('.walletsection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function supportTrigger() {
+
+        $('.supportsection').show();
+        $('.supportsection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function helpTrigger() {
+
+        $('.helpsection').show();
+        $('.helpsection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function markedOrderTrigger() {
+
+        $('.markedOrdersection').show();
+        $('.markedOrdersection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function btnCodriver() {
+
+        $('.userCoDriversection').show();
+        $('.userCoDriversection').animate({ 'margin-bottom': '+=100vh' }, 200);
     }
     function searchTypeClickedProfile() {
         $('.userprofilesection').hide();
@@ -572,9 +871,6 @@
 
 
     })
-
-
-
     $("#verifyType").click(function () {
         typeseleccted = "";
 
@@ -656,5 +952,288 @@
         return false;
     }
 
+    function setNewComment(mark, content,orderID) {
+        
+        $("#loading").show();
+        $.post(
+            "/driverapp/setNewComment",
+            { mark: mark, content: content, orderID :orderID },
+            function (data) {
+                if (data == "400") {
+                    window.location.href = "/driverapp/index";
+                }
+                else {
+                    $("#loading").hide();
+                    toastr.options = {
+                        "debug": false,
+                        "positionClass": "toast-top-center",
+                        "onclick": null,
+                        "fadeIn": 300,
+                        "fadeOut": 1000,
+                        "timeOut": 10000,
+                        "extendedTimeOut": 1000,
+                    };
+                    toastr.success('نظر شما موفقیت ثبت شد');
+                }
+            });
+    }
+    function sendOrderRequest(ID, price) {
+        $("#loading").show();
+        $.post(
+            "/driverapp/requestOrder",
+            { orderID: ID, price: price },
+            function (data) {
+                if (data == "400") {
+                    window.location.href = "/driverapp/index";
+                }
+                else {
+                    $("#loading").hide();
+                    $('.orderDetailSection').hide();
+                    $('.orderDetailSection').animate({ 'margin-bottom': '-=100vh' }, 200);
+                    toastr.options = {
+                        "debug": false,
+                        "positionClass": "toast-top-center",
+                        "onclick": null,
+                        "fadeIn": 300,
+                        "fadeOut": 1000,
+                        "timeOut": 10000,
+                        "extendedTimeOut": 1000,
+                    };
+                    toastr.success('درخواست شما با موفقیت ثبت شد');
+                }
+            });
+    }
+    $('.homeFooter').show();
+
+
+
+
+
 
 </script>
+<script>
+    getLocation();
+    function showLocation(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+
+
+
+        $.post(
+            "updateLocation",
+            {
+                lat: lat,
+                lon: lon
+            },
+            function (data) {
+
+            });
+
+    }
+    function errorHandler(err) {
+        if (err.code == 1) {
+            alert("Error: Access is denied!");
+        } else if (err.code == 2) {
+            alert("Error: Position is unavailable!");
+        }
+
+
+
+    }
+    function getLocation() {
+        //if (navigator.geolocation) {
+
+        //    var options = { timeout: 60000 };
+        //    navigator.geolocation.getCurrentPosition
+        //        (showLocation, errorHandler, options);
+        //} else {
+        //    alert("Sorry, browser does not support geolocation!");
+        //}
+    };
+</script>
+
+@if (ViewBag.fireBase == "1")
+{
+    @*<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js">
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js">
+        </script>*@
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js'
+        import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js";
+        const firebaseConfig = {
+
+
+            apiKey: "AIzaSyBxK_7nyYIToI_wB5qgh9x5F4Ly9a6k234",
+            authDomain: "jbar-50591.firebaseapp.com",
+            projectId: "jbar-50591",
+            storageBucket: "jbar-50591.appspot.com",
+            messagingSenderId: "231524570173",
+            appId: "1:231524570173:web:ac685ad0a39d8f2c22c654",
+            measurementId: "G-8RW00J0FTM"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging(app);
+        getToken(messaging, { vapidKey: 'BPsgWUwcu8GGYYjLRy3A8Pu2vLTp9EdjvsUT0tGds5_ozdFWVWqZdwwTWes_ap3cfTz-UCDKXjGn0aLGh6Bn9no' }).then((currentToken) => {
+            if (currentToken) {
+
+                $("#fitoken").text(currentToken);
+                $.post(
+                    "setProfile",
+                    { firebaseToken: currentToken },
+                    function (response) {
+
+                    });
+                // alert(currentToken)
+                // Send the token to your server and update the UI if necessary
+                // ...
+            } else {
+                // Show permission request UI
+                console.log('No registration token available. Request permission to generate one.');
+                // ...
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+            // ...
+        });
+
+    </script>
+
+    @*<script type="module">
+            // Import the functions you need from the SDKs you need
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+            import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+                apiKey: "AIzaSyBxK_7nyYIToI_wB5qgh9x5F4Ly9a6k234",
+                authDomain: "jbar-50591.firebaseapp.com",
+                projectId: "jbar-50591",
+                storageBucket: "jbar-50591.appspot.com",
+                messagingSenderId: "231524570173",
+                appId: "1:231524570173:web:a6de140157ca418722c654",
+                measurementId: "G-WYSY39RKZR"
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+            import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js";
+            const messaging = getMessaging();
+
+            getToken(messaging, { vapidKey: 'BGZ7LOC9zD7fsDxkkzCmmRIbl3z8Y5qTMvb7qBzI9zLDzefDBnDmEVnc49NN48RjlLeXTL3RcOIQR-mlj2LiUZY' }).then((currentToken) => {
+                if (currentToken) {
+                    $("#fitoken").text(currentToken);
+                    $.post(
+                        "setProfile",
+                        { firebaseToken: currentToken },
+                        function (response) {
+
+                        });
+                    // alert(currentToken)
+                    // Send the token to your server and update the UI if necessary
+                    // ...
+                } else {
+                    // Show permission request UI
+                    console.log('No registration token available. Request permission to generate one.');
+                    // ...
+                }
+            }).catch((err) => {
+                console.log('An error occurred while retrieving token. ', err);
+                // ...
+            });
+
+        </script>*@
+
+    @*<script type="module">
+            //document.querySelector('body').addEventListener('click', function () {
+            //    Notification.requestPermission().then(function (permission) {
+            //        navigator.serviceWorker.ready.then(function (reg) {
+
+            //        })
+            //    });
+            //   // pushpad('subscribe'); // call PushManager.subscribe() and display the prompt
+            //});
+            // Import the functions you need from the SDKs you need
+
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-analytics.js";
+
+            // TODO: Add SDKs for Firebase products that you want to use
+            // https://firebase.google.com/docs/web/setup#available-libraries
+
+
+
+
+            // Your web app's Firebase configuration
+            // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+            const firebaseConfig = {
+                apiKey: "AIzaSyBxK_7nyYIToI_wB5qgh9x5F4Ly9a6k234",
+                authDomain: "jbar-50591.firebaseapp.com",
+                projectId: "jbar-50591",
+                storageBucket: "jbar-50591.appspot.com",
+                messagingSenderId: "231524570173",
+                appId: "1:231524570173:web:a6de140157ca418722c654",
+                measurementId: "G-WYSY39RKZR"
+            };
+
+            // Initialize Firebase
+            const app = initializeApp(firebaseConfig);
+            const analytics = getAnalytics(app);
+
+
+            import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js";
+            const messaging = getMessaging();
+            getToken(messaging, { vapidKey: 'BHToCse5qKZLcgxCBS7ogjyjUi6UcO2DeF7oH2qVM6E2xUpBIV2qUxIdoYNQUqdmHraSFTX06YGkJxb9vrgifDg' }).then((currentToken) => {
+                if (currentToken) {
+                    $("#fitoken").text(currentToken);
+                    $.post(
+                        "setProfile",
+                        { firebaseToken: currentToken },
+                        function (response) {
+                            // $("#holdersection").html(response);
+                        });
+                    // alert(currentToken)
+                    // Send the token to your server and update the UI if necessary
+                    // ...
+                } else {
+                    // Show permission request UI
+                    console.log('No registration token available. Request permission to generate one.');
+                    // ...
+                }
+            }).catch((err) => {
+                console.log('An error occurred while retrieving token. ', err);
+                // ...
+            });
+
+            //messaging.onMessage(function (payload) {
+            //    //console.log('Message received. ', payload);
+            //    var title = payload.data.title;
+
+            //    var options = {
+            //        body: payload.data.body,
+            //        icon: payload.data.icon,
+            //        image: payload.data.image,
+            //        data: {
+            //            time: new Date(Date.now()).toString(),
+            //            click_action: payload.data.click_action
+            //        }
+            //    };
+            //    var myNotification = new Notification(title, options);
+            //    alet(title);
+            //});
+
+
+
+
+
+
+        </script>*@
+}
+

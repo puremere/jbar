@@ -48,6 +48,7 @@ namespace jbar.ViewModel
     public class setProfileVM
     {
 
+        public string username { get; set; }
         public string name { get; set; }
         public string coName { get; set; }
         public string shenaseSherkat { get; set; }
@@ -122,6 +123,20 @@ namespace jbar.ViewModel
         public List<Model.loadType> lst { get; set; }
         public int status { get; set; }
         public string message { get; set; }
+    }
+
+
+    public class codrivervm
+    {
+        public Guid did { get; set; }
+        public string dname { get; set; }
+        public string dusername { get; set; }
+    }
+    public class getCoDriverResponse
+    {
+       public  List<codrivervm> codrivers { get; set; }
+        public int status { get; set; }
+        public int message { get; set; }
     }
     public class getDashbaord
     {
@@ -275,11 +290,23 @@ namespace jbar.ViewModel
         public string driverID { get; set; }
     }
 
+    public class addDriverVM
+    {
+        public string phone { get; set; }
+    }
     public class setCommentVM
     {
         public string  content { get; set; }
         public string  mark { get; set; }
         public string orderID { get; set; }
+    }
+
+    public class sendUserStatusVM
+    {
+        public int status { get; set; }
+        public string statusTitle { get; set; }
+        public string statusCode { get; set; }
+        public string message { get; set; }
     }
     public class getCommentVM
     {
@@ -327,6 +354,23 @@ namespace jbar.ViewModel
         public string content { get; set; }
     }
 
+    public class setOrderclientVM
+    {
+        public string status { get; set; }
+        public string originCityID { get; set; }
+        public string destinCityID { get; set; }
+        public string date { get; set; }
+        public string type { get; set; }
+        public string loadingStartHour { get; set; }
+        public string loadingFinishHour { get; set; }
+        public string loadAmount { get; set; }
+        public string pricePerTone { get; set; }
+        public string priceTotal { get; set; }
+        public string description { get; set; }
+        public string showPhone { get; set; }
+        public string recieveSMS { get; set; }
+        public string loadTypeID { get; set; }
+    }
     public class setOrderVM
     {
         public string status { get; set; }

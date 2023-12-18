@@ -1,0 +1,342 @@
+﻿@model jbar.ViewModel.getOrderVM
+<link href="~/Content/persian-datepicker.css" rel="stylesheet" />
+<script src="~/Scripts/persian-date.min.js"></script>
+<script src="~/Scripts/persian-datepicker.js"></script>
+<style>
+    .orderParent {
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #eee;
+        background-color: white;
+        margin: 10px
+    }
+
+    .section {
+        display: flex;
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .icon {
+        margin: 0 15px;
+        font-size: 16px;
+        font-weight: 600
+    }
+
+    .sectionRLT {
+        direction: rtl;
+    }
+
+    .flexcentre {
+        align-items: center;
+    }
+
+        .flexcentre div {
+            margin: 0 5px
+        }
+
+    .noborder {
+        border: none;
+    }
+
+    .viewcounter {
+        font-size: 12px
+    }
+
+    .descRow {
+        text-align: right;
+        direction: rtl;
+        margin: 20px;
+    }
+
+    .lable {
+        padding: 4px;
+        background-color: #a06509;
+        color: white;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    .white {
+        background-color: white;
+    }
+
+    .price {
+        flex: 1;
+        color: #a06509;
+        text-align: left;
+        font-size: 15px;
+        font-weight: 600
+    }
+
+    .secTitle {
+        font-weight: 600;
+        font-size: 14px
+    }
+
+    .formlbl {
+        font-weight: 600;
+        font-size: 13px;
+        flex: 1;
+        text-align: right
+    }
+
+
+
+    .togglebutton {
+        height: 0;
+        width: 0;
+        visibility: hidden;
+    }
+
+    .lableToggle {
+        cursor: pointer;
+        text-indent: -9999px;
+        width: 50px;
+        height: 25px;
+        background: grey;
+        display: block;
+        border-radius: 25px;
+        position: relative;
+    }
+
+        .lableToggle:after {
+            content: '';
+            position: absolute;
+            top: 1.25px;
+            left: 1.25px;
+            width: 22.5px;
+            height: 21.5px;
+            background: #fff;
+            border-radius: 90px;
+            transition: 0.3s;
+        }
+
+    .togglebutton:checked + .lableToggle {
+        background: #a06509;
+    }
+
+    .togglebutton:checked + label:after {
+        left: calc(100% - 1.25px);
+        transform: translateX(-100%);
+    }
+
+    .lableToggle:active:after {
+        width: 32.5px;
+    }
+</style>
+
+
+<div style="">
+
+    <div class="dataHolderSectionClient" style="margin-top:15px">
+        <input value="" id="searchOriginInput" style="display:none" />
+        <div onclick="searchOriginClicked()" class="buttonFigureClient">
+            <i class="fal fa-map-marker icon"></i>
+            <span style="" id="searchOrigin" class="formlbl">مبدا بارگیری:</span>
+            <i class="fal fa-chevron-left icon"></i>
+        </div>
+        <div onclick="searchDestinClicked()" class="buttonFigureClient">
+            <input value="" id="searchDestinInput" style="display:none" />
+            <i class="fal fa-map-marker icon"></i>
+            <span style="" id="searchDestin" class="formlbl">مقصد بارگیری</span>
+            <i class="fal fa-chevron-left icon"></i>
+        </div>
+        <div onclick="searchTypeClicked()" class="buttonFigureClient noborder">
+            <div style="width:100%">
+                <div class="buttonForTypeText" style="width:100%">
+                    <input value="" id="homeClientType" style="display:none" />
+                    <i class="fal fa-truck icon"></i>
+                    <span style="" class="formlbl">انتخاب ناوگان و بارگیر: </span>
+                    <i class="fal fa-chevron-left icon"></i>
+                </div>
+                <div id="typetextholder" style=" direction: rtl; text-align:right">
+
+                </div>
+            </div>
+           
+        </div>
+    </div>
+    <div class="dataHolderSectionClient" style="margin-top:15px">
+        <div style="padding-bottom:120px ; position:relative">
+            <div class="tabPrent " style="direction:rtl; height:7vh">
+                <div secToGo="barkoll" class="tabChile active" style="width:50%">
+                    <p> کل بار</p>
+                </div>
+                <div secToGo="barton" class="tabChile" style="width:50%">
+                    <p>
+                        هر تن
+                    </p>
+                </div>
+
+            </div>
+            <div class="subTab" style="position:absolute; top:7vh; width:100%">
+                <div id="barkoll" class="subTabChild active">
+                    <div class="inputHolder" style="margin-top:20px">
+                        <input onchange=" doreplace(this) " id="priceTotal" value="0" required='' type='text'>
+                        <label alt='صافی کل بار (تومان)' placeholder='صافی کل بار (تومان)'></label>
+
+                    </div>
+
+                </div>
+                <div id="barton" class="subTabChild">
+                    <div class="inputHolder" style="margin-top:20px">
+                        <input onchange=" doreplace(this) "  id="pricePerTon" value="0" required='' type='text'>
+                        <label alt='به ازای هر تن (تومان)' placeholder='به ازای هر تن (تومان)'></label>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="dataHolderSectionClient" style="margin-top:15px">
+        <div class="buttonFigureClient" style="margin:0">
+            <div style="padding:0 15px">
+                <input class="togglebutton" type="checkbox" id="showPhone" />
+                <label class="lableToggle" for="showPhone">Toggle</label>
+            </div>
+            <p class="formlbl" style="flex:1; margin:15px 15px 5px 15px">شماره همراه من را به راننده نمایش بده</p>
+
+        </div>
+        <div class="buttonFigureClient noborder" style="margin:0">
+            <div style="padding:0 15px">
+                <input class="togglebutton" type="checkbox" id="getSMS" />
+                <label class="lableToggle" for="getSMS">Toggle</label>
+            </div>
+            <p class="formlbl " style="flex:1; margin:15px 15px 5px 15px">مایل به دریافت پیامک هستم</p>
+        </div>
+    </div>
+
+    <div class="dataHolderSectionClient" style="margin-top:15px">
+        <p style="margin:20px;text-align:right" class="formlbl"> توضیحات بار </p>
+        <p style="margin:20px ;text-align:right">جزئیات و نکات قابل توجه بار خود را بنویسید</p>
+        <div class="inputHolder" style="margin-top:20px">
+            <input id="description" value="" required='' type='text'>
+            <label alt='جزیئات بار' placeholder='جزئیات بار'></label>
+
+        </div>
+    </div>
+
+    <div class="dataHolderSectionClient" style="margin-top:15px">
+        <p style="margin:20px;text-align:right" class="formlbl">  تاریخ انتشار بار </p>
+        <div class="tabPrent " style="direction:rtl; height:7vh">
+            <div secToGo="today" class="tabChile active selectdate" style="width:33%">
+                <p> امروز</p>
+            </div>
+            <div secToGo="tomorrow" class="tabChile selectdate" style="width:33%">
+                <p>
+                    فردا
+                </p>
+            </div>
+            <div secToGo="rang" class="tabChile selectdate" style="width:33%">
+                <p>
+                    بازه زمانی
+                </p>
+            </div>
+
+        </div>
+        <div class="subTab" style=" width:100%">
+            <div id="today" class="subTabChild active">
+
+
+            </div>
+            <div id="tomorrow" class="subTabChild">
+
+            </div>
+            <div id="rang" class="subTabChild">
+                <div class="" style="display:flex">
+
+                    <div class="inputHolder" style="margin:0 10px">
+                        <input id="ToDate" value="" required='' type='text'>
+                        <input hidden class="toDateOb" value="" required='' type='text'>
+                        <label alt='تا' placeholder='تا'></label>
+
+                    </div>
+                    <div class="inputHolder" style="margin:0 10px">
+                        <input id="fromDate" value="" required='' type='text'>
+                        <input hidden class="fromDateOb" value="" required='' type='text'>
+                        <label alt='از' placeholder='از'></label>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="dataHolderSectionClient" style="margin-top:15px">
+        <p style="margin:20px;text-align:right" class="formlbl">  ساعت بارگیری </p>
+        <div class="" style="display:flex;direction:rtl">
+
+            <div class="inputHolder" style="margin:0 10px">
+                <input id="hourFrom" value="" required='' type='text'>
+                <label alt='از' placeholder='از'></label>
+
+            </div>
+            <div class="inputHolder" style="margin:0 10px">
+                <input id="hourTo" value="" required='' type='text'>
+                <label alt='تا' placeholder='تا'></label>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="dataHolderSectionClient" style="margin-top:15px">
+        <input value="" id="loadtypeInputID" style="display:none" />
+        <p style="margin:20px;text-align:right" class="formlbl"> اطلاعات بار </p>
+        <div class="">
+            <div class="inputHolder" style="margin-top:20px">
+                <input id="amount" value="" required='' type='text'>
+                <label alt='وزن بار' placeholder='وزن بار'></label>
+            </div>
+            <div class="inputHolder" style="margin-top:20px" onclick="loggegTypeClicked()">
+                <input id="loadtypeInput" value="" required='' type='text'>
+
+                <label alt='نوع بار' placeholder='نوع بار'></label>
+
+
+            </div>
+            <input id="loadTypestring" style="display:none" />
+        </div>
+    </div>
+
+    <div onclick="VerifyNewOrder()" class="buttonVerif" style="margin:20px">
+        <p   class="lbl">ایجاد بار جدید</p>
+    </div>
+</div>
+
+<script>
+  
+   
+    $(document).ready(function () {
+        $("#fromDate").pDatepicker({
+            observer: true,
+            format: 'YYYY/MM/DD',
+            altField: '.fromDateOb'
+        });
+        $("#ToDate").pDatepicker({
+            observer: true,
+            format: 'YYYY/MM/DD',
+            altField: '.toDateOb'
+        });
+    });
+
+    $(".tabChile").click(function () {
+        $(this).parent().find(".tabChile").removeClass("active");
+        $(this).addClass("active");
+        var id = $(this).attr('secToGo');
+
+        $(this).parent().siblings().find(".subTabChild").removeClass("active");
+        $("#" + id).addClass("active");
+    })
+
+    
+</script>

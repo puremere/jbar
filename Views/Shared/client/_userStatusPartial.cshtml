@@ -1,0 +1,35 @@
+﻿@model jbar.ViewModel.sendUserStatusVM
+
+
+
+
+
+
+@if (Model.statusCode == "0")
+{
+    <div class="modal-header">
+        <button style="float:left" type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">عدم احراز هویت</h4>
+    </div>
+    <div class="modal-body">
+        <p>جهت دسترسی بهتر به امکانات اپلیکیشن لازم است مراحل احراز هویت را انجام دهید</p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">پشتیبانی</button>
+        <button onclick="verifyClientModal()" type="button" class="btn btn-success" data-dismiss="modal">احراز هویت</button>
+    </div>
+}
+else if (Model.statusCode == "1")
+{
+
+}
+else if (Model.statusCode == "2")
+{
+
+}
+else if (Model.statusCode == "3")
+{
+
+}
+
+

@@ -1,0 +1,73 @@
+﻿@model jbar.ViewModel.sendProfileVM
+
+
+
+<div class="inputHolder">
+    <input id="personName" value="@Model.user.name" required='' type='text'>
+    <label alt='نام و نام خانوادگی' placeholder='نام و نام خانوادگی '></label>
+
+</div>
+<div class="inputHolder">
+    <input id="personCodemeli" value="@Model.user.codeMelli" required='' type='text'>
+    <label alt='کد ملی شما' placeholder='کد ملی شما'></label>
+
+</div>
+<div class="cityprofileholder " style="" onclick="profileCityClicked()">
+    @{
+        string citytity = "شهر محل سکونت";
+        if (Model.city != null)
+        {
+            citytity = Model.city;
+
+        }
+
+    }
+    <span id="profileCity" style="margin:0; text-align:right">@citytity</span>
+    <input value="@Model.user.cityID" id="profileCityInput" style="display:none" />
+</div>
+<div class="inputHolder" style="margin-top:20px">
+    <input id="personAddress" value="@Model.user.address" required='' type='text'>
+    <label alt='آدرس محل سکونت' placeholder='آدرس محل سکونت'></label>
+
+</div>
+<div class="inputHolder">
+    <input id="personPostalCode" value="@Model.user.postalCode" required='' type='text'>
+    <label alt='کد پستی' placeholder='کد پستی'></label>
+</div>
+
+
+<div onclick="" class="downloaddSec">
+    @{
+        string kartMelli = "/images/upload.png";
+        string Tasvir = "/images/upload.png";
+
+        if (Model.user.cartNavgan != null)
+        {
+            kartMelli = "/uploads/" + Model.user.cartMelliModir;
+        }
+        if (Model.user.cartDriver != null)
+        {
+            Tasvir = "/uploads/" + Model.user.rooznameOrParvaneOrTasvir;
+        }
+    }
+
+    <img style="width:50px; " id="melliTitle" src="@kartMelli" />
+    <p id="navganTitle" style="flex:1; margin-right:10px" class="lbl">کارت ملی</p>
+    <input type="file" onchange="karteMelli()" id="karteMelliPerson" style="display:none" />
+    <p id="karteMelliFinal" style="display:none">@Model.user.cartMelliModir</p>
+    <p onclick="karteMelliTrriger()" class="lbl">انتخاب تصویر</p>
+</div>
+<p style="margin:10px; text-align:right">لطفا تصویر واضحی از کارت ملی خود بارگزاری کنید</p>
+<div onclick="" class="downloaddSec">
+    <img style="width:50px" id="TasvirTitle" src="@Tasvir" />
+    <p id="" style="flex:1; margin-right:10px" class="lbl">تصویر شما با کارت ملی</p>
+    <input type="file" onchange="karteTasvir()" id="karteTasvir" style="display:none" />
+    <p id="karteTasvirFinal" style="display:none">@Model.user.rooznameOrParvaneOrTasvir</p>
+    <p onclick="karteTasvirTrigger()" class="lbl">انتخاب تصویر</p>
+</div>
+<p style="margin:10px; text-align:right">با در دست داشتن کارت ملی از خودتان عکس بگیرید</p>
+<div style="padding:15px">
+    <div onclick="btnprofilePersonsubmit()" class="btnstyle"  style="text-align:center">تایید</div>
+</div>
+
+

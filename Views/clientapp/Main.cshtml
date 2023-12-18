@@ -1,0 +1,1687 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+    //Layout = "~/Views/Shared/_driverLayout.cshtml";
+}
+
+<link rel="manifest" href="/manifest.json">
+<style>
+    .tabsec{
+        display:none;
+
+    }
+        .tabsec.active{
+            display:block
+        }
+        .homeFooter {
+            position: absolute;
+            background-color: white;
+           
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            text-align: center;
+            line-height: 2;
+            font-size: 13px;
+            direction: rtl;
+            width: 100%;
+            height:10vh;
+            bottom:0
+        }
+
+        .homeFooter > .active {
+            color: #a06509;
+            font-weight: 600;
+        }
+
+    .sectionParent > .sections {
+        display: none;
+    }
+
+    .sectionParent > .active {
+        display: block
+    }
+
+    .sectionHeader {
+        background-color: #a06509;
+        text-align: center;
+        height: 10vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+        width: 100%;
+        top: 0;
+        box-shadow: 0px 4px 4px -1px rgba(0,0,0,0.43);
+        -webkit-box-shadow: 0px 5px 4px -1px rgba(0,0,0,0.43);
+        -moz-box-shadow: 0px 5px 4px -1px rgba(0,0,0,0.43);
+    }
+
+    .secondSection {
+        background-color: #a06509;
+        text-align: center;
+        height: 10vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+    }
+
+
+    .mainContent {
+        height: 80vh;
+        background-color: #F7FBFC;
+        width: 100%;
+        top: 10vh;
+        overflow: scroll;
+        padding-top: 20px
+    }
+
+    .slideSection {
+        height: 100vh;
+        background-color: white;
+        border-radius: 5px 5px 0 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99;
+        margin-bottom: -100vh;
+    }
+
+    .paperone {
+        z-index: 100;
+    }
+
+    .paperTwo {
+        z-index: 999;
+    }
+
+    .userprofilesection {
+        z-index: 99;
+        height: 100vh;
+        margin-bottom: -100vh;
+    }
+
+    .carTypeSectionP {
+        height: 100%;
+    }
+
+    .chooseType {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .typeList {
+        height: calc(85vh);
+    }
+
+    .buttonVerif {
+    }
+
+    .typenameTitle {
+        background-color: #a06509;
+        border-radius: 10px;
+        padding: 10px 15px;
+        position: relative;
+        text-align: center;
+        color: white;
+    }
+
+    .plak {
+        width: 100%;
+        background-color: #eee;
+        border: none;
+        height: 4em;
+        padding: 5px
+    }
+
+    .plakParent {
+        max-width: 24%;
+        padding: 5px;
+    }
+
+    .downloaddSec {
+        padding: 15px;
+        border: 1px dashed #ccc;
+        display: flex;
+        margin: 25px 15px 0;
+        border-radius: 15px;
+        direction: rtl;
+        align-items: center
+    }
+
+    .cityprofileholder {
+        direction: rtl;
+        border: 1px solid #ddd;
+        display: flex;
+        border-radius: 20px;
+        padding: 25px;
+        margin-top: 20px;
+        margin: 35px 10px;
+        text-align: right;
+        margin-bottom: 20px;
+    }
+
+    .typeProfileHolder {
+    }
+
+    .btnstyle {
+        background-color: #a06509;
+        color: white;
+        padding: 20px;
+        border-radius: 30px;
+        width: 95%;
+        margin: 5px auto;
+        font-size: 18px
+    }
+    #btnprofilesubmit {
+        background-color: #a06509;
+        color: white;
+        padding: 20px;
+        border-radius: 30px;
+        width: 85%;
+        margin: 5px auto;
+        font-size: 18px
+    }
+
+    #homeSection, #holdersection {
+    }
+
+    #holdersection {
+        position: fixed;
+        inset: 0;
+        overflow: auto;
+        display: grid;
+        place-items: center;
+        height: 100vh;
+    }
+
+    html, body {
+        overflow: hidden;
+        height: 100%;
+    }
+    .orderParent {
+        border-radius: 5px;
+        border: 1px solid #eee;
+        background-color: white;
+        margin: 20px;
+        box-shadow: 1px 1px 2px -1px rgba(0,0,0,0.75);
+        -webkit-box-shadow: 1px 1px 2px -1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 1px 1px 2px -1px rgba(0,0,0,0.75);
+    }
+
+    .section {
+        display: flex;
+        padding: 7px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .icon {
+        margin: 0 15px
+    }
+
+    .sectionRLT {
+        direction: rtl;
+    }
+
+    .flexcentre {
+        align-items: center;
+    }
+
+        .flexcentre div {
+            margin: 0 5px
+        }
+
+    .noborder {
+        border: none;
+    }
+
+    .viewcounter {
+        font-size: 12px
+    }
+
+    .descRow {
+        text-align: right;
+        direction: rtl;
+        margin: 20px;
+    }
+
+    .lable {
+        padding: 4px;
+        background-color: #a06509;
+        color: white;
+        border-radius: 5px;
+        font-size: 12px;
+    }
+
+    .white {
+        background-color: white;
+    }
+
+    .price {
+        flex: 1;
+        color: #a06509;
+        text-align: left;
+        font-size: 15px;
+        font-weight: 600
+    }
+
+    .secTitle {
+        font-weight: 600;
+        font-size: 14px
+    }
+</style>
+
+<div class="sectionParent" style="width:100%; position:absolute; top:0; height:100vh">
+    <div style="position:relative;height:100vh">
+        <div>
+            <div id="homeSection" class="sections active tabsec" style="position:relative">
+                <div class="sectionHeader" style="overflow-y:scroll">
+                    لیست بار
+
+
+                </div>
+
+                <div style="position:relative">
+                    <div class="mainContent">
+                        <div id="orderparent" style="text-align :center; ">
+                            <div class="loaderholder">
+                                <span class="loader"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="width: 90%;position:absolute;left: 5%; bottom:15px;margin:0" onclick="searchOrderClicked()" class="buttonVerif">
+                        <p class="lbl">ثبت بار جدید</p>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div id="listSection" class="sections tabsec ">
+                <div class="sectionHeader">
+                   بارنامه
+                </div>
+                <div class="mainContent">
+
+                </div>
+                @*<div class="inputFigure">
+                    <input id="searchCityInput" class="lbl" placeholder="جستجو" />
+                    <i id="searchCity" class="fa fa-search icon"></i>
+                </div>*@
+            </div>
+            <div id="profileSection" class="sections tabsec">
+                <div class="sectionHeader">
+                    پروفایل
+                </div>
+                <div class="mainContent">
+                    <div id="proparent" style="text-align :center">
+                        <div class="loaderholder">
+                            <span class="loader"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="homeFooter topboxshadow" style="display:none">
+            <div itemToShow="homeSection" class="active bottonToGo">
+                <i class="fa fa-home "></i>
+                <p>خانه</p>
+            </div>
+            <div itemToShow="listSection" class="bottonToGo">
+                <i class="fa fa-truck-container"></i>
+                <p>بارنامه</p>
+            </div>
+            <div itemToShow="profileSection" class="bottonToGo">
+                <i class="fa fa-user"></i>
+                <p>پروفایل</p>
+            </div>
+        </div>
+    </div>
+  
+
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="paperone slideSection" style="display: none ; z-index:200">
+    <div style="max-height:100vh; overflow:scroll; padding:25px 0">
+        <h5 style="text-align:center; margin:20px"><i id="backToHome" class="fa fa-arrow-left"></i> <span class="titleCentre"></span> </h5>
+        <div class="inputFigure">
+            <input id="searchCityInput" class="lbl" placeholder="جستجو" />
+            <i id="searchCity" class="fa fa-search icon"></i>
+        </div>
+
+        <div id="countyList">
+            <div class="loaderholder">
+                <span class="loader"></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="paperTwo slideSection" style="display:none;; z-index:201">
+    <div style="max-height:100vh; overflow:scroll; padding:25px 0">
+        <h5 style="text-align:center; margin:20px" id="backToState" class="titleCentreCity"> <i class="fa fa-arrow-left" style="margin-right:20px"></i> <span>بازگشت</span> </h5>
+
+        <div id="cityListSection">
+            <div class="loaderholder">
+                <span class="loader"></span>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="carTypeSection slideSection" style="display:none; z-index:200">
+    <div style="max-height:100vh; overflow:scroll; padding:25px 0">
+        <div class="carTypeSectionP">
+            <div class="chooseType">
+
+                <div id="typeList" class="typeList">
+                    <div class="loaderholder">
+                        <span class="loader"></span>
+                    </div>
+                </div>
+                <div class="buttonVerif" style="margin:0; position:absolute; width:90%; margin-bottom:15px;bottom:0; margin-left:5%">
+                    <p id="verifyType" class="lbl">تایید</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script type="text/javascript">
+    var myMap;
+    var theMarker = {};
+    var greenIcon;
+
+
+    function showTwoPoin(orlat, orlon, deslat, deslon) {
+
+
+        var Mapnik = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        });
+        const myIcon = L.icon({
+            iconUrl: '/images/marker.png',
+
+
+        });
+
+
+        var mymiddlex = (orlat + deslat) / 2;
+        var mymiddley = (orlon + deslon) / 2;
+
+        var mymap = L.map('Map', {
+            layers: [Mapnik]
+        }).setView([mymiddlex, mymiddley], 5);
+
+        //var marker = L.marker([orlat, orlon], { icon: myIcon }).addTo(mymap);
+        //var marker2 = L.marker([deslat, deslon], { icon: myIcon }).addTo(mymap);
+
+
+        var latlngs = [];
+
+        var latlng1 = [orlat, orlon],
+            latlng2 = [deslat, deslon];
+
+        var offsetX = latlng2[1] - latlng1[1],
+            offsetY = latlng2[0] - latlng1[0];
+
+        var r = Math.sqrt(Math.pow(offsetX, 2) + Math.pow(offsetY, 2)),
+            theta = Math.atan2(offsetY, offsetX);
+
+        var thetaOffset = (3.14 / 10);
+
+        var r2 = (r / 2) / (Math.cos(thetaOffset)),
+            theta2 = theta + thetaOffset;
+
+        var midpointX = (r2 * Math.cos(theta2)) + latlng1[1],
+            midpointY = (r2 * Math.sin(theta2)) + latlng1[0];
+
+        var midpointLatLng = [midpointY, midpointX];
+
+        latlngs.push(latlng1, midpointLatLng, latlng2);
+
+        var pathOptions = {
+            color: 'rgba(255,255,255,0.5)',
+            weight: 2
+        }
+
+        if (typeof document.getElementById('Map').animate === "function") {
+            var durationBase = 2000;
+            var duration = Math.sqrt(Math.log(r)) * durationBase;
+            // Scales the animation duration so that it's related to the line length
+            // (but such that the longest and shortest lines' durations are not too different).
+            // You may want to use a different scaling factor.
+            pathOptions.animate = {
+                duration: duration,
+                iterations: Infinity,
+                easing: 'ease-in-out',
+                direction: 'alternate'
+            }
+        }
+        var curved_line = L.curve(['M', latlng1,
+            'Q', midpointLatLng,
+            latlng2
+        ], {
+            fillColor: 'green',
+            weight: 4,
+            opacity: 1,
+            color: 'green',
+            fillOpacity: 1,
+            lineCap: 'round'
+        });
+        mymap.addLayer(curved_line);
+        //var curvedPath = L.curve(
+        //    [
+        //        'M', latlng1,
+        //        'Q', midpointLatLng,
+        //        latlng2
+        //    ], pathOptions).addTo(myMap);
+    };
+    function showLocation(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+
+        myMap = L.map('Map', { attributionControl: false }).setView([35.75453394917301, 51.37116999302821], 13);
+
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoibWVyaW9saSIsImEiOiJja2p6dXhmdngwYmVvMnZwY2lyc2htNGxhIn0.Y9t__Bll6Fw9b9amb_rcHg',
+
+        }).addTo(myMap);
+        myMap.panTo(new L.LatLng(lat, lon));
+
+
+
+
+
+        myMap.on('click', function (e) {
+
+            $("#checkmap").show();
+            lat = e.latlng.lat;
+            lon = e.latlng.lng;
+
+            console.log("You clicked the map at LAT: " + lat + " and LONG: " + lon);
+            //Clear existing marker,
+
+            if (theMarker != undefined) {
+                myMap.removeLayer(theMarker);
+            };
+
+            //Add a marker to show where you clicked.
+            theMarker = L.marker([lat, lon]).addTo(myMap);
+            $("#lat").val(lat);
+            $("#lon").val(lon);
+        });
+        theMarker = L.marker([lat, lon]).addTo(myMap);
+        $("#lat").val(lat);
+        $("#lon").val(lon);
+
+
+
+
+
+
+    }
+    function errorHandler(err) {
+        if (err.code == 1) {
+            //alert("Error: Access is denied!");
+        } else if (err.code == 2) {
+            //alert("Error: Position is unavailable!");
+        }
+
+
+        myMap = L.map('Map', { attributionControl: false }).setView([35.75453394917301, 51.37116999302821], 13);
+        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox/streets-v11',
+            tileSize: 512,
+            zoomOffset: -1,
+            accessToken: 'pk.eyJ1IjoibWVyaW9saSIsImEiOiJja2p6dXhmdngwYmVvMnZwY2lyc2htNGxhIn0.Y9t__Bll6Fw9b9amb_rcHg',
+
+        }).addTo(myMap);
+
+        myMap.panTo(new L.LatLng(35.73598454240641, 51.48437862217327));
+
+
+
+
+        myMap.on('click', function (e) {
+            $("#checkmap").show();
+            lat = e.latlng.lat;
+            lon = e.latlng.lng;
+
+            console.log("You clicked the map at LAT: " + lat + " and LONG: " + lon);
+            //Clear existing marker,
+
+            if (theMarker != undefined) {
+                myMap.removeLayer(theMarker);
+            };
+
+            //Add a marker to show where you clicked.
+            theMarker = L.marker([lat, lon]).addTo(myMap);
+
+            $("#lat").val(lat);
+            $("#lon").val(lon);
+        });
+
+
+    }
+    function getLocation() {
+        if (navigator.geolocation) {
+            // timeout at 60000 milliseconds (60 seconds)
+            var options = { timeout: 60000 };
+            navigator.geolocation.getCurrentPosition
+                (showLocation, errorHandler, options);
+        } else {
+            alert("Sorry, browser does not support geolocation!");
+        }
+    };
+
+
+
+
+</script>
+<script>
+    var itemtoChange;
+    var typeseleccted;
+    var profileType;
+
+
+    $.ajax({
+        url: "DriverPartial",
+        success: function (data) {
+            if (data == "400") {
+                alert("DriverPartial");
+               // window.location.href = "/clientapp/index";
+            }
+            else {
+                $("#proparent").html(data);
+            }
+
+        }
+
+    })
+    function getHome() {
+        $.ajax({
+            url: "getHome",
+            success: function (data) {
+                if (data == "400") {
+                    alert("getHome");
+                   // window.location.href = "/clientapp/index";
+                }
+                else {
+                    $("#orderparent").html(data);
+                }
+
+            }
+
+        })
+
+    }
+    getHome();
+    $("#searchCity").click(function () {
+        var search = $("#searchCityInput").val();
+        $('.paperTwo').animate({ 'margin-bottom': '+=100vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            data: {
+                search: search,
+            },
+            success: function (data) {
+                $('.paperone').hide();
+                $("#cityListSection").html(data);
+
+            }
+
+        })
+    })
+    $(".bottonToGo").click(function () {
+        var id = $(this).attr('itemToShow');
+
+        $(".bottonToGo").removeClass('active');
+        $(".sections").removeClass('active');
+        $(this).addClass('active')
+
+        $(".tabsec" ).removeClass('active')
+        $("#" + id).addClass('active')
+
+    })
+
+    function searchDestinClicked() {
+        $('.paperone').show();
+        itemtoChange = "searchDestin";
+        $(".titleCentre").text("انتخاب شهر مقصد")
+        $('.paperone').animate({ 'margin-bottom': '+=100vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            success: function (data) {
+
+                $("#countyList").html(data);
+            }
+
+        })
+    }
+    function searchOriginClicked() {
+        $('.paperone').show();
+        itemtoChange = "searchOrigin";
+        $(".titleCentre").text("انتخاب شهر مبدا")
+        $('.paperone').animate({ 'margin-bottom': '+=100vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            success: function (data) {
+
+                $("#countyList").html(data);
+            }
+
+        })
+    }
+    function searchOrderClicked() {
+
+        $('.orderListSection').show();
+        $('.orderListSection').animate({ 'margin-bottom': '0' }, 200);
+        $.post(
+            "/clientapp/getOrderForm",
+            { originCityID: "", destinCityID: "", type: "" },
+            function (data) {
+                if (data == "400") {
+                   // window.location.href = "/clientapp/index";
+                }
+                else {
+                    $("#orderListparent").html(data);
+                }
+            });
+
+
+    }
+
+    function profileCityClicked() {
+
+        $('.paperone').show();
+        itemtoChange = "profileCity";
+        $(".titleCentre").text("شهر محل سکونت")
+        $('.paperone').animate({ 'margin-bottom': '+=100vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            success: function (data) {
+
+                $("#countyList").html(data);
+            }
+
+        })
+    }
+    function orderDetialClicked(el) {
+        var id = $(el).attr('id');
+        $('.orderDetailSection').show();
+        $('.orderDetailSection').animate({ 'margin-bottom': '+=100vh' }, 200);
+
+
+        $.post(
+            "getOrderDetail",
+            { orderID: id },
+            function (data) {
+                if (data == "400") {
+                   // window.location.href = "/clientapp/index";
+                }
+                else {
+                    $("#orderDetailParent").html(data);
+
+                }
+            });
+    }
+
+
+    function profileSectionClicked() {
+        $('.userprofilesection').show();
+        $('.userprofilesection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function verifyClientModal() {
+        $('.userVerifsection').show();
+        $('.userVerifsection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function supportTrigger() {
+
+        $('.supportsection').show();
+        $('.supportsection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function helpTrigger() {
+
+        $('.helpsection').show();
+        $('.helpsection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function btnCodriver() {
+        $("#coDriverParent").html('<div style="align-items: center;padding:50px 0;display:flex; justify-content:center; align-content:center"><p style="padding:25px"> لطفا کمی صبر کنید</p >  <img src="/images/loading.gif" /></div >')
+        $('.userCoDriversection').show();
+        $('.userCoDriversection').animate({ 'margin-bottom': '+=100vh' }, 200);
+        $.ajax({
+            url: "/clientapp/getCoDriver",
+            success: function (data) {
+                $("#coDriverParent").html(data);
+            }
+        })
+
+        
+    }
+    function btnDriverScore() {
+        $('.driverScoreSection').show();
+        $('.driverScoreSection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function btnDriverComment() {
+        $('.driverCommentSection').show();
+        $('.driverCommentSection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function addDriver(el) {
+        alert(el);
+        $("#loading").show();
+        $.post(
+            "addCoDriver",
+            { phone: el },
+            function (data) {
+                if (data == "400") {
+                   // window.location.href = "/clientapp/index";
+                }
+                else {
+                    $.ajax({
+                        url: "/clientapp/getCoDriver",
+                        success: function (data) {
+                            $("#loading").hide();
+                            $("#coDriverParent").html(data);
+                        }
+                    })
+
+                }
+            });
+
+
+    }
+    function btnVerifInnerEvent() {
+        $('.userVerifInnerSection').show();
+        $('.userVerifInnerSection').animate({ 'margin-bottom': '+=100vh' }, 200);
+    }
+    function profileForm(type) {
+        $("#loading").show();
+        var action = "";
+        if (type == "1") {
+            action = "personPartial";
+            $("#veriflable").text("فرم احراز هویت فردی");
+        }
+        else if (type == "2") {
+            action = "companyPartial";
+            $("#veriflable").text("فرم احراز هویت شرکت");
+        }
+        else {
+            action = "loggiginPartial";
+            $("#veriflable").text("فرم احراز هویت باربری");
+        }
+        $.ajax({
+            url: action,
+            success: function (data) {
+                if (data == "400") {
+                   // window.location.href = "/clientapp/index";
+                }
+                else {
+                    $("#parentOfVerifForm").html(data);
+                    $('.userProfilesectionForAll').show();
+                    $('.userProfilesectionForAll').animate({ 'margin-bottom': '+=100vh' }, 200);
+                    $("#loading").hide();
+                }
+
+            }
+
+        })
+
+       
+    }
+    
+    
+    function searchTypeClickedProfile() {
+        $('.userprofilesection').hide();
+        $('.carTypeSection').show();
+        $('.carTypeSection').animate({ 'margin-bottom': '+=100vh' }, 200);
+        $.ajax({
+            url: "getType2",
+            success: function (data) {
+
+                $("#typeList").html(data);
+            }
+
+        })
+    }
+    function searchTypeClicked(el) {
+        $("#typeList").html('');
+        $('.carTypeSection').show();
+        $('.carTypeSection').animate({ 'margin-bottom': '+=100vh' }, 200);
+        $.ajax({
+            url: "getType",
+            success: function (data) {
+
+                $("#typeList").html(data);
+            }
+
+        })
+    }
+
+    function loggegTypeClicked() {
+        $('.loggigTypeSection').show();
+        $('.loggigTypeSection').animate({ 'margin-bottom': '0' }, 200);
+        $.post(
+            "/clientapp/getLoggigList",
+            { originCityID: "", destinCityID: "", type: "" },
+            function (data) {
+                if (data == "400") {
+                    window.location.href = "/driverapp/index";
+                }
+                else {
+                    $("#loggigTypeParent").html(data);
+                }
+            });
+
+
+    }
+    function VerifyNewOrder() {
+
+        var typeSelected = $("#homeClientType").val();
+        var origincity = $("#searchOriginInput").val();
+        var destincity = $("#searchDestinInput").val();
+        var priceTotal = $("#priceTotal").val();
+        var pricePerTon = $("#pricePerTon").val();
+        var showPhone = $("#showPhone").val();
+        var getSMS = $("#getSMS").val();
+        var description = $("#description").val();
+        var date;
+        $(".selectdate").each(function () {
+
+            if ($(this).hasClass("active")) {
+                var ds = $(this).attr('secToGo');
+
+                if (ds == "today") {
+                    date = $(".fromDateOb").val() / 1000;
+                }
+                else if (ds == "tomorrow") {
+                    date = parseInt($(".fromDateOb").val() / 1000) + 12 * 60 * 60;
+                }
+                else {
+                    date = $(".fromDateOb").val() / 1000 + "," + $(".toDateOb").val() / 1000
+                }
+            }
+        })
+
+        var pricePerTon = $("#pricePerTon").val();
+        var hourFrom = $("#hourFrom").val();
+        var hourTo = $("#hourTo").val();
+        var amount = $("#amount").val();
+        var loadtypeInputID = $("#loadtypeInputID").val();
+
+
+       
+        $("#loading").show();
+
+
+        $.post(
+            "/clientapp/setNewOrder",
+            {
+                date: date,
+                description: description,
+                destinCityID: destincity,
+                loadAmount: amount,
+                loadingFinishHour: hourTo,
+                loadingStartHour: hourFrom,
+                loadTypeID: loadtypeInputID,
+                originCityID: origincity,
+                pricePerTone: pricePerTon,
+                priceTotal: priceTotal,
+                recieveSMS: getSMS,
+                showPhone: showPhone,
+                type: typeSelected
+
+
+            },
+            function (data) {
+                if (data == "400") {
+                   // window.location.href = "/clientapp/index";
+                }
+                else {
+                    getHome();
+                    $("#loading").hide();
+                    $('.orderListSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+                        $('.orderListSection').hide();
+
+                    });
+                }
+            });
+
+    };
+    var itemorderID;
+    var itemdriverID;
+    function verrifyOrderResponseModalTrriger(orderID, driverID) {
+        itemorderID = orderID;
+        itemdriverID = driverID;
+        $("#sendOrderResponse").modal('toggle');
+    }
+    function verifyOrderrResponse() {
+        $.post(
+            "/clientapp/verifyOrderrResponse",
+            {
+                orderID: itemorderID,
+                driverID: itemdriverID,
+            },
+            function (data) {
+                if (data == "400") {
+                   // window.location.href = "/clientapp/index";
+                }
+                else {
+                    //getHome();
+                    $("#loading").hide();
+                    $('.orderListSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+                        $('.orderListSection').hide();
+
+                    });
+                    $('.orderDetailSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+                        $('.orderDetailSection').hide();
+                    });
+                }
+            });
+    }
+
+    $("#backToState").click(function () {
+        $('.paperone').show();
+        $('.paperTwo').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $("#cityListSection").html("");
+            $('.paperTwo').hide();
+        });
+
+    })
+    $("#backToHome").click(function () {
+        $('.paperone').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $('.paperone').hide();
+            $("#countyList").html("");
+        });
+
+
+    })
+    $("#verifyType").click(function () {
+        typeseleccted = "homeClientType";
+        $("#typetextholder").html('');
+        var fid = "";
+        $(".typeinput").each(function () {
+
+            if ($(this).is(":checked")) {
+
+                var id = $(this).attr('id');
+                var txt = $(this).attr('texttoshow');
+                fid += id + ",";
+                $("#typetextholder").append('<p style="margin:25px 5px;display:inline-block" id="typeName"><span class="typenameTitle"> ' + txt + ' </span></p>');
+            }
+
+        })
+        $("#" + typeseleccted).val(fid);
+        $('.carTypeSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $('.carTypeSection').hide();
+        });
+
+    })
+
+    function loadTypeInputClicked() {
+        loadType = "";
+
+        $(".loadTypeInput").each(function () {
+
+            if ($(this).is(":checked")) {
+                var id = $(this).attr('id');
+                var txt = $(this).attr('texttoshow');
+                profileType = id;
+                $("#loadTypestring").val(id);
+                $("#loadtypeInput").val(txt);
+            }
+        })
+
+
+        $('.loggigTypeSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $('.loggigTypeSection').hide();
+        });
+    }
+
+    function typeinputProfileClicked() {
+        profileType = "";
+        $("#profileTypestring").html('');
+        $(".typeinputProfile").each(function () {
+
+            if ($(this).is(":checked")) {
+                var id = $(this).attr('id');
+                var txt = $(this).attr('texttoshow');
+                profileType = id;
+                $("#profileTypestringInput").val(id);
+                $("#profileTypestring").append('<p style="margin:25px 5px;display:inline-block" id="typeName"><span class="typenameTitle"> ' + txt + ' </span></p>');
+            }
+        })
+        $(".typeProfileHolder").css("padding", "5px 25px")
+        $('.userprofilesection').show();
+        $('.carTypeSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+
+            $('.carTypeSection').hide();
+        });
+    }
+
+    function cityClicked(el) {
+
+        var title = $(el).text();
+        var id = $(el).attr('id');
+        var idsring = itemtoChange + "Input";
+        $("#" + itemtoChange).text(title);
+        $("#" + itemtoChange).val(title);
+        $("#" + idsring).val(id);
+        $('.paperone').animate({ 'margin-bottom': '-=100vh' }, 200);
+        $('.paperTwo').animate({ 'margin-bottom': '-=100vh' }, 200);
+        $('.paperone').hide();
+        $('.paperTwo').hide();
+        $("#countyList").html("");
+        $("#cityListSection").html("");
+
+        //$('.paperone').css("margin-bottom", '-100vh')
+        //$('.paperTwo').css("margin-bottom", '-100vh')
+    }
+    function stateClicked(el) {
+        $('.paperTwo').show();
+        var ID = $(el).attr('id');
+
+        $('.paperTwo').animate({ 'margin-bottom': '+=100vh' }, 200);
+        $.ajax({
+            url: "getCity",
+            data: {
+                ID: ID,
+            },
+            success: function (data) {
+                $('.paperone').hide();
+                $("#cityListSection").html(data);
+
+            }
+
+        })
+        return false;
+    }
+    function loadTypeInputClicked(el) {
+        var ID = $(el).attr('id');
+        var title = $(el).attr('texttoshow');
+        $("#loadtypeInputID").val(ID);
+        $("#loadtypeInput").val(title);
+        $('.loggigTypeSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $('.loggigTypeSection').hide();
+        });
+
+    }
+    $('.homeFooter').show();
+
+
+
+
+
+
+</script>
+<script>
+    function ReplaceNumberWithCommas(yourNumber) {
+        //Seperates the components of the number
+        var n = yourNumber.toString().split(".");
+        //Comma-fies the first part
+        n[0] = n[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        //Combines the two sections
+        return n.join(".");
+    }
+    function doreplace(el) {
+        val = $(el).val();
+        $(el).val(ReplaceNumberWithCommas(val.replace(",", "")));
+    }
+</script>
+<script>
+    getLocation();
+    function showLocation(position) {
+        var lat = position.coords.latitude;
+        var lon = position.coords.longitude;
+
+
+
+        $.post(
+            "updateLocation",
+            {
+                lat: lat,
+                lon: lon
+            },
+            function (data) {
+
+            });
+
+    }
+    function errorHandler(err) {
+        if (err.code == 1) {
+            alert("Error: Access is denied!");
+        } else if (err.code == 2) {
+            alert("Error: Position is unavailable!");
+        }
+
+
+
+    }
+    function getLocation() {
+        //if (navigator.geolocation) {
+
+        //    var options = { timeout: 60000 };
+        //    navigator.geolocation.getCurrentPosition
+        //        (showLocation, errorHandler, options);
+        //} else {
+        //    alert("Sorry, browser does not support geolocation!");
+        //}
+    };
+</script>
+
+
+@*clientperson*@
+<script>
+    function karteTasvirTrigger() {
+        $("#karteTasvir").click();
+    }
+
+    function karteMelliTrriger() {
+        $("#karteMelli").click();
+    }
+
+    function karteTasvir() {
+        var file = $("#karteTasvir").get(0).files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                $("#TasvirTitle").attr("src", reader.result);
+                $("#TasvirTitle").show();
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function karteMelli() {
+        var file = $("#karteMelli").get(0).files[0];
+        if (file) {
+            var reader = new FileReader();
+            reader.onload = function () {
+                $("#melliTitle").attr("src", reader.result);
+                $("#melliTitle").show();
+            }
+
+            reader.readAsDataURL(file);
+        }
+    }
+    function sendMellCard(sendTasvir, sendProfileFormPerson) {
+
+        var fd = new FormData();
+        var files = $('#karteMelliPerson')[0].files[0];
+        if (files != null) {
+            fd.append('file', files);
+            $.ajax({
+                url: 'setImage',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#karteMelliFinal").text(response);
+                    if (response != 0) {
+                        alert('mellicartOK');
+                    } else {
+                        alert('file not uploaded');
+                    }
+                    sendTasvir(sendProfileFormPerson)
+                },
+            });
+        }
+        else {
+            sendTasvir(sendProfileFormPerson)
+        }
+    }
+
+    function sendTasvir(sendProfileFormPerson) {
+
+        var fd = new FormData();
+        var files = $('#karteTasvir')[0].files[0];
+        if (files != null) {
+            fd.append('file', files);
+            $.ajax({
+                url: 'setImage',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#karteTasvirFinal").text(response);
+                    console.log(response);
+                    if (response != 0) {
+                        alert('tasvirOK');
+                    } else {
+                        alert('file not uploaded');
+                    }
+                    sendProfileFormPerson();
+                },
+            });
+
+        }
+        else {
+            sendProfileFormPerson();
+        }
+    }
+
+    function sendProfileFormPerson() {
+        var cartMelli = $("#karteMelliFinal").text();
+        var cartTasvir = $("#karteTasvirFinal").text();
+        var personName = $("#personName").val();
+        var codeMelli = $("#personCodemeli").val();
+        var address = $("#personAddress").val();
+        var postalCode = $("#personPostalCode").val();
+        var typeID = $("#profileTypestringInput").val();
+        var cityID = $("#profileCityInput").val();
+      
+        $.post(
+            "setProfilePerson",
+            {
+                cartMelliModir: cartMelli,
+                RPT: cartTasvir,
+                name: personName,
+                codeMelli: codeMelli,
+                cityID: cityID,
+                typeID: typeID,
+                address: address,
+                postalCode: postalCode,
+                clientType: "1"
+
+            },
+            function (response) {
+                if (response == "200") {
+                    $.ajax({
+                        url: "DriverPartial",
+                        success: function (data) {
+                            if (data == "400") {
+                               // window.location.href = "/clientapp/index";
+                            }
+                            else {
+                                $("#loading").hide();
+                                $("#proparent").html(data);
+                                toastr.options = {
+                                    "debug": false,
+                                    "positionClass": "toast-top-center",
+                                    "onclick": null,
+                                    "fadeIn": 300,
+                                    "fadeOut": 1000,
+                                    "timeOut": 10000,
+                                    "extendedTimeOut": 1000,
+                                };
+                                toastr.success('با موفقیت انجام شد');
+
+                            }
+
+                        }
+
+                    })
+
+                }
+            });
+    }
+
+    function sendProfileFormCompany() {
+        var coNameCompany = $("#coNameCompany").val();
+        var cartMelli = $("#karteMelliFinal").text();
+        var cartTasvir = $("#karteTasvirFinal").text();
+        var nameCompany = $("#nameCompany").val();
+        var codeMelli = $("#companyCodemeli").val();
+        var address = $("#companyAddress").val();
+        var shenaseSherkat = $("#shenaseSherkat").val(); 
+        var postalCode = $("#postalCodeCompany").val();
+        var typeID = $("#profileTypestringInput").val();
+        var cityID = $("#profileCityInput").val();
+        var emPhoneCmpany = $("#emPhoneCmpany").val();
+        $.post(
+            "setProfileCompany",
+            {
+                shenaseSherkat: shenaseSherkat,
+                emPhone: emPhoneCmpany,
+                cartMelliModir: cartMelli,
+                RPT: cartTasvir,
+                name: nameCompany,
+                coName: coNameCompany,
+                codeMelli: codeMelli,
+                cityID: cityID,
+                typeID: typeID,
+                address: address,
+                postalCode: postalCode,
+                clientType: "2"
+
+            },
+            function (response) {
+                if (response == "200") {
+                    $.ajax({
+                        url: "DriverPartial",
+                        success: function (data) {
+                            if (data == "400") {
+                               // window.location.href = "/clientapp/index";
+                            }
+                            else {
+                                $("#loading").hide();
+                                $("#proparent").html(data);
+                                toastr.options = {
+                                    "debug": false,
+                                    "positionClass": "toast-top-center",
+                                    "onclick": null,
+                                    "fadeIn": 300,
+                                    "fadeOut": 1000,
+                                    "timeOut": 10000,
+                                    "extendedTimeOut": 1000,
+                                };
+                                toastr.success('با موفقیت انجام شد');
+
+                            }
+
+                        }
+
+                    })
+
+                }
+            });
+    }
+    function sendProfileFormLoggiging() {
+        var coName = $("#coNameLoggig").val();
+        var name = $("#fullnameLoggig").val();
+        var cartMelli = $("#karteMelliFinal").text();
+        var cartTasvir = $("#karteTasvirFinal").text();
+      
+        var codeMelli = $("#codemeliLoggig").val();
+        var address = $("#addressLoggig").val();
+        var emPhoneCmpany = $("#emPhoneLoggig").val();
+        var shenaseSherkat = $("#shenaseSherkatLoggig").val();
+        var postalCode = $("#postalCode").val();
+        var cityID = $("#profileCityInput").val();
+        
+        $.post(
+            "setProfileLoggiging",
+            {
+                shenaseSherkat: shenaseSherkat,
+                emPhone: emPhoneCmpany,
+                cartMelliModir: cartMelli,
+                RPT: cartTasvir,
+                name: name,
+                coName: coName,
+                codeMelli: codeMelli,
+                cityID: cityID,
+                address: address,
+                postalCode: postalCode,
+                clientType: "3"
+
+            },
+            function (response) {
+                if (response == "200") {
+                    $.ajax({
+                        url: "DriverPartial",
+                        success: function (data) {
+                            if (data == "400") {
+                               // window.location.href = "/clientapp/index";
+                            }
+                            else {
+                                $("#loading").hide();
+                                $("#proparent").html(data);
+                                toastr.options = {
+                                    "debug": false,
+                                    "positionClass": "toast-top-center",
+                                    "onclick": null,
+                                    "fadeIn": 300,
+                                    "fadeOut": 1000,
+                                    "timeOut": 10000,
+                                    "extendedTimeOut": 1000,
+                                };
+                                toastr.success('با موفقیت انجام شد');
+
+                            }
+
+                        }
+
+                    })
+
+                }
+            });
+    }
+    function btnprofilePersonsubmit() {
+       
+        $("#loading").show();
+        sendMellCard(sendTasvir, sendProfileFormPerson);
+    }
+    // company
+
+    function btnprofileComanySubmit() {
+        sendMellCard(sendTasvir, sendProfileFormCompany);
+    }
+    function btnprofileLoggigingSubmit() {
+        sendMellCard(sendTasvir, sendProfileFormLoggiging);
+    }
+
+    //
+
+    function statusModalTrigger() {
+        $("#userStatusHolder").html('<div style="align-items: center;padding:50px 0;display:flex; justify-content:center; align-content:center"><p style="padding:25px"> لطفا کمی صبر کنید</p >  <img src="/images/loading.gif" /></div >')
+        $("#statusModal").modal('toggle');
+        $.post(
+            "getAuthentication",
+            {},
+            function (response) {
+                
+                $("#userStatusHolder").html(response);
+            });
+
+    }
+</script>
+
+@*profile home*@
+<script>
+    function sendkart(sendnavgan, sendprofileImage, sendProfileForm) {
+        var fd = new FormData();
+        var files = $('#kartehosshman')[0].files[0];
+        if (files != null) {
+            fd.append('file', files);
+            $.ajax({
+                url: 'setImage',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#kartehoshmandFinal").text(response);
+                    if (response != 0) {
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                    sendnavgan(sendprofileImage, sendProfileForm)
+                },
+            });
+        }
+        else {
+            sendnavgan(sendprofileImage, sendProfileForm)
+        }
+    }
+
+    function sendnavgan(sendprofileImage, sendProfileForm) {
+
+        var fd = new FormData();
+        var files = $('#kartenavgan')[0].files[0];
+        if (files != null) {
+            fd.append('file', files);
+            $.ajax({
+                url: 'setImage',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#kartenavganFinal").text(response);
+                    console.log(response);
+                    if (response != 0) {
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                    sendprofileImage(sendProfileForm);
+                },
+            });
+
+        }
+        else {
+            sendprofileImage(sendProfileForm);
+        }
+    }
+
+    function sendprofileImage(sendProfileForm) {
+        var fd = new FormData();
+        var files = $('#profileImageInput')[0].files[0];
+        if (files != null) {
+            fd.append('file', files);
+            $.ajax({
+                url: 'setImage',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    $("#profileImageInputFinal").text(response)
+                    console.log(response);
+                    if (response != 0) {
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                    sendProfileForm();
+                },
+            });
+        }
+        else {
+            sendProfileForm();
+        }
+    }
+
+    function sendProfileForm() {
+
+        var userprof = $("#profileImageInputFinal").text();
+        var name = $("#fullnameclient").val();
+
+        alert(name);
+        $.post(
+            "setProfile",
+            {
+
+                profileImage: userprof,
+                username: name,
+
+
+            },
+            function (response) {
+                if (response == "200") {
+                    $.ajax({
+                        url: "DriverPartial",
+                        success: function (data) {
+                            if (data == "400") {
+                               // window.location.href = "/clientapp/index";
+                            }
+                            else {
+                                $("#loading").hide();
+                                $("#proparent").html(data);
+                                toastr.options = {
+                                    "debug": false,
+                                    "positionClass": "toast-top-center",
+                                    "onclick": null,
+                                    "fadeIn": 300,
+                                    "fadeOut": 1000,
+                                    "timeOut": 10000,
+                                    "extendedTimeOut": 1000,
+                                };
+                                toastr.success('با موفقیت انجام شد');
+
+                            }
+
+                        }
+
+                    })
+
+                }
+            });
+    }
+</script>
+
+@if (ViewBag.fireBase == "1")
+{
+    @*<script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js">
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js">
+        </script>*@
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.4.0/firebase-app.js'
+        import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.4.0/firebase-messaging.js";
+        const firebaseConfig = {
+
+
+            apiKey: "AIzaSyBxK_7nyYIToI_wB5qgh9x5F4Ly9a6k234",
+            authDomain: "jbar-50591.firebaseapp.com",
+            projectId: "jbar-50591",
+            storageBucket: "jbar-50591.appspot.com",
+            messagingSenderId: "231524570173",
+            appId: "1:231524570173:web:ac685ad0a39d8f2c22c654",
+            measurementId: "G-8RW00J0FTM"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const messaging = getMessaging(app);
+        getToken(messaging, { vapidKey: 'BPsgWUwcu8GGYYjLRy3A8Pu2vLTp9EdjvsUT0tGds5_ozdFWVWqZdwwTWes_ap3cfTz-UCDKXjGn0aLGh6Bn9no' }).then((currentToken) => {
+            if (currentToken) {
+               
+                $("#fitoken").text(currentToken);
+                $.post(
+                    "setProfile",
+                    { firebaseToken: currentToken },
+                    function (response) {
+
+                    });
+                // alert(currentToken)
+                // Send the token to your server and update the UI if necessary
+                // ...
+            } else {
+                // Show permission request UI
+                console.log('No registration token available. Request permission to generate one.');
+                // ...
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+            // ...
+        });
+
+    </script>
+
+    
+}
+

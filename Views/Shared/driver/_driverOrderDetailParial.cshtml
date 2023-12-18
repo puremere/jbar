@@ -1,6 +1,101 @@
 ﻿
-@model jbar.ViewModel.sendDetailVM 
+@model jbar.ViewModel.sendDetailVM
+@using jbar.Classes
 
+<style>
+    .rate {
+        display: flex;
+        height: 46px;
+        padding: 0 10px;
+        justify-content: space-between;
+        margin: 10px 22px;
+        direction: rtl
+    }
+
+        .rate:not(:checked) > input {
+            position: absolute;
+            top: -9999px;
+        }
+
+        .rate:not(:checked) > label {
+            float: right;
+            width: 1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+        }
+
+            .rate:not(:checked) > label:before {
+                content: '★ ';
+            }
+
+        .rate > input:checked ~ label {
+            color: #ffc700;
+        }
+
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+            color: #deb217;
+        }
+
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+
+
+
+
+    .rateRead {
+        display: flex;
+        height: 46px;
+        padding: 0 10px;
+        justify-content: space-between;
+        margin: 10px 22px;
+        direction: rtl
+    }
+
+        .rateRead:not(:checked) > input {
+            position: absolute;
+            top: -9999px;
+        }
+
+        .rateRead:not(:checked) > label {
+            float: right;
+            width: 1em;
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+            font-size: 30px;
+            color: #ccc;
+        }
+
+            .rateRead:not(:checked) > label:before {
+                content: '★ ';
+            }
+
+        .rateRead > input:checked ~ label {
+            color: #ffc700;
+        }
+
+        .rateRead:not(:checked) > label:hover,
+        .rateRead:not(:checked) > label:hover ~ label {
+            color: #deb217;
+        }
+
+        .rateRead > input:checked + label:hover,
+        .rateRead > input:checked + label:hover ~ label,
+        .rateRead > input:checked ~ label:hover,
+        .rateRead > input:checked ~ label:hover ~ label,
+        .rateRead > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+</style>
 
 <div id="Map" class="buttonFigure" style="background-color:white; height:250px">
 
@@ -19,15 +114,15 @@
             <i class="fal fa-map-marker icon"></i>
         </div>
         <div class="section" style="border:none">
-            <div  class="price" style="text-align:left">@string.Format("{0:n0}", Model.netTotal)</div>
+            <div class="price" style="text-align:left">@string.Format("{0:n0}", Model.netTotal)</div>
             <div class="sectionRLT" style="font-weight:600">صافی کل: </div>
             <i class="fal fa-money-bill-alt icon"></i>
         </div>
     </div>
-   
+
 </div>
 
-<div  class="buttonFigure white">
+<div class="buttonFigure white">
     <div style="padding:20px ; width:100%">
         <div class="section" style="justify-content:space-around">
             <div>
@@ -50,12 +145,12 @@
         }
         <p class="descRow">@typ</p>
         <p class="descRow secTitle">توضیحات بار</p>
-       
+
         <p class="descRow">@Model.description</p>
     </div>
 </div>
 
-<div  class="buttonFigure white"> 
+<div class="buttonFigure white">
     <div style="width:100%">
         <p class="descRow secTitle">اطلاعات صاحب بار</p>
         <div class="section sectionRLT flexcentre noborder" style="padding:15px 0">
@@ -73,11 +168,202 @@
                     <p>تعداد کل  : </p>
                     <p>@Model.clientMark</p>
                 </div>
-              
+
             </div>
         </div>
+        <div onclick="searchOrderClicked()" class="buttonVerif">
+            <p class="lbl">تماس با صاحب بار</p>
+        </div>
     </div>
-  
+
 
 </div>
 
+
+@if (Model.orderStatus != "2")
+{
+    <div class="buttonFigure white ">
+        <div style="width:100%">
+            <span class="secTitle" style="text-align:right">پیشنهاد قیمتی شما برای حمل این بار</span>
+            <div class="section noborder " style="margin:15px">
+                <i class="fa fa-minus icon" style="font-size:15px"></i>
+                <p id="orderPrice" style="flex:1; text-align:center" class="price" priceatt="@Model.netTotal">@string.Format("{0:n0}", Model.netTotal)</p>
+                <i class="fa fa-plus icon" style="font-size:15px"></i>
+
+            </div>
+
+            <div onclick="sendOrderRequest('@Model.orderID',$('#orderPrice').attr('priceatt'))" class="buttonVerif">
+                <p class="lbl">ارسال درخواست</p>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+<div class="buttonFigure white ">
+    <div style="width:100%">
+        <span class="secTitle" style="text-align:right">نظرات کاربران</span>
+        <div style="width:100%">
+            @if (Model.comments != null)
+            {
+                foreach (var comm in Model.comments)
+                {
+                    string src = "/images/user.png";
+                    if (!string.IsNullOrEmpty(comm.clientImage))
+                    {
+                        src = comm.clientImage;
+                    }
+                    string name = methods.RandomString();
+                    <div class="section">
+                        <div style="width:100%">
+                            <div class="section noborder sectionRLT" style="padding:0">
+
+                                <img style="width:35px" src="@src" />
+                                <span style="padding:0 15px"></span>
+                                <p style="flex:1; text-align:right">@comm.clientTitle</p>
+                                <p> @dateTimeConvert.ToPersianDateString(@comm.date)</p>
+                            </div>
+                            <div>
+                                <div class="rateRead" style="margin:0; padding:0; justify-content:unset">
+                                    @if (Int32.Parse(comm.clientMark) > 0)
+                                    {
+                                        <input readonly type="radio" id="str1" name="@name" value="1" checked />
+                                        <label for="str1" title="text">1 star</label>
+                                    }
+                                    else
+                                    {
+                                        <input readonly type="radio" id="str1" name="@name" value="1" />
+                                        <label for="str1" title="text">1 star</label>
+                                    }
+
+                                    @if (Int32.Parse(comm.clientMark) > 1)
+                                    {
+                                        <input readonly type="radio" id="str2" name="@name" value="2" checked />
+                                        <label for="str2" title="text">2 stars</label>
+                                    }
+                                    else
+                                    {
+                                        <input readonly type="radio" id="str2" name="@name" value="2" />
+                                        <label for="str2" title="text">2 stars</label>
+
+                                    }
+                                    @if (Int32.Parse(comm.clientMark) > 2)
+                                    {<input readonly type="radio" id="str3" name="@name" value="3" checked />
+                                        <label for="str3" title="text">3 stars</label>
+
+                                    }
+                                    else
+                                    {<input readonly type="radio" id="str3" name="@name" value="3" />
+                                        <label for="str3" title="text">3 stars</label>
+
+                                    }
+                                    @if (Int32.Parse(comm.clientMark) > 3)
+                                    {
+                                        <input readonly type="radio" id="str4" name="@name" value="4" checked />
+                                        <label for="str4" title="text">4 stars</label>
+                                    }
+                                    else
+                                    {
+                                        <input readonly type="radio" id="str4" name="@name" value="4" />
+                                        <label for="str4" title="text">4 stars</label>
+                                    }
+                                    @if (Int32.Parse(comm.clientMark) > 4)
+                                    {
+                                        <input readonly type="radio" id="str5" name="@name" value="5" checked />
+                                        <label for="str5" title="text">5 stars</label>
+                                    }
+                                    else
+                                    {
+                                        <input readonly type="radio" id="str5" name="@name" value="5" />
+                                        <label for="str5" title="text">5 stars</label>
+                                    }
+
+
+
+
+
+                                </div>
+
+                            </div>
+                            <div>
+                                @comm.content
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+                }
+            }
+        </div>
+
+
+        <div onclick="searchOrderClicked()" class="buttonVerif">
+            <p class="lbl">مشاهده همه نظرات</p>
+        </div>
+    </div>
+
+</div>
+<div class="buttonFigure white ">
+    <div style="width:100%">
+        <div class="rate">
+            <input type="radio" id="star5" name="userRate" value="5" />
+            <label for="star5" title="text">5 stars</label>
+            <input type="radio" id="star4" name="userRate" value="4" />
+            <label for="star4" title="text">4 stars</label>
+            <input type="radio" id="star3" name="userRate" value="3" />
+            <label for="star3" title="text">3 stars</label>
+            <input type="radio" id="star2" name="userRate" value="2" />
+            <label for="star2" title="text">2 stars</label>
+            <input type="radio" id="star1" name="userRate" value="1" />
+            <label for="star1" title="text">1 star</label>
+        </div>
+        <div>
+            <input class="inputStyle" id="userComment" style="width:95%" placeholder="نظر شما" />
+        </div>
+        <div onclick='setNewComment( $("input[name=userRate]").val(), $("#userComment").val(),"@Model.orderID")' class="buttonVerif">
+            <p class="lbl">ثبت نظر</p>
+        </div>
+
+    </div>
+</div>
+
+
+
+<script>
+    showTwoPoin(@Model.origing.lat,@Model.origing.lon,@Model.destination.lat,@Model.destination.lon);
+</script>
+<script>
+    function addCommas(nStr) {
+        nStr += '';
+        var x = nStr.split('.');
+        var x1 = x[0];
+        var x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+    $(".fa-plus").click(function () {
+        var price = parseFloat($("#orderPrice").attr('priceatt'))
+
+        price = price + 200000;
+
+        $("#orderPrice").text(addCommas(price.toString()));
+        $("#orderPrice").attr('priceatt', price.toString());
+    })
+    $(".fa-minus").click(function () {
+        var price = parseFloat($("#orderPrice").attr('priceatt'))
+
+        price = price - 200000;
+        if (price > 0) {
+            $("#orderPrice").text(addCommas(price.toString()));
+            $("#orderPrice").attr('priceatt', price.toString());
+        }
+
+    })
+</script>

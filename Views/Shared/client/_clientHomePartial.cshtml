@@ -1,0 +1,249 @@
+﻿@model jbar.ViewModel.getOrderVM
+
+    <style>
+        
+    </style>
+<style>
+    .tabPrent {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .tabChile {
+        padding: 10px;
+        height:33%
+    }
+
+    .tabPrent .active span {
+        padding: 10px;
+        color: #a06509;
+        border-bottom: 1px solid #a06509;
+        width: 100%
+    }
+
+    .tabPrent  p {
+        padding: 10px;
+        color: #a06509;
+        border-bottom: 1px solid white;
+        width: 100%
+    }
+    .tabPrent .active p {
+        padding: 10px;
+        color: #a06509;
+        border-bottom: 1px solid #a06509;
+        width: 100%
+    }
+    .subTab .active{
+        display:block
+    }
+
+    .subTabChild {
+        display: none
+    }
+</style>
+
+<div style="position: relative; height: 80vh">
+    <div style="padding-bottom:10vh;position:relative;height: 80vh;">
+        <div class="tabPrent " style="direction:rtl; height:7vh">
+            <div secToGo="unpublished" class="tabChile active">
+                <span>  منتشر نشده</span>
+            </div>
+            <div secToGo="published" class="tabChile">
+                <span>
+                    منتشر شده
+                </span>
+              
+            </div>
+            <div secToGo="accepted" class="tabChile">
+                <span>
+                    قبول شده
+                </span>
+               
+            </div>
+        </div>
+        <div class="subTab" style="position:absolute; top:7vh; width:100%; padding-bottom:10vh">
+            <div id="unpublished" class="subTabChild active">
+                @foreach (var item in Model.orderList.Where(x => x.status == "0"))
+                {
+                    <div id="@item.orderID" onclick="orderDetialClicked(this)" class="orderParent gotToOrderDetail">
+                        <div class="section flexcentre">
+                            <div class="lable">جدید</div>
+                            <div class="viewcounter">@item.viewNumber</div>
+                            <i style="color: #a06509;" class="fa fa-eye"></i>
+                        </div>
+                        <div class="section sectionRLT">
+                            <div>
+                                <div class="section noborder">
+                                    <i class="fal fa-map-marker icon"></i>
+                                    <div>@item.origin</div>
+                                </div>
+
+                                <img style="width:30px" src="~/images/down.png" />
+                                <div class="section noborder">
+                                    <i class="fal fa-map-marker icon"></i>
+                                    <div>@item.destin</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section sectionRLT">
+                            <div>صافی کل</div>
+                            <div class="price">@string.Format("{0:n0}", item.priceTotal) </div>
+                        </div>
+                    </div>
+                }
+               
+            </div>
+            <div id="published" class="subTabChild">
+                @foreach (var item in Model.orderList.Where(x => x.status == "1"))
+                {
+                    <div id="@item.orderID" onclick="orderDetialClicked(this)" class="orderParent gotToOrderDetail">
+                        <div class="section flexcentre">
+                            <div class="lable">جدید</div>
+                            <div class="viewcounter">@item.viewNumber</div>
+                            <i style="color: #a06509;" class="fa fa-eye"></i>
+                        </div>
+                        <div class="section sectionRLT">
+                            <div>
+                                <div class="section noborder">
+                                    <i class="fal fa-map-marker icon"></i>
+                                    <div>@item.origin</div>
+                                </div>
+
+                                <img style="width:30px" src="~/images/down.png" />
+                                <div class="section noborder">
+                                    <i class="fal fa-map-marker icon"></i>
+                                    <div>@item.destin</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section sectionRLT">
+                            <div>صافی کل</div>
+                            <div class="price">@string.Format("{0:n0}", item.priceTotal) </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div id="accepted" class="subTabChild">
+                @foreach (var item in Model.orderList.Where(x => x.status == "2"))
+                {
+                    <div id="@item.orderID" onclick="orderDetialClicked(this)" class="orderParent gotToOrderDetail">
+                        <div class="section flexcentre">
+                            <div class="lable">جدید</div>
+                            <div class="viewcounter">@item.viewNumber</div>
+                            <i style="color: #a06509;" class="fa fa-eye"></i>
+                        </div>
+                        <div class="section sectionRLT">
+                            <div>
+                                <div class="section noborder">
+                                    <i class="fal fa-map-marker icon"></i>
+                                    <div>@item.origin</div>
+                                </div>
+
+                                <img style="width:30px" src="~/images/down.png" />
+                                <div class="section noborder">
+                                    <i class="fal fa-map-marker icon"></i>
+                                    <div>@item.destin</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="section sectionRLT">
+                            <div>صافی کل</div>
+                            <div class="price">@string.Format("{0:n0}", item.priceTotal) </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+<div class="loggigTypeSection slideSection" style="display: none; padding-top:10vh; z-index:100 ;background-color:#F7FBFC">
+
+    <div style="height:100vh; overflow:scroll;padding-bottom:10vh; background-color:white">
+        <div class="secondSection">
+            <i id="backToHomeFromLoggig" class="fa fa-arrow-left" style="margin:0 20px"></i> <span style="flex:1">نوع بار</span>
+        </div>
+        <div>
+            <div id="loggigTypeParent" style="text-align :center">
+                <div class="loaderholder">
+                    <span class="loader"></span>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+<div class="orderDetailSection slideSection" style="display: none; padding-top:10vh; z-index:100 ;background-color:#F7FBFC">
+    <div style="height:100vh; overflow:scroll;padding-bottom:10vh">
+        <div class="secondSection">
+            <i id="backToHomeFromDetail" class="fa fa-arrow-left" style="margin:0 20px"></i> <span style="flex:1">جزئیات سفارش</span>
+        </div>
+        <div id="orderDetailParent" style="text-align :center">
+            <div class="loaderholder">
+                <span class="loader"></span>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="orderListSection slideSection" style="display: none; padding-top:10vh; z-index:99 ;background-color:#F7FBFC" >
+    <div style="height:90vh; overflow-y:scroll; overflow-x:hidden; width:100% ">
+        <div class="secondSection">
+            <i id="backToHomeFromOrder" class="fa fa-arrow-left" style="margin: 0 20px"></i> <span style="flex:1">ثبت سفارش جدید</span>
+        </div>
+
+        <div id="orderList">
+
+            <div id="orderListparent" style="text-align :center">
+                <div class="loaderholder">
+                    <span class="loader"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    
+    $("#backToHomeFromLoggig").click(function () {
+
+       
+        $('.loggigTypeSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $('.loggigTypeSection').hide();
+        });
+
+    })
+   
+    $("#backToHomeFromOrder").click(function () {
+
+        $('.orderListSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $('.orderListSection').hide();
+        });
+
+    })
+    $("#backToHomeFromDetail").click(function () {
+        $("#orderDetailParent").html('<div class="loaderholder"><span class= "loader" ></span ></div >');
+        $('.orderDetailSection').animate({ 'margin-bottom': '-=100vh' }, 200, function () {
+            $('.orderDetailSection').hide();
+        });
+
+    })
+
+</script>
+<script>
+    $(".tabChile").click(function () {
+        $(".tabChile").removeClass("active");
+        $(this).addClass("active");
+        var id = $(this).attr('secToGo');
+        $(".subTabChild").removeClass("active");
+        $("#" + id).addClass("active");
+    })
+</script>

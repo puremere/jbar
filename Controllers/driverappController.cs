@@ -15,7 +15,7 @@ namespace jbar.Controllers
    
     public class driverappController : Controller
     {
-        string baseServer = "https://jbar.app/api/app";
+        string baseServer = "https://localhost:44389/api/app";
         // GET: driverapp
         public ActionResult Index()
         {
@@ -41,6 +41,7 @@ namespace jbar.Controllers
                     var collection = new NameValueCollection();
                     collection.Add("phone", phone);
                     collection.Add("code", code);
+                    collection.Add("userType", "1");
                     byte[] response = client.UploadValues(baseServer + "/Verify", collection);
 
                     result = System.Text.Encoding.UTF8.GetString(response);
@@ -54,12 +55,18 @@ namespace jbar.Controllers
                 Response.Cookies["token"].Value = tkn;
             }
             
+            if (Request.Cookies["firebase"] == null)
+            {
+                //ViewBag.fireBase ="1";
+            }
+            ViewBag.fireBase = "1";
             return View("Home");
 
 
 
         }
-       
+
+        [HttpPost]
         public ActionResult getCode(string phone)
         {
             string result = "";
@@ -98,6 +105,7 @@ namespace jbar.Controllers
                     ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
                     byte[] response = client.UploadValues(baseServer + "/getProfile", collection);
 
+
                     result = System.Text.Encoding.UTF8.GetString(response);
                     sendProfileVM model = JsonConvert.DeserializeObject<sendProfileVM>(result);
                     return PartialView("/Views/Shared/driver/_driverProfileParial.cshtml", model);
@@ -119,6 +127,43 @@ namespace jbar.Controllers
         public ActionResult getHome()
         {
             return PartialView("/Views/Shared/driver/_driverHomePartial.cshtml");
+        }
+
+       [HttpPost]
+       public ActionResult requestOrder(requestOrderVM inputmodel)
+        {
+            if (Request.Cookies["token"] == null)
+            {
+                return Content("400");
+            }
+            string token = Request.Cookies["token"].Value;
+            string result = "";
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    client.Headers.Set("Authorization", "Basic " + token);
+                    var collection = new NameValueCollection();
+                    collection.Add("orderID", inputmodel.orderID);
+                    collection.Add("price", inputmodel.price.ToString());
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
+                    byte[] response = client.UploadValues(baseServer + "/requestOrder", collection);
+
+                    result = System.Text.Encoding.UTF8.GetString(response);
+                    responseModel model = JsonConvert.DeserializeObject<responseModel>(result);
+                    return Content (model.status.ToString());
+                }
+            }
+            catch (Exception e)
+            {
+
+
+                HttpCookie nameCookie = Request.Cookies["token"];
+                nameCookie.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(nameCookie);
+                return Content("400");
+            }
         }
 
 
@@ -160,6 +205,7 @@ namespace jbar.Controllers
             }
         }
 
+
         [HttpPost]
         public ActionResult getOrderDetail(string orderID)
         {
@@ -182,6 +228,7 @@ namespace jbar.Controllers
 
                     result = System.Text.Encoding.UTF8.GetString(response);
                     sendDetailVM model = JsonConvert.DeserializeObject<sendDetailVM>(result);
+                    model.orderID = orderID;
                     return PartialView("/Views/Shared/driver/_driverOrderDetailParial.cshtml", model);
                 }
             }
@@ -214,23 +261,104 @@ namespace jbar.Controllers
             }
             return Content(name);
         }
+
+        
+        public ActionResult getUserOrder()
+        {
+            if (Request.Cookies["token"] == null)
+            {
+                return Content("400");
+            }
+            string token = Request.Cookies["token"].Value;
+            string result = "";
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    client.Headers.Set("Authorization", "Basic " + token);
+                    var collection = new NameValueCollection();
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
+                    byte[] response = client.UploadValues(baseServer + "/getUserOrder", collection);
+
+                    result = System.Text.Encoding.UTF8.GetString(response);
+                    getOrderVM model = JsonConvert.DeserializeObject<getOrderVM>(result);
+                    return PartialView("/Views/Shared/driver/_driverOrderlistParial.cshtml", model);
+                }
+            }
+            catch (Exception e)
+            {
+
+
+                HttpCookie nameCookie = Request.Cookies["token"];
+                nameCookie.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(nameCookie);
+                return Content("400");
+            }
+            
+        }
+
+        [HttpPost]
+        public void updateLocation(getCityNameVM model)
+        {
+            string result = "";
+            string token = Request.Cookies["token"].Value;
+            using (WebClient client = new WebClient())
+            {
+                client.Headers.Set("Authorization", "Basic " + token);
+                var collection = new NameValueCollection();
+
+                collection.Add("lat", model.lat.ToString());
+                collection.Add("lon", model.lon.ToString());
+                byte[] response = client.UploadValues(baseServer + "/changeUserLocation", collection);
+
+                result = System.Text.Encoding.UTF8.GetString(response);
+
+            }
+        }
+
+        [HttpPost]
+        public void setNewComment(setCommentVM model)
+        {
+            string result = "";
+            string token = Request.Cookies["token"].Value;
+            using (WebClient client = new WebClient())
+            {
+                client.Headers.Set("Authorization", "Basic " + token);
+                var collection = new NameValueCollection();
+
+                collection.Add("orderID", model.orderID);
+                collection.Add("mark", model.mark);
+                collection.Add("content", model.content);
+                byte[] response = client.UploadValues(baseServer + "/addComment", collection);
+
+                result = System.Text.Encoding.UTF8.GetString(response);
+            }
+        }
+
         [HttpPost]
         public ActionResult setProfile(setProfileVM model)
         {
             string token = Request.Cookies["token"].Value;
             string result = "";
 
+            if (!string.IsNullOrEmpty(model.firebaseToken))
+            {
+                Response.Cookies["firebase"].Value = model.firebaseToken;
+            }
+
             using (WebClient client = new WebClient())
             {
                 client.Headers.Set("Authorization", "Basic " + token);
                 var collection = new NameValueCollection();
+                
+                collection.Add("firebaseToken", model.firebaseToken);
                 collection.Add("hooshmandMashin", model.hooshmandMashin);
                 collection.Add("cartDriver", model.cartDriver);
                 collection.Add("cartNavgan", model.cartNavgan);
                 collection.Add("profileImage", model.profileImage);
                 collection.Add("cityID", model.cityID);
                 collection.Add("typeID", model.typeID);
-                collection.Add("profileImage", model.profileImage);
                 collection.Add("pelakIran", model.pelakIran);
                 collection.Add("pelakHarf", model.pelakHarf);
                 collection.Add("pelak2", model.pelak2);

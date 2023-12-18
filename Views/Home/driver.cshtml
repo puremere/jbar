@@ -7,8 +7,9 @@
     .prnt {
         height: 100vh;
         background-size: cover;
-        background-image: url(/Assets/scontent/uploads/sites/20/2015/09/hicker.jpg)
+        background-image: url(/Assets/wp-content/themes/parspack/template/images/driver.jpg)
     }
+
     .itemholder {
         position: absolute;
         top: 50%;
@@ -30,6 +31,15 @@
             object-fit:scale-down;
             width:100%
         }
+
+        @@media (max-width : 600px){
+            .parentdiv a img {
+               margin:20px 0;
+            }
+            .parentdiv{
+                display:block
+            }
+        }
 </style>
 <div class="prnt" style="">
     <div class="itemholder">
@@ -42,7 +52,7 @@
             <a>
                 <img src="~/Assets/img/googlePlay.png" />
             </a>
-            <a>
+            <a href="/driverapp/index">
 
                 <img src="~/Assets/img/wpa.png" />
             </a>

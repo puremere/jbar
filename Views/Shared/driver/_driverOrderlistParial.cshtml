@@ -1,69 +1,7 @@
 ﻿@model jbar.ViewModel.getOrderVM
 
 <style>
-    .orderParent {
-        padding: 15px;
-        border-radius: 5px;
-        border: 1px solid #eee;
-        background-color: white;
-        margin: 10px
-    }
-
-    .section {
-        display: flex;
-        padding: 15px;
-        border-bottom: 1px solid #ddd;
-    }
-
-    .icon {
-        margin: 0 15px
-    }
-
-    .sectionRLT {
-        direction: rtl;
-    }
-
-    .flexcentre {
-        align-items: center;
-    }
-
-        .flexcentre div {
-            margin: 0 5px
-        }
-
-    .noborder {
-        border: none;
-    }
-
-    .viewcounter {
-        font-size: 12px
-    }
-    .descRow{
-        text-align:right;
-        direction:rtl;
-        margin:20px;
-    }
-    .lable {
-        padding: 4px;
-        background-color: #a06509;
-        color: white;
-        border-radius: 5px;
-        font-size: 12px;
-    }
-    .white{
-        background-color:white;
-    }
-    .price {
-        flex: 1;
-        color: #a06509;
-        text-align: left;
-        font-size: 15px;
-        font-weight: 600
-    }
-    .secTitle{
-        font-weight:600;
-        font-size:14px
-    }
+   
 </style>
 @if (Model.orderList != null)
 {
@@ -73,7 +11,7 @@
             <div class="section flexcentre">
                 <div class="lable">جدید</div>
                 <div class="viewcounter">@item.viewNumber</div>
-                <i style="color: #a06509;" class="fa fa-eye"></i>
+                <i style="color: #312974;" class="fa fa-eye"></i>
             </div>
             <div class="section sectionRLT">
                 <div>

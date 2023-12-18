@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="rtl">
+
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta name="description" content="Spruha -  Admin Panel laravel Dashboard Template">
+    <meta name="author" content="Spruko Technologies Private Limited">
+    <meta name="keywords" content="admin laravel template, template laravel admin, laravel css template, best admin template for laravel, laravel blade admin template, template admin laravel, laravel admin template bootstrap 4, laravel bootstrap 4 admin template, laravel admin bootstrap 4, admin template bootstrap 4 laravel, bootstrap 4 laravel admin template, bootstrap 4 admin template laravel, laravel bootstrap 4 template, bootstrap blade template, laravel bootstrap admin template">
+
+    <!-- Favicon -->
+    <link rel="icon" href="~/Assets_panel/img/brand/favicon.ico" type="image/x-icon" />
+
+    <!-- Title -->
+    <title>داشبورد</title>
+
+    <!-- Bootstrap css-->
+    <link href="~/Assets_panel/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Icons css-->
+    <link href="~/Assets_panel/plugins/web-fonts/icons.css" rel="stylesheet" />
+    <link href="~/Assets_panel/plugins/web-fonts/font-awesome/font-awesome.min.css" rel="stylesheet">
+    <link href="~/Assets_panel/plugins/web-fonts/plugin.css" rel="stylesheet" />
+
+    <!-- Style css-->
+    <link href="~/Assets_panel/css-rtl/style/style.css" rel="stylesheet">
+    <link href="~/Assets_panel/css-rtl/skins.css" rel="stylesheet">
+    <link href="~/Assets_panel/css-rtl/dark-style.css" rel="stylesheet">
+    <link href="~/Assets_panel/css-rtl/colors/default.css" rel="stylesheet">
+
+
+    <!-- Color css-->
+    <link id="theme" rel="stylesheet" type="text/css" media="all" href="~/Assets_panel/css-rtl/colors/color.css">
+
+    <!-- Switcher css-->
+    <link href="~/Assets_panel/switcher/css/switcher-rtl.css" rel="stylesheet">
+    <link href="~/Assets_panel/switcher/demo.css" rel="stylesheet">
+    <link href="~/Content/panelStyle.css" rel="stylesheet" />
+
+
+
+
+</head>
+
+<body class="main-body leftmenu">
+
+  
+    <!-- Loader -->
+    <div id="global-loader">
+        <img src="~/Assets_panel/img/loader.svg" class="loader-img" alt="Loader">
+    </div>
+    <!-- End Loader -->
+    <!-- Page -->
+    <div class="page main-signin-wrapper">
+
+        <!-- Row -->
+        <div class="row signpages text-center">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="row row-sm">
+                        <div class="col-lg-6 col-xl-5 d-none d-lg-block text-center bg-primary details">
+                            <div class="mt-5 pt-4 p-2 pos-absolute">
+                                <img src="~/images/whitey.png" class="header-brand-img mb-4" alt="logo">
+                                <div class="clearfix"></div>
+                             
+                                <h5 class="mt-4 text-white">ورد به پنل جی بار</h5>
+                                <span class="tx-white-6 tx-13 mb-5 mt-xl-0">برای ورود از پنل مقابل استفاده کنید</span>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-xl-7 col-xs-12 col-sm-12 login_form ">
+                            <div class="container-fluid">
+                                <div class="row row-sm">
+                                    <div class="card-body mt-2 mb-2">
+                                        <img src="~/Assets_panel/img/brand/logo.png" class=" d-lg-none header-brand-img text-left float-left mb-4" alt="logo">
+                                        <div class="clearfix"></div>
+                                      
+                                        <form method="post" action="getCode">
+                                            <h5 class="text-right mb-2">به حساب خود وارد شوید</h5>
+                                            <p class="mb-4 text-muted tx-13 ml-0 text-right">برای استفاده از امکانات وارد حساب کاربری خود شوید</p>
+                                            <div class="form-group text-right">
+                                                <label>شماره موبایل</label>
+                                                <div class="l1">
+                                                    <input id="inputPhone" name="phone" class="form-control " placeholder="شماره موبایل خود را وارد کنید" type="text">
+
+                                                    <button id="getCodeButton" class=" btn ripple btn-main-primary btn-block">دریافت کد</button>
+                                                </div>
+                                                
+
+                                            </div>
+                                            
+                                            
+                                        </form>
+                                        <form method="post" action="setCode">
+                                            <div class="form-group text-right">
+                                                <input id="fname" name="phone" style="display:none"/>
+                                                <label>کد ارسال شده</label>
+                                                <input name="code" class="form-control" placeholder="لطفا کد ارسال شده را وارد نمایید" type="password">
+                                            </div>
+                                            <button class="btn ripple btn-main-primary btn-block">تایید</button>
+                                        </form>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Row -->
+
+    </div>
+    <!-- End Page -->
+    <!-- Jquery js-->
+    <script src="~/Assets_panel/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap js-->
+    <script src="~/Assets_panel/plugins/bootstrap/js/popper.min.js"></script>
+    <script src="~/Assets_panel/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Select2 js-->
+    <script src="~/Assets_panel/plugins/select2/js/select2.min.js"></script>
+
+
+    <!-- Custom js -->
+    <script src="~/Assets_panel/js/custom.js"></script>
+
+    <!-- Switcher js -->
+    <script src="~/Assets_panel/switcher/js/switcher-rtl.js"></script>
+   
+
+    <script src="~/Scripts/panelScript.js"></script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,90 @@
+﻿@model jbar.ViewModel.sendProfileVM
+
+@{
+    string url = "";
+}
+
+
+
+
+<div class="inputHolder">
+    <input id="fullnameLoggig" value="@Model.user.name" required='' type='text'>
+    <label alt='نام  نام خانوادگی ' placeholder='نام و نام خانوادگی '></label>
+
+</div>
+<div class="inputHolder">
+    <input id="coNameLoggig" value="@Model.user.coName" required='' type='text'>
+    <label alt='نام شرکت' placeholder='نام باربری'></label>
+
+</div>
+<div class="inputHolder">
+    <input id="codemeliLoggig" value="@Model.user.codeMelli" required='' type='text'>
+    <label alt='کد ملی مدیر' placeholder='کد ملی مدیر'></label>
+
+</div>
+<div class="inputHolder">
+    <input id="shenaseSherkatLoggig" value="@Model.user.shenaseSherkat" required='' type='text'>
+    <label alt='شناسه ملی شرکت' placeholder='شناسه ملی باربری'></label>
+
+</div>
+<div class="cityprofileholder " style="" onclick="profileCityClicked()">
+    @{
+        string citytity = "شهر محل سکونت";
+        if (Model.city != null)
+        {
+            citytity = Model.city;
+
+        }
+
+    }
+    <span id="profileCity" style="margin:0; text-align:right">@citytity</span>
+    <input value="@Model.user.cityID" id="profileCityInput" style="display:none" />
+</div>
+<div class="inputHolder" style="margin-top:20px">
+    <input id="addressLoggig" value="@Model.user.address" required='' type='text'>
+    <label alt='آدرس بابری' placeholder='آدرس باربری'></label>
+
+</div>
+<div class="inputHolder">
+    <input id="emPhoneLoggig" value="@Model.user.emPhone" required='' type='text'>
+    <label alt='تلفن ثابت باربری' placeholder='تلفن ثابت باربری'></label>
+</div>
+<div class="inputHolder">
+    <input id="postalCode" value="@Model.user.postalCode" required='' type='text'>
+    <label alt='کد پستی' placeholder='کد پستی'></label>
+</div>
+
+
+<div onclick="" class="downloaddSec">
+    @{
+        string kartMelli = "/images/upload.png";
+        string Tasvir = "/images/upload.png";
+
+        if (Model.user.cartNavgan != null)
+        {
+            kartMelli = "/uploads/" + Model.user.cartMelliModir;
+        }
+        if (Model.user.cartDriver != null)
+        {
+            Tasvir = "/uploads/" + Model.user.rooznameOrParvaneOrTasvir;
+        }
+    }
+
+    <img style="width:50px; " id="melliTitle" src="@kartMelli" />
+    <p id="navganTitle" style="flex:1; margin-right:10px" class="lbl">کارت ملی مدیر</p>
+    <input type="file" id="karteMelliPerson" style="display:none" />
+    <p id="karteMelliFinal" style="display:none">@Model.user.cartMelliModir</p>
+    <p id="karteMelliTrriger" class="lbl">انتخاب تصویر</p>
+</div>
+<p style="margin:10px; text-align:right">لطفا تصویر واضحی از کارت ملی مدیر بارگزاری کنید</p>
+<div onclick="" class="downloaddSec">
+    <img style="width:50px" id="TasvirTitle" src="@Tasvir" />
+    <p id="" style="flex:1; margin-right:10px" class="lbl">پروانه فعالیت </p>
+    <input type="file" id="karteTasvir" style="display:none" />
+    <p id="karteTasvirFinal" style="display:none">@Model.user.rooznameOrParvaneOrTasvir</p>
+    <p id="karteTasvirTrigger" class="lbl">انتخاب تصویر</p>
+</div>
+<p style="margin:10px; text-align:right">لطفا پروانه فعالیت باربری را براگزاری کنید</p>
+<div style="padding:15px">
+    <div onclick="btnprofileLoggigingSubmit()" class="btnstyle" style="text-align:center">تایید</div>
+</div>

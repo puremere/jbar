@@ -44,6 +44,9 @@ namespace jbar.Controllers
             using (Context dbcontext = new Context())
             {
                 user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
+                user.lat = model.lat.ToString();
+                user.lon = model.lon.ToString();
+                //user.userType = "1";
                 DbGeography point = ConvertLatLonToDbGeography(model.lon, model.lat);
                 user.point = point;
                 dbcontext.SaveChanges();
@@ -143,7 +146,7 @@ namespace jbar.Controllers
                 }
                 else
                 {
-                    if (model.search == null &&  model.ID == null)
+                    if (model.search == null && model.ID == null)
                     {
                         List<newcity> cities = dbcontext.cities.Where(x => x.userID == x.parentID).Select(x => new newcity { title = x.title, parentID = x.parentID, userID = x.userID }).ToList();
                         output.lst = cities;
@@ -179,7 +182,7 @@ namespace jbar.Controllers
                         }
                     }
 
-                    
+
 
 
                 }
@@ -223,7 +226,7 @@ namespace jbar.Controllers
                         output.status = 200;
 
                     }
-                   
+
                 }
 
 
@@ -285,8 +288,17 @@ namespace jbar.Controllers
             string outputstring = "";
             Random rnd = new Random();
             int num = rnd.Next(1111, 9999);
+
+
             using (Context dbcontext = new Context())
             {
+               
+
+                //Guid Userguid = new Guid("5417296b-b07e-404a-bc71-f04dc8baac2f");
+
+                //user user = dbcontext.users.SingleOrDefault(x => x.userID == Userguid);
+                //dbcontext.users.Remove(user);
+                //dbcontext.SaveChanges();
                 user myuser = dbcontext.users.SingleOrDefault(x => x.phone == model.phone && x.userType == model.userType);
                 if (myuser != null)
                 {
@@ -393,7 +405,7 @@ namespace jbar.Controllers
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
                 HttpClient HttpClient = new HttpClient();
-                HttpClient.DefaultRequestHeaders.Add("Api-Key", "service.d09e8d248510468daf13691f4c352241");
+                HttpClient.DefaultRequestHeaders.Add("Api-Key", "service.88c9de7768a84c0393b15c115871da47");
                 string url = "https://api.neshan.org/v1/distance-matrix/no-traffic?type=car&origins=" + origin.lat + "," + origin.lon + "&destinations=" + destination.lat + "," + destination.lon + "";
                 string page = await HttpClient.GetStringAsync(url);
                 distancVM distancemodel = JsonConvert.DeserializeObject<distancVM>(page);
@@ -412,6 +424,7 @@ namespace jbar.Controllers
                     clientID = user.userID,
                     distance = distance,
                     date = orderdete,
+                    orderdate = DateTime.Now,
                     description = model.description,
                     destinCityID = new Guid(model.destinCityID),
                     driverID = new Guid(),
@@ -428,13 +441,11 @@ namespace jbar.Controllers
                     viewCount = 0,
                     publishDate = orderdete,
                     orderStatus = "0"
-                    
-                     
+
+
 
                 };
                 dbcontext.orders.Add(neworder);
-                
-
                 List<string> typeList = model.type.Trim(',').Split(',').ToList();
                 foreach (var type in typeList)
                 {
@@ -443,7 +454,7 @@ namespace jbar.Controllers
                         orderID = orderguid,
                         ordertypeID = Guid.NewGuid(),
                         typeID = new Guid(type),
-                        
+
                     };
                     dbcontext.ordertypes.Add(newtype);
                 }
@@ -472,16 +483,19 @@ namespace jbar.Controllers
             Guid userID = new Guid(someObject.ToString());
             getOrderVM mymodel = new getOrderVM();
 
+
+
             using (Context dbcontext = new Context())
             {
+
                 List<order> lstorder = dbcontext.orders.ToList();
                 List<orderListVM> lst = (from p in dbcontext.orders
                                          join c in dbcontext.cities on
                                          p.originCityID equals c.userID
                                          join cc in dbcontext.cities on
                                          p.destinCityID equals cc.userID
-
-                                         where  p.clientID == userID
+                                         where p.clientID == userID
+                                         orderby p.orderdate descending
                                          select new orderListVM
                                          {
                                              orderID = p.orderID.ToString(),
@@ -508,7 +522,7 @@ namespace jbar.Controllers
                 mymodel.orderList = lst;
             }
 
-            
+
 
             mymodel.status = 200;
             mymodel.message = "ok";
@@ -521,7 +535,7 @@ namespace jbar.Controllers
         [System.Web.Http.HttpPost]
         public getOrderVM getUserOrder([FromBody] setOrderVM model)
         {
-            
+
             object someObject;
             Request.Properties.TryGetValue("UserToken", out someObject);
 
@@ -537,7 +551,7 @@ namespace jbar.Controllers
                                          p.originCityID equals c.userID
                                          join cc in dbcontext.cities on
                                          p.destinCityID equals cc.userID
-                                         where  p.orderStatus == "2" && p.driverID == userID
+                                         where p.orderStatus == "2" && p.driverID == userID
                                          select new orderListVM
                                          {
                                              orderID = p.orderID.ToString(),
@@ -609,11 +623,12 @@ namespace jbar.Controllers
             return mymodel;
         }
 
+
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
         public getOrderVM getOrder([FromBody] setOrderVM model)
         {
-            
+
             object someObject;
             Request.Properties.TryGetValue("UserToken", out someObject);
 
@@ -684,20 +699,28 @@ namespace jbar.Controllers
                                            select new newtype { title = otp.title + " - " + o.title }).ToList();
 
                     List<orderCommentVM> comments = (from c in dbcontext.comments
-                                                     join u in dbcontext.users on c.userID equals u.userID 
-                                                      where c.orderID == orderGuid 
-                                                     select new orderCommentVM { clientImage = "https://www.jbar.app/Uploads/"+u.profileImage, clientMark = c.clientMark, clientTitle = u.name, content = c.content, date = c.date }).ToList();
+                                                     join u in dbcontext.users on c.userID equals u.userID
+                                                     where c.orderID == orderGuid
+                                                     select new orderCommentVM { clientImage = "https://www.jbar.app/Uploads/" + u.profileImage, clientMark = c.clientMark, clientTitle = u.name, content = c.content, date = c.date }).ToList();
 
 
-
+                    
                     foreach (var item in comments)
                     {
+                       
                         item.srtdate = dateTimeConvert.ToPersianDateString(item.date);
                     }
+                    List<Comment> lst = dbcontext.comments.ToList();
+                    //foreach (var item in lst)
+                    //{
+                    //    dbcontext.comments.Remove(item);
+                    //}
+                    //dbcontext.SaveChanges();
+
                     var sb = new StringBuilder();
                     sb.Append(Math.Ceiling(myorder.distance / 1000).ToString());
                     sb.Append("کیلومتر ");
-                  
+
                     result.origing = origin;
                     result.clientPhone = client.phone;
                     result.orderStatus = myorder.orderStatus;
@@ -718,11 +741,11 @@ namespace jbar.Controllers
                     result.status = 200;
 
                     var sb2 = new StringBuilder();
-                    sb2.Append((DateTime.Now - myorder.date).TotalHours);
+                    sb2.Append((int)(DateTime.Now - myorder.date).TotalHours);
                     sb2.Append(" ساعت پیش ");
 
                     var sb3 = new StringBuilder();
-                    sb3.Append((DateTime.Now - myorder.date).Minutes);
+                    sb3.Append((int)(DateTime.Now - myorder.date).Minutes);
                     sb3.Append("  دقیقه پیش ");
                     result.passedTime = (int)(DateTime.Now - myorder.date).TotalHours > 1 ? sb2.ToString() : sb3.ToString();
 
@@ -733,7 +756,7 @@ namespace jbar.Controllers
                 {
                 }
 
-                
+
             }
             return result;
         }
@@ -773,9 +796,9 @@ namespace jbar.Controllers
 
 
                     var qResponse = (from c in dbcontext.orderResponses
-                                                          join u in dbcontext.users on c.driverID equals u.userID
-                                                          where c.orderID == orderGuid
-                                                          select new responsToOrder { driverID = c.driverID.ToString(), phone = u.phone, price = c.price, title = u.name });
+                                     join u in dbcontext.users on c.driverID equals u.userID
+                                     where c.orderID == orderGuid
+                                     select new responsToOrder { driverID = c.driverID.ToString(), phone = u.phone, price = c.price, title = u.name });
 
                     if (myorder.orderStatus == "2")
                     {
@@ -836,6 +859,75 @@ namespace jbar.Controllers
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
+        public getCoDriverResponse getCoDriver()
+        {
+
+            getCoDriverResponse obj = new getCoDriverResponse();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+
+            Guid userID = new Guid(someObject.ToString());
+            using (Context dbcontext = new Context())
+            {
+                user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
+                List<codrivervm> lst = (from cd in dbcontext.coDrivers
+                                        join u in dbcontext.users on cd.coDriverID equals u.userID
+                                        where cd.DriverID == user.userID
+                                        select new codrivervm { did = u.userID, dname = u.name,dusername = u.username }).ToList();
+
+                obj.codrivers = lst;
+                obj.status = 200;
+
+
+            }
+            return obj;
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public JObject addDriver([FromBody] addDriverVM model)
+        {
+            getDashbaord obj = new getDashbaord();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            responseModel mymodel = new responseModel();
+            Guid userID = new Guid(someObject.ToString());
+            using (Context dbcontext = new Context())
+            {
+                user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
+
+                user codriver = dbcontext.users.SingleOrDefault(x => x.phone == model.phone && x.userType == "1");
+
+                if (codriver != null)
+                {
+                    coDriver coobj = new coDriver()
+                    {
+                        coDriverID = codriver.userID,
+                        DriverID = user.userID
+                    };
+                    dbcontext.coDrivers.Add(coobj);
+                    dbcontext.SaveChanges();
+                    mymodel.status = 200;
+
+                }
+                else
+                {
+                    mymodel.status = 400;
+                    mymodel.message = "کاربر مورد نظر عضو سامانه نمی باشد";
+                }
+            }
+
+
+            string result = JsonConvert.SerializeObject(mymodel);
+
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+        }
+
+
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
         public getDashbaord getDashboard()
         {
 
@@ -872,7 +964,8 @@ namespace jbar.Controllers
         {
             responseModel mymodel = new responseModel();
             string result = "";
-            using (Context dbcontext = new Context()){
+            using (Context dbcontext = new Context())
+            {
                 Guid orderID = new Guid(model.orderID);
                 order selectedOrder = dbcontext.orders.SingleOrDefault(x => x.orderID == orderID);
                 selectedOrder.orderStatus = "1";
@@ -906,7 +999,7 @@ namespace jbar.Controllers
                 city ordercity = dbcontext.cities.SingleOrDefault(x => x.userID == selectedOrder.originCityID);
                 DbGeography point = ordercity.citypoint;
 
-
+                //List<user> useddrs0 = dbcontext.users.Where(x=>x.phone == "09194594505").ToList();
                 List<user> useddrs = (from u in dbcontext.users
                                       where u.userType == "1" && u.point.Distance(point) < 2000000
                                       select u).ToList();
@@ -918,53 +1011,56 @@ namespace jbar.Controllers
                         Credential = GoogleCredential.FromFile(src),
                     });
                 }
-               
+
 
                 foreach (var item in useddrs)
                 {
 
-
-                    notifVM fm = new notifVM();
-                    fm.data = notifString;
-                    bigStyle big_style = new bigStyle();
-                    big_style.type = "";
-                    titleModel title = new titleModel();
-                    title.text = "productDetail";
-                    clickAction click_action = new clickAction();
-                    click_action.title = "";
-                    click_action.type = "openapp";
-                    click_action.data = "/home/viewDetail?q=" + orderID;
-                    fm.big_style = big_style;
-                    fm.title = title;
-                    fm.click_action = click_action;
-
-                    string mdljson = JsonConvert.SerializeObject(fm);
-                    Dictionary<string, string> dat = new Dictionary<string, string>();
-                    dat.Add("mydata", mdljson);
-                    var message = new Message()
+                    if (true) //item.phone == "09194594505"
                     {
+                        notifVM fm = new notifVM();
+                        fm.data = notifString;
+                        bigStyle big_style = new bigStyle();
+                        big_style.type = "";
+                        titleModel title = new titleModel();
+                        title.text = "productDetail";
+                        clickAction click_action = new clickAction();
+                        click_action.title = "";
+                        click_action.type = "openapp";
+                        //click_action.data = "/home/viewDetail?q=" + orderID;
+                        fm.big_style = big_style;
+                        fm.title = title;
+                        fm.click_action = click_action;
 
-                        Data = dat,
-                        Notification = new Notification
+                        string mdljson = JsonConvert.SerializeObject(fm);
+                        Dictionary<string, string> dat = new Dictionary<string, string>();
+                        dat.Add("mydata", mdljson);
+                        var message = new Message()
                         {
-                            Title = "درخواست جدید انتقال بار",
-                            Body = "",
+
+                            Data = dat,
+                            Notification = new Notification
+                            {
+                                Title = "درخواست جدید انتقال بار",
+                                Body = "",
 
 
-                        },
-                        Token = item.firebaseToken
-                    };
-                    ServicePointManager.Expect100Continue = true;
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                    var response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
-                    mymodel.status = 200;
+                            },
+                            Token = item.firebaseToken
+                        };
+                        ServicePointManager.Expect100Continue = true;
+                        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                        var response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+                        mymodel.status = 200;
+                    }
+
                 }
 
 
-                 
 
-                
-               
+
+
+
             }
             result = JsonConvert.SerializeObject(mymodel);
             JObject jObject = JObject.Parse(result);
@@ -986,8 +1082,8 @@ namespace jbar.Controllers
 
 
                 sendDetailVM modeltosend = new sendDetailVM();
-                
-                
+
+
                 modeltosend.orderID = model.orderID;
                 string notifString = JsonConvert.SerializeObject(modeltosend);
 
@@ -1083,7 +1179,7 @@ namespace jbar.Controllers
                 {
                     lastorder.price = model.price;
                 }
-                
+
                 dbcontext.SaveChanges();
                 sendDetailVM modeltosend = new sendDetailVM();
                 modeltosend.orderID = model.orderID;
@@ -1131,12 +1227,12 @@ namespace jbar.Controllers
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 var response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
-           
+
                 mymodel.status = 200;
                 mymodel.message = "ok";
             }
 
-           
+
             string result = JsonConvert.SerializeObject(mymodel);
 
             JObject jObject = JObject.Parse(result);
@@ -1186,7 +1282,7 @@ namespace jbar.Controllers
 
             using (Context dbcontext = new Context())
             {
-                
+
                 Guid orderID = new Guid(model.orderID);
 
                 List<orderCommentVM> comments = (from c in dbcontext.comments
@@ -1221,12 +1317,13 @@ namespace jbar.Controllers
                 user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
                 if (user != null)
                 {
+
                     if (!string.IsNullOrEmpty(model.hooshmandMashin))
                         user.hooshmandMashin = model.hooshmandMashin;
                     if (!string.IsNullOrEmpty(model.address))
                         user.address = model.address;
-                    if (!string.IsNullOrEmpty(model.clientType))
-                        user.clientType = model.clientType;
+                    if (!string.IsNullOrEmpty(model.clientType)) { user.clientType = model.clientType; user.status = "1"; }
+
                     if (!string.IsNullOrEmpty(model.postalCode))
                         user.postalCode = model.postalCode;
                     if (!string.IsNullOrEmpty(model.cartDriver))
@@ -1247,6 +1344,8 @@ namespace jbar.Controllers
                         user.emPhone = model.emPhone;
                     if (!string.IsNullOrEmpty(model.name))
                         user.name = model.name;
+                    if (!string.IsNullOrEmpty(model.username))
+                        user.username = model.username;
                     if (!string.IsNullOrEmpty(model.pelak1))
                         user.pelak1 = model.pelak1;
                     if (!string.IsNullOrEmpty(model.pelak2))
@@ -1279,7 +1378,54 @@ namespace jbar.Controllers
             return jObject;
         }
 
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public sendUserStatusVM getUserStatus()
+        {
+            sendUserStatusVM result = new sendUserStatusVM();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
 
+            Guid userID = new Guid(someObject.ToString());
+
+            using (Context dbcontext = new Context())
+            {
+                user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
+                if (user != null)
+                {
+                    if (user.status == "0" || user.status == null)
+                    {
+                        result.statusCode = "0";
+                        result.statusTitle = "تایید نشده";
+                        result.message = "لازم است برای احراز قویت اقدام نمایید";
+                    }
+                    else if (user.status == "1")
+                    {
+                        result.statusCode = "1";
+                        result.statusTitle = "دردست بررسی";
+                        result.statusTitle = "مدارک شما در دست بررسی می باشد";
+                    }
+                    else if (user.status == "2")
+                    {
+                        result.statusCode = "2";
+                        result.statusTitle = "رد شده";
+                        result.statusTitle = "به دلیل عدم ارائه مدارک کافی هویت شما احراز نشدهد است";
+                    }
+                    else if (user.status == "3")
+                    {
+                        result.statusCode = "3";
+                        result.statusTitle = "تایید شده";
+                        result.statusTitle = " هویت شما احراز شده است";
+                    }
+                    result.status = 200;
+                }
+                else
+                {
+                    result.status = 400;
+                }
+            }
+            return result;
+        }
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
@@ -1310,7 +1456,6 @@ namespace jbar.Controllers
 
                 }
                 user.point = null;
-                user.firebaseToken = null;
                 mymodel.user = user;
 
                 mymodel.status = 200;
