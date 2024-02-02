@@ -1,0 +1,494 @@
+﻿@model jbar.ViewModel.panelSetOrder
+@{
+    Layout = "~/Views/Shared/_panelLayout.cshtml";
+}
+
+<link href="~/Content/persian-datepicker.css" rel="stylesheet" />
+
+<style>
+    #holdersection {
+        height: 90vh
+    }
+
+    .parentsection {
+        text-align: center;
+    }
+
+    .imgparent {
+        text-align: center;
+        margin: 5px 0 55px 0
+    }
+
+        .imgparent img {
+            max-width: 30%
+        }
+
+    .headingone {
+        color: #a06509;
+        font-weight: 600;
+        margin: 25px;
+    }
+
+    .headingtwo {
+        margin: 25px;
+        line-height: 2
+    }
+
+    .parentsection input {
+        border: 1px solid #ddd;
+        background-color: transparent;
+        padding: 20px;
+        margin: 15px auto;
+        border-radius: 20px;
+        width: 85%;
+        max-width: unset !important;
+        direction: rtl;
+        font-size: 18px
+    }
+
+    .btnsubmit {
+        background-color: #a06509;
+        color: white;
+        padding: 20px;
+        border-radius: 30px;
+        width: 85%;
+        margin: 5px auto;
+        font-size: 18px
+    }
+</style>
+@section scripts{
+
+
+    <script src="~/Scripts/persian-date.min.js"></script>
+    <script src="~/Scripts/persian-datepicker.js"></script>
+    <style>
+        .tabPrent {
+            display: flex;
+            justify-content: space-around;
+        }
+        .subTabChild {
+            display: none;
+        }
+        .subTab .active {
+            display: block;
+        }
+    </style>
+    <script>
+
+
+        $(document).ready(function () {
+            $("#fromDate").pDatepicker({
+                observer: true,
+                format: 'YYYY/MM/DD',
+                altField: '.fromDateOb'
+            });
+            $("#ToDate").pDatepicker({
+                observer: true,
+                format: 'YYYY/MM/DD',
+                altField: '.toDateOb'
+            });
+        });
+
+        $(".tabChile").click(function () {
+            $(this).parent().find(".tabChile").removeClass("active");
+            $(this).addClass("active");
+            var id = $(this).attr('secToGo');
+
+            $(this).parent().siblings().find(".subTabChild").removeClass("active");
+            $("#" + id).addClass("active");
+        })
+
+
+    </script>
+    <script>
+
+        $("#setOrder").addClass("active");
+        $("#rangeTime").click(function () {
+            $("")
+        })
+
+    </script>
+    <!-- Internal Form-elements js-->
+    <script src="~/Assets_panel/js/advanced-form-elements.js"></script>
+    <script src="~/Assets_panel/js/select2.js"></script>
+
+    <script>
+        $("#originState").change(function () {
+            var value = $(this).val();
+            $.ajax({
+                url: "getCityPartail",
+                data: {
+                    ID: value,
+                    name: 'originCity'
+                },
+                success: function (data) {
+                    $(".originCity").html(data)
+                }
+            })
+        })
+        $("#destinState").change(function () {
+            var value = $(this).val();
+            $.ajax({
+                url: "getCityPartail",
+                data: {
+                    ID: value,
+                    name: 'destinCity'
+                },
+                success: function (data) {
+                    $(".destinCity").html(data)
+                }
+            })
+        })
+
+    </script>
+}
+
+<div class="row row-sm">
+    <div class="col-xl-6 col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <div>
+                    <h6 class="main-content-label mb-1"> مقصد بارگیری</h6>
+                    <p class="text-muted card-sub-title">لطفا محل مقصد بارگیری را مشخص کنید</p>
+                </div>
+                <div class="row row-sm mg-b-20">
+                    <div class="col-lg-12 mg-t-20 mg-lg-t-0">
+                        <p class="mg-b-10">استان</p>
+                        <select id="originState" class="form-control select2">
+                            <option label="استان مورد نظر را انتخاب کنید">
+                            </option>
+                            @if (Model.cityList != null)
+                            {
+                                foreach (var state in Model.cityList.lst)
+                                {
+                                    <option value=" @state.userID">
+                                        @state.title
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row row-sm mg-b-20">
+                    <div class="col-lg-12 mg-t-20 mg-lg-t-0">
+                        <p class="mg-b-10">شهر</p>
+                        <div class="originCity">
+                            <input class="form-control" name="lastname" placeholder="شهر مبدا" required="" type="text">
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <div>
+                    <h6 class="main-content-label mb-1"> مبدا بارگیری</h6>
+                    <p class="text-muted card-sub-title">لطفا محل مبدا بارگیری را مشخص کنید</p>
+                </div>
+                <div class="row row-sm mg-b-20">
+                    <div class="col-lg-12 mg-t-20 mg-lg-t-0">
+                        <p class="mg-b-10">استان</p>
+                        <select id="destinState" class="form-control select2">
+                            <option label="استان مورد نظر را انتخاب کنید">
+                            </option>
+                            @if (Model.cityList != null)
+                            {
+                                foreach (var state in Model.cityList.lst)
+                                {
+                                    <option value=" @state.userID">
+                                        @state.title
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+                </div>
+                <div class="row row-sm mg-b-20">
+                    <div class="col-lg-12 mg-t-20 mg-lg-t-0">
+                        <p class="mg-b-10">شهر</p>
+                        <div class="destinCity">
+                            <input class="form-control" name="lastname" placeholder="شهر مقصد" required="" type="text">
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <div>
+                    <h6 class="main-content-label mb-1"> نوع وسیله</h6>
+                    <p class="text-muted card-sub-title">لطفانوع وسیله مد نظر خود برای جا به جایی را انتخاب کنید</p>
+                </div>
+                <div class="row row-sm mg-b-20">
+                    <div class="col-lg-12 mg-t-20 mg-lg-t-0">
+                        <p class="mg-b-10">نوع وسیله</p>
+                        <select id="ge" class="form-control select2" multiple="multiple">
+                            <option label="نوع وسیله انتخاب کنید">
+                            </option>
+                            @if (Model.typeList != null)
+                            {
+                                foreach (var state in Model.typeList)
+                                {
+                                    <option value=" @state.typeID">
+                                        @state.title
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <div>
+                    <h6 class="main-content-label mb-1"> نوع بار</h6>
+                    <p class="text-muted card-sub-title">لطفانوع بار را انتخاب کنید</p>
+                </div>
+                <div class="row row-sm mg-b-20">
+                    <div class="col-lg-12 mg-t-20 mg-lg-t-0">
+                        <p class="mg-b-10">نوع بار</p>
+                        <select class="form-control select2">
+                            <option label="استان مورد نظر را انتخاب کنید">
+                            </option>
+                            @if (Model.loadList != null)
+                            {
+                                foreach (var state in Model.loadList.lst)
+                                {
+                                    <option value=" @state.loadTypeID">
+                                        @state.title
+                                    </option>
+                                }
+                            }
+
+                        </select>
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <div>
+                    <h6 class="main-content-label mb-1"> قیمت بار</h6>
+                    <p class="text-muted card-sub-title">قیمت کل و یا صافی به ازای هر کلیومتر</p>
+                </div>
+                <div class="row row-sm mg-b-20">
+
+                    <div class="col-lg-12 form-group">
+                        <label class="form-label">صافی کل بار (تومان)@*: <span class="tx-danger">*</span>*@</label>
+                        <input class="form-control" name="firstname" placeholder="صافی کل " required="" type="text">
+                    </div>
+
+                </div>
+                <div class="row row-sm mg-b-20">
+
+                    <div class="col-lg-12 form-group">
+                        <label class="form-label">صافی به ازای هر کیلومتر (تومان)</label>
+                        <input class="form-control" name="firstname" placeholder="قیمت در کیلومتر " required="" type="text">
+                    </div>
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+             
+
+                <div class="row row-sm mg-b-20">
+                    <div style="margin-bottom:15px">
+                        <h6 class="main-content-label mb-1"> وزن بار</h6>
+
+                    </div>
+                    <div class="col-lg-12 form-group">
+
+                        <input class="form-control" name="firstname" placeholder="وزن بار " required="" type="text">
+                    </div>
+                    <div style="margin-bottom:15px">
+                        <h6 class="main-content-label mb-1"> توضیحات سفارش</h6>
+
+                    </div>
+                    <div class="col-lg-12 form-group">
+                        <textarea class="form-control" name="example-textarea-input" rows="4" placeholder="متن اینجا "></textarea>
+
+                    </div>
+
+
+
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <div style="margin-bottom:20px">
+                    <h6 class="main-content-label mb-1"> شرایط سفارش</h6>
+
+                </div>
+                <div class="row row-sm mg-b-20">
+
+                    <label class="custom-switch">
+                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" checked="">
+                        <span class="custom-switch-indicator"></span>
+                        <span class="custom-switch-description">شماره همراه مرا به راننده نمایش بده</span>
+                    </label>
+
+                </div>
+                <div class="row row-sm mg-b-20">
+
+                    <label class="custom-switch">
+                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" checked="">
+                        <span class="custom-switch-indicator"></span>
+                        <span class="custom-switch-description">مایل به دریافت  پیامک هستم</span>
+                    </label>
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <div style="margin-bottom:20px">
+                    <h6 class="main-content-label mb-1"> زمان ارسال</h6>
+
+                </div>
+                <div class="row row-sm mg-b-20" style="display:flex; justify-content:space-around">
+
+                    <div class="tabPrent " style="direction:rtl; height:7vh">
+                        <div secToGo="today" class="tabChile active selectdate" style="width:33%">
+                            <label class="custom-switch" style="width:initial">
+                                <input type="radio" name="custom-switch-checkbox" class="custom-switch-input" checked="">
+                                <span class="custom-switch-indicator"></span>
+                                <span class="custom-switch-description">امروز</span>
+                            </label>
+                        </div>
+                        <div secToGo="tomorrow" class="tabChile selectdate" style="width:33%">
+                            <label class="custom-switch" style="width:initial">
+
+                                <input type="radio" name="custom-switch-checkbox" class="custom-switch-input">
+                                <span class="custom-switch-indicator"></span>
+                                <span class="custom-switch-description">فردا</span>
+                            </label>
+                        </div>
+                        <div secToGo="rang" class="tabChile selectdate" style="width:33%">
+                            <label id="rangeTime" class="custom-switch" style="width:initial">
+                                <input type="radio" name="custom-switch-checkbox" class="custom-switch-input">
+                                <span class="custom-switch-indicator"></span>
+                                <span class="custom-switch-description">بازه زمانی</span>
+                            </label>
+                        </div>
+
+                    </div>
+                    <div class="subTab" style=" width:100%">
+                        <div id="today" class="subTabChild active">
+
+
+                        </div>
+                        <div id="tomorrow" class="subTabChild">
+
+                        </div>
+                        <div id="rang" class="subTabChild">
+                            <div class="" style="display:flex">
+
+                                <div class="inputHolder" style="margin:0 10px">
+                                    <p>از :</p>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fe fe-calendar lh--9 op-6"></i>
+                                            </div>
+                                        </div>
+                                        <input id="ToDate" class="form-control fc-datepicker hasDatepicker" placeholder="ماه / روز / سال" type="text" id="dp1706880671801">
+                                        <input hidden class="toDateOb" value="" required='' type='text'>
+
+                                    </div>
+
+                                </div>
+                                <div class="inputHolder" style="margin:0 10px">
+                                    <p>تا :</p>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">
+                                                <i class="fe fe-calendar lh--9 op-6"></i>
+                                            </div>
+                                        </div>
+                                        <input id="fromDate" class="form-control fc-datepicker hasDatepicker" placeholder="ماه / روز / سال" type="text" id="dp1706880671801">
+                                        <input hidden class="fromDateOb" value="" required='' type='text'>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+                </div>
+
+                <div class="row row-sm mg-b-20">
+
+
+
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-12 col-lg-12 col-md-12">
+        <div class="card custom-card">
+            <div class="card-body">
+                <button class="btn ripple btn-main-primary btn-block">ارسال</button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+

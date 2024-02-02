@@ -3290,6 +3290,8 @@
     <Content Include="Views\Shared\_panelLayout.cshtml" />
     <Content Include="Views\panel\Orders.cshtml" />
     <Content Include="Views\panel\OrderDetail.cshtml" />
+    <Content Include="Views\panel\setOrder.cshtml" />
+    <Content Include="Views\Shared\panel\_cityPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

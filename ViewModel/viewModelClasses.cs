@@ -183,6 +183,12 @@ namespace jbar.ViewModel
 
     }
 
+    public class panelCityVM
+    {
+        public  sendCityVM cityList { get; set; }
+        public string listname { get; set; }
+    }
+
 
     
     public class newcity
@@ -415,6 +421,13 @@ namespace jbar.ViewModel
     {
         public int value { get; set; }
         public string text { get; set; }
+    }
+
+    public class panelSetOrder
+    {
+        public sendLoadTypeVM loadList { get; set; }
+        public sendCityVM cityList { get; set; }
+        public List<jbar.Model.cartype> typeList { get; set; }
     }
 }
 

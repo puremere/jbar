@@ -1,0 +1,22 @@
+﻿@model jbar.ViewModel.panelCityVM
+
+
+
+
+
+<select id="@Model.listname"  class="form-control select2">
+        <option label="شهر مورد نظر را انتخاب کنید">
+        </option>
+        @if (Model.cityList != null)
+        {
+            foreach (var state in Model.cityList.lst)
+            {
+                <option value=" @state.userID">
+                    @state.title
+                </option>
+            }
+        }
+
+    </select>
+
+<script src="~/Assets_panel/js/select2.js"></script>
