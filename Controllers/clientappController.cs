@@ -7,6 +7,9 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -15,7 +18,7 @@ namespace jbar.Controllers
    
     public class clientappController : Controller
     {
-        string baseServer = "https://jbar.app/api/app";
+        string baseServer = "https://localhost:44389/api/app";
         // GET: clientapp
         public ActionResult Index()
         {
@@ -234,6 +237,43 @@ namespace jbar.Controllers
 
         }
 
+        public async Task<ActionResult> getHomeAsync()
+        {
+            if (Request.Cookies["clientToken"] == null)
+            {
+                return Content("400");
+            }
+            string token = Request.Cookies["clientToken"].Value;
+            string result = "";
+            try
+            {
+
+               
+
+                using (WebClient client = new WebClient())
+                {
+                    client.Headers.Set("Authorization", "Basic " + token);
+                    var collection = new NameValueCollection();
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
+                    byte[] response = client.UploadValues(baseServer + "/getOrderClient", collection);
+
+                    result = System.Text.Encoding.UTF8.GetString(response);
+                    getOrderVM model = JsonConvert.DeserializeObject<getOrderVM>(result);
+                    return PartialView("/Views/Shared/client/_clientHomePartial.cshtml", model);
+                }
+            }
+            catch (Exception e)
+            {
+
+
+                HttpCookie nameCookie = Request.Cookies["clientToken"];
+                nameCookie.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(nameCookie);
+                return Content("400");
+            }
+
+        }
         public ActionResult getHome()
         {
             if (Request.Cookies["clientToken"] == null)
@@ -383,6 +423,62 @@ namespace jbar.Controllers
                     result = System.Text.Encoding.UTF8.GetString(response);
                     getOrderVM model = JsonConvert.DeserializeObject<getOrderVM>(result);
                     return PartialView("/Views/Shared/client/_clientOrderlistParial.cshtml", model);
+                }
+            }
+            catch (Exception e)
+            {
+
+
+                HttpCookie nameCookie = Request.Cookies["clientToken"];
+                nameCookie.Expires = DateTime.Now.AddDays(-1);
+                Response.Cookies.Add(nameCookie);
+                return Content("400");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<ActionResult> getOrderDetailAsync(string orderID)
+        {
+            if (Request.Cookies["clientToken"] == null)
+            {
+                return Content("400");
+            }
+            string token = Request.Cookies["clientToken"].Value;
+            string result = "";
+            try
+            {
+
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseServer + "/getOrderDetailClientAsync");
+                    client.DefaultRequestHeaders.Add("Authorization", "Basic " + token);
+                    orderDetailVM mdl = new orderDetailVM();
+                    mdl.orderID = orderID;
+                    string content = JsonConvert.SerializeObject(mdl);
+
+                    var buffer = System.Text.Encoding.UTF8.GetBytes(content);
+                    var byteContent = new ByteArrayContent(buffer);
+                    byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                    var rsp =await client.PostAsync("", byteContent).ConfigureAwait(false);
+                    sendDetailVM model = JsonConvert.DeserializeObject<sendDetailVM>(rsp.ToString());
+                    model.orderID = orderID;
+                    return PartialView("/Views/Shared/client/_cleintOrderDetailParial.cshtml", model);
+
+                }
+                using (WebClient client = new WebClient())
+                {
+                    client.Headers.Set("Authorization", "Basic " + token);
+                    var collection = new NameValueCollection();
+                    collection.Add("orderID", orderID);
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
+                    byte[] response = client.UploadValues(baseServer + "/getOrderDetailClient", collection);
+
+                    result = System.Text.Encoding.UTF8.GetString(response);
+                    sendDetailVM model = JsonConvert.DeserializeObject<sendDetailVM>(result);
+                    model.orderID = orderID;
+                    return PartialView("/Views/Shared/client/_cleintOrderDetailParial.cshtml", model);
                 }
             }
             catch (Exception e)

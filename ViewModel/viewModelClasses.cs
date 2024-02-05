@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using jbar.Model;
 
 namespace jbar.ViewModel
 {
@@ -39,6 +40,7 @@ namespace jbar.ViewModel
 
     }
 
+    
     public class getCityNameVM
     {
         public double lat { get; set; }
@@ -428,6 +430,17 @@ namespace jbar.ViewModel
         public sendLoadTypeVM loadList { get; set; }
         public sendCityVM cityList { get; set; }
         public List<jbar.Model.cartype> typeList { get; set; }
+    }
+
+    public class formulaActionVM
+    {
+       public  List<formula> formulaList { get; set; }
+        public List<namad> namadList { get; set; }
+        public List<mabna> mabna { get; set; }
+    }
+    public class nullclass
+    {
+
     }
 }
 

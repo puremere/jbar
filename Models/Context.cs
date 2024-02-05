@@ -33,10 +33,21 @@ namespace jbar.Model
         public DbSet<orderResponse> orderResponses { get; set; }
         public DbSet<Comment> comments { get; set; }
         public DbSet<coDriver> coDrivers { get; set; }
+        public DbSet<processOrder> processOrders { get; set; }
+        public DbSet<process> processes { get; set; }
+        public DbSet<vehicle> vehicles { get; set; }
+        public DbSet<yadak> yadaks { get; set; }
+        public DbSet<yadakVehicle> yadakVehicles { get; set; }
+        public DbSet<coding> codings { get; set; }
+        public DbSet<sanad> sanads { get; set; }
+        public DbSet<article> articles { get; set; }
+        public DbSet<tarafHesab> tarafHesabs { get; set; }
+        public DbSet<sanadSource> sanadSources { get; set; }
+        public DbSet<formula> formulas { get; set; }
+        public DbSet<namad> namads { get; set; }
+        public DbSet<mabna> mabnas { get; set; }
 
         
-
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -45,12 +56,174 @@ namespace jbar.Model
     }
 
 
+    public class coding
+    {
+        [Key]
+        public Guid codingID { get; set; }
+        public Guid parentID { get; set; }
+       
+        public int codingType { get; set; }
+        public int  codeHesab { get; set; }
+        public int title { get; set; }
+        public Guid nodeID { get; set; }
+
+    }
+    public class sanad
+    {
+        [Key]
+        public Guid sanadID { get; set; }
+        public int number { get; set; }
+        public int atf { get; set; }
+        public int status { get; set; }
+        public DateTime date { get; set; }
+        public string description { get; set; }
+        public Guid nodeID { get; set; }
+
+    }
+
+    
+    public class article
+    {
+        [Key]
+        public Guid articleID { get; set; }
+
+        public Guid sanadID { get; set; }
+        public int tarafHesab { get; set; }
+        public int status { get; set; }
+        public DateTime date { get; set; }
+        public string description { get; set; }
+        public double price { get; set; }
+        public int koll { get; set; }
+        public int grooh { get; set; }
+        public int moin { get; set; }
+        public int tafsil1 { get; set; }
+        public int tafsil2 { get; set; }
+        public int tafsil3 { get; set; }
+        public int tafsil4 { get; set; }
+        public int tafsil5 { get; set; }
+        public int type { get; set; }
+        public Guid nodeID { get; set; }
+    }
+
+
+    public class sanadSource
+    {
+        [Key]
+        public Guid sanadSourceID { get; set; }
+        public string title { get; set; }
+        public Guid codingID { get; set; }
+        public Guid nodeID { get; set; }
+    }
+    public class tarafHesab
+    {
+        [Key]
+        public Guid tarafHesabID { get; set; }
+        public int code { get; set; }
+        public string name { get; set; }
+        public Guid userID { get; set; }
+        public Guid nodeID { get; set; } // مرتبط با کدوم باربریه
+    }
+    public class vehicle
+    {
+        [Key]
+        public Guid  vehicleID { get; set; }
+        public string placeNumber { get; set; }
+        public string data { get; set; }
+        public Guid ownerID { get; set; }
+    }
+    public class yadak
+    {
+        [Key]
+        public Guid yadakID { get; set; }
+        public string yadakNumber { get; set; }
+        public string data { get; set; }
+        public Guid ownerID { get; set; }
+    }
+
+    public class yadakVehicle
+    {
+        [Key]
+        public Guid yadakVehicleID { get; set; }
+        public string yadakID { get; set; }
+        public string vehicleID { get; set; }
+        public DateTime startDate { get; set; }
+        public DateTime dateTime { get; set; }
+    }
+
+    public class basePrice   // این آیتم مقداریه که به عنوان بیس در نظر گرفته میشه مثل ارزش کل بار 
+    {
+        [Key]
+        public Guid formulaID { get; set; }
+        public Guid title { get; set; }
+        public string relation { get; set; }
+    }
+
+
+    
+    public class namad   // این آیتم مقداریه که به عنوان بیس در نظر گرفته میشه مثل ارزش کل بار 
+    {
+        [Key]
+        public Guid namadID { get; set; }
+        public string title { get; set; }
+    }
+    public class mabna   // این آیتم مقداریه که به عنوان بیس در نظر گرفته میشه مثل ارزش کل بار 
+    {
+        [Key]
+        public Guid mabnaID { get; set; }
+        public string title { get; set; }
+        public string value { get; set; }
+    }
+    
+    public class formula
+    {
+        [Key]
+        public Guid formulaID { get; set; }
+        public int col { get; set; }
+        public int leftID { get; set; }
+        public int rightID { get; set; }
+        public Guid mabnaID { get; set; }
+        public string mabnaName { get; set; }
+        public Guid namadID { get; set; }
+        public string namadName { get; set; }
+        public decimal number { get; set; }
+        public Guid nodeID { get; set; }
+        public string name { get; set; }
+        public string result { get; set; }
+    }
+   
+    public class process// پروسه ای که بابری برای خدش توولید میکنه و اردرهاشو تطبیق میده
+    {
+        [Key]
+        public Guid processID { get; set; }
+        public string title { get; set; }
+        public Guid nodeID { get; set; }
+    }
+    public class processFormula// میگه چه فرمولهایی برای چه پروسه هایی هست که روی یک کدینگ اثر میزاره یا بدهکار یا بستانکار
+    {
+        [Key]
+        public Guid processFormulaID { get; set; }
+        public Guid proccessID { get; set; }
+        public Guid FormulaID { get; set; }
+        public Guid codingID { get; set; }
+        public Guid type { get; set; } // بدهکاری یا بستانکاری عدد حاصل از فرمول را رووی کدینگ اعمال میکند
+    }
+    public class processOrder
+    {
+        [Key]
+        public Guid processOrderID { get; set; }
+        public Guid ordrID { get; set; }
+        public Guid processID { get; set; }
+    }
+
+
+
+
     public class coDriver
     {
         [Key]
         public Guid DriverID { get; set; }
         public Guid coDriverID { get; set; }
-       
+
     }
     public class Comment
     {
@@ -90,6 +263,9 @@ namespace jbar.Model
         public string orderStatus { get; set; }
 
     }
+
+    // باربری خودش روش های مختلف باربری رو مشخص میکنه  الصاق میکنه به یک سفارش که سند های ثابت با فرمول بخوره
+    
     public class loadType
     {
         public Guid loadTypeID { get; set; }

@@ -49,8 +49,8 @@
     <link href="~/Assets_panel/switcher/css/switcher-rtl.css" rel="stylesheet">
     <link href="~/Assets_panel/switcher/demo.css" rel="stylesheet">
 
-
-
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    
 
 
 
@@ -87,16 +87,29 @@
                             <i class="ti-home sidemenu-icon"></i><span class="sidemenu-label">داشبورد</span>
                         </a>
                     </li>
+                    <li id="coDrivers" class="nav-item ">
+                        <a class="nav-link" href="Process">
+                            <span class="shape1"></span><span class="shape2"></span>
+                            <i class="ti-truck sidemenu-icon"></i><span class="sidemenu-label">ماهیت سفارشات </span>
+                        </a>
+                    </li>
                     <li id="orders" class="nav-item ">
                         <a class="nav-link" href="/panel/orders">
                             <span class="shape1"></span><span class="shape2"></span>
                             <i class="ti-file sidemenu-icon"></i><span class="sidemenu-label">سفارشات</span>
                         </a>
                     </li>
+
                     <li id="setOrder" class="nav-item ">
                         <a class="nav-link" href="/panel/setOrder">
                             <span class="shape1"></span><span class="shape2"></span>
                             <i class="ti-file sidemenu-icon"></i><span class="sidemenu-label">ثبت سفارش جدید</span>
+                        </a>
+                    </li>
+                    <li id="setOrder" class="nav-item ">
+                        <a class="nav-link" href="/panel/setOrder">
+                            <span class="shape1"></span><span class="shape2"></span>
+                            <i class="ti-file sidemenu-icon"></i><span class="sidemenu-label">قراردادها</span>
                         </a>
                     </li>
                     <li id="comments" class="nav-item ">
@@ -108,7 +121,38 @@
                     <li id="coDrivers" class="nav-item ">
                         <a class="nav-link" href="index.html">
                             <span class="shape1"></span><span class="shape2"></span>
-                            <i class="ti-truck sidemenu-icon"></i><span class="sidemenu-label">رانندگان همکار</span>
+                            <i class="ti-truck sidemenu-icon"></i><span class="sidemenu-label">رانندگان </span>
+                        </a>
+                    </li>
+                    <li id="coDrivers" class="nav-item ">
+                        <a class="nav-link" href="index.html">
+                            <span class="shape1"></span><span class="shape2"></span>
+                            <i class="ti-truck sidemenu-icon"></i><span class="sidemenu-label">خودروها </span>
+                        </a>
+                    </li>
+                    <li id="coDrivers" class="nav-item ">
+                        <a class="nav-link" href="index.html">
+                            <span class="shape1"></span><span class="shape2"></span>
+                            <i class="ti-truck sidemenu-icon"></i><span class="sidemenu-label">یدک ها </span>
+                        </a>
+                    </li>
+                    <li id="coDrivers" class="nav-item ">
+                        <a class="nav-link" href="coding">
+                            <span class="shape1"></span><span class="shape2"></span>
+                            <i class="ti-truck sidemenu-icon"></i><span class="sidemenu-label">کدینگ حسابداری </span>
+                        </a>
+                    </li>
+                    <li id="coDrivers" class="nav-item ">
+                        <a class="nav-link" href="formula">
+                            <span class="shape1"></span><span class="shape2"></span>
+                            <i class="ti-truck sidemenu-icon"></i><span class="sidemenu-label">فرمول های حسابداری </span>
+                        </a>
+                    </li>
+
+                    <li id="coDrivers" class="nav-item ">
+                        <a class="nav-link" href="index.html">
+                            <span class="shape1"></span><span class="shape2"></span>
+                            <i class="ti-truck sidemenu-icon"></i><span class="sidemenu-label">گزارشات مالی </span>
                         </a>
                     </li>
                     <li id="driverScore" class="nav-item ">
@@ -355,7 +399,7 @@
     <!-- Select2 js-->
     <script src="~/Assets_panel/plugins/select2/js/select2.min.js"></script>
 
-   
+
 
     <!-- Internal Form-elements js-->
     <script src="~/Assets_panel/js/form-elements.js"></script>
@@ -370,7 +414,7 @@
     <!-- Switcher js -->
     <script src="~/Assets_panel/switcher/js/switcher-rtl.js"></script>
 
-
+    <script src="~/Scripts/toastr.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

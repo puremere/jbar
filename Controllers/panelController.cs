@@ -1,29 +1,102 @@
 ﻿using jbar.Classes;
+using jbar.Model;
 using jbar.ViewModel;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json.Linq;
+using jbar.Classes;
+
+
 
 namespace jbar.Controllers
 {
+    [panelCheck]
+    [doForAll]
     public class panelController : Controller
     {
-        string baseServer = "https://jbar.app/api/app";
+        string baseServer = "https://localhost:44389/api/app";
         // GET: panel
         public ActionResult Login()
         {
+
+            Context dbcontext = new Context();
+            //mabna mabna = new mabna()
+            //{
+            //    mabnaID = Guid.NewGuid(),
+            //     title = "قیمت تمام شده سفارش",
+            //      value = "1",
+            //};
+            //dbcontext.mabnas.Add(mabna);
+            //mabna = new mabna()
+            //{
+            //    mabnaID = Guid.NewGuid(),
+            //    title = "ارزش بار",
+            //    value = "2",
+            //};
+            //dbcontext.mabnas.Add(mabna);
+            //mabna = new mabna()
+            //{
+            //    mabnaID = Guid.NewGuid(),
+            //    title = "مسافت کلی بار",
+            //    value = "3",
+            //};
+            //dbcontext.mabnas.Add(mabna);
+            //dbcontext.SaveChanges();
+            //dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [formulas]");
+            //namad formula = new namad()
+            //{
+            //    namadID = Guid.NewGuid(),
+            //    title = "&#43;"
+            //};
+            //dbcontext.namads.Add(formula);
+            //dbcontext.SaveChanges();
+            //formula = new namad()
+            //{
+            //    namadID = Guid.NewGuid(),
+            //    title = "&#8722;"
+            //};
+            //dbcontext.namads.Add(formula);
+            //dbcontext.SaveChanges();
+            //formula = new namad()
+            //{
+            //    namadID = Guid.NewGuid(),
+            //    title = "&#215;"
+            //};
+            //dbcontext.namads.Add(formula);
+            //dbcontext.SaveChanges();
+            //formula = new namad()
+            //{
+            //    namadID = Guid.NewGuid(),
+            //    title = "&#8260;"
+            //};
+            //dbcontext.namads.Add(formula);
+            //dbcontext.SaveChanges();
+            //formula = new namad()
+            //{
+            //    namadID = Guid.NewGuid(),
+            //    title = "&#61;"
+            //};
+            //dbcontext.namads.Add(formula);
+            dbcontext.SaveChanges();
             return View();
         }
         public ActionResult Dashboard()
         {
             return View();
         }
+       
 
         public ActionResult setOrder()
         {
@@ -259,5 +332,75 @@ namespace jbar.Controllers
             ViewBag.phone = phone;
             return View("Verify");
         }
+
+
+
+
+
+
+        ///////////////////////////////
+        
+       
+        // process
+        public async Task<ActionResult> Process()
+        {
+            if (TempData["er"] != null)
+                ViewBag.error = TempData["er"].ToString();
+            List<process> responsemodel = new List<process>();
+            responsemodel = await methods.PostData(new nullclass(), responsemodel, "/getProcess", Request.Cookies["clientToken"].Value);
+            return View(responsemodel);
+        }
+
+        public async Task<ActionResult> setNewProcess(process model)
+        {
+            responseModel responsemodel = await methods.PostData(model, new responseModel(), "/setProcess", Request.Cookies["clientToken"].Value);
+            if (responsemodel.status != 200)
+                TempData["er"] = responsemodel.message;
+            return RedirectToAction("process");
+        }
+
+
+
+        // formula
+        public async Task<ActionResult> Formula()
+        {
+            if (TempData["er"] != null)
+                ViewBag.error = TempData["er"].ToString();
+            formulaActionVM responsemodel = await methods.PostData(new nullclass(), new formulaActionVM(), "/getFormula", Request.Cookies["clientToken"].Value);
+            return View(responsemodel);
+        }
+
+        public async Task<ActionResult> setNewFormula(formula model)
+        {
+             
+            responseModel responsemodel = await methods.PostData(model, new responseModel(), "/setFormula", Request.Cookies["clientToken"].Value);
+            if (responsemodel.status != 200)
+                TempData["er"] = responsemodel.message;
+            return RedirectToAction("Formula");
+        }
+
+
+        //coding
+        public async Task<ActionResult> Coding()
+        {
+            if (TempData["er"] != null)
+                ViewBag.error = TempData["er"].ToString();
+            List<coding> responsemodel = new List<coding>();
+            responsemodel = await methods.PostData(new nullclass(), responsemodel, "/getCoding", Request.Cookies["clientToken"].Value);
+            return View(responsemodel);
+            
+        }
+
+        public async Task<ActionResult> setNewCoding(coding model)
+        {
+            
+            responseModel responsemodel = await methods.PostData(model, new responseModel(), "/setCoding", Request.Cookies["clientToken"].Value);
+            if (responsemodel.status != 200)                
+                TempData["er"] = responsemodel.message;
+            return RedirectToAction("Coding");
+        }
+
+       
+
     }
 }

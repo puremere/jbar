@@ -1,0 +1,175 @@
+﻿@using System.Text;
+
+@model jbar.ViewModel.formulaActionVM
+
+@{
+    ViewBag.Title = "Formula";
+    Layout = "~/Views/Shared/_panelLayout.cshtml";
+}
+@section scripts{
+    <script src="~/Scripts/persian-date.min.js"></script>
+    <script src="~/Scripts/persian-datepicker.js"></script>
+    <script src="~/Assets_panel/js/advanced-form-elements.js"></script>
+    <script src="~/Assets_panel/js/select2.js"></script>
+    @if (@ViewBag.error != null)
+    {
+        <script>
+            toastr.options = {
+                'closeButton': true,
+                'debug': false,
+                'newestOnTop': false,
+                'progressBar': false,
+                'positionClass': 'toast-top-right',
+                'preventDuplicates': false,
+                'showDuration': '1000',
+                'hideDuration': '1000',
+                'timeOut': '5000',
+                'extendedTimeOut': '1000',
+                'showEasing': 'swing',
+                'hideEasing': 'linear',
+                'showMethod': 'fadeIn',
+                'hideMethod': 'fadeOut',
+            }
+            toastr.error('@ViewBag.error');
+        </script>
+    }
+}
+
+
+<div class="">
+    <div class="border">
+        <div class="bg-gray-300 nav-bg" style="border-radius:6px; margin:0 30px">
+            <nav class="nav nav-tabs">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">لیست فرمول ها </a>
+                <a class="nav-link " data-bs-toggle="tab" href="#tabCont2"> افزودن فرمول جدید </a>
+
+            </nav>
+        </div>
+        <div class="card-body tab-content">
+            <div class="tab-pane active show" id="tabCont1">
+                <div class="col-lg-12">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <div>
+                                <h6 class="main-content-label mb-1">جدول ماهیت سفارشات</h6>
+                                <p class="text-muted card-sub-title">لیست انواع پروسه های جاری شرکت قابل مشاهده خواهد بود</p>
+                            </div>
+                            <div class="table-responsive border">
+                                <style>
+                                    td{
+                                        direction:ltr
+                                    }
+                                </style>
+                                <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
+                                    <thead>
+                                        <tr>
+
+                                            <th>ردیف</th>
+                                            <th>نام معادله</th>
+                                            <th>سمت راست معادله</th>
+                                            <th>سمت چپ معادله</th>
+                                            <th>عملگر معادله</th>
+                                            <th>مبنای معادله</th>
+                                            <th>عدد احتمالی </th>
+                                            <th>نتیجه نهایی </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.formulaList != null)
+                                        {
+                                            foreach (var item in Model.formulaList)
+                                            {
+
+                                        <tr>
+
+
+                                            <td>@item.col</td>
+                                            <td>@item.name</td>
+                                            <td>@item.leftID</td>
+                                            <td>@item.rightID</td>
+                                            <td>@Html.Raw(@item.namadName)</td>
+                                            <td>@item.mabnaName</td>
+                                            <td>@item.number</td>
+                                            <td>@item.result</td>
+
+
+                                        </tr>
+                                            }
+                                        }
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane " id="tabCont2">
+                <div class="row row-sm">
+                    <div class="col-xl-12 col-lg-12 col-md-12">
+                        <div class="card custom-card">
+                            <div class="card-body">
+
+                                <form action="setNewFormula" method="post">
+                                    <div class="row row-sm mg-b-20">
+
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> شماره ارجاع</h6>
+                                            <input class="form-control" name="col" placeholder="شماره ارجاع" required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> سمت چپ معادله</h6>
+                                            <input class="form-control" name="leftID" placeholder="سمت چپ معادله" required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> سمت راست معادله</h6>
+                                            <input class="form-control" name="rightID" placeholder="سمت راست معادله" required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> مبنا</h6>
+                                            <select name="mabnaID" class="form-control">
+                                                <option value="0000-0000-0000-0000">0</option>
+                                                @foreach (var item in Model.mabna)
+                                                {
+
+                                                    <option value="@item.mabnaID">@Html.Raw(item.title)</option>
+                                                }
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1">  اپراتور عددی </h6>
+                                            <input class="form-control" name="number" placeholder="اپراتور عددی" required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب عملگر</h6>
+                                            <select name="namadID" class="form-control">
+                                                @foreach (var item in Model.namadList)
+                                                {
+
+                                                    <option value="@item.namadID">@Html.Raw(item.title)</option>
+                                                }
+                                            </select>
+
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1">نام ارجاع</h6>
+                                            <input class="form-control" name="name" placeholder="نام ارجاع" required="" type="text">
+                                        </div>
+
+                                    </div>
+                                    <button class="btn ripple btn-main-primary btn-block">ارسال</button>
+                                </form>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

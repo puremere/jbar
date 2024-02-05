@@ -305,6 +305,7 @@
     <Compile Include="Classes\customMethodes.cs" />
     <Compile Include="Classes\dateTimeConvert.cs" />
     <Compile Include="Classes\methods.cs" />
+    <Compile Include="Classes\SessionCheck.cs" />
     <Compile Include="Classes\TokenManager.cs" />
     <Compile Include="Controllers\appController.cs" />
     <Compile Include="Controllers\clientappController.cs" />
@@ -3292,6 +3293,9 @@
     <Content Include="Views\panel\OrderDetail.cshtml" />
     <Content Include="Views\panel\setOrder.cshtml" />
     <Content Include="Views\Shared\panel\_cityPartial.cshtml" />
+    <Content Include="Views\panel\Process.cshtml" />
+    <Content Include="Views\panel\Formula.cshtml" />
+    <Content Include="Views\panel\Coding.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
