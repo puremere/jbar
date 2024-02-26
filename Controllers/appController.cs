@@ -293,7 +293,7 @@ namespace jbar.Controllers
 
             using (Context dbcontext = new Context())
             {
-               
+
 
                 //Guid Userguid = new Guid("5417296b-b07e-404a-bc71-f04dc8baac2f");
 
@@ -450,14 +450,15 @@ namespace jbar.Controllers
                 List<string> typeList = model.type.Trim(',').Split(',').ToList();
                 foreach (var type in typeList)
                 {
-                    ordertype newtype = new ordertype()
-                    {
-                        orderID = orderguid,
-                        ordertypeID = Guid.NewGuid(),
-                        typeID = new Guid(type),
+                    //dbcontext.order.Add(newtype);
+                    //ordertype newtype = new ordertype()
+                    //{
+                    //    orderID = orderguid,
+                    //    ordertypeID = Guid.NewGuid(),
+                    //    typeID = new Guid(type),
 
-                    };
-                    dbcontext.ordertypes.Add(newtype);
+                    //};
+
                 }
 
                 dbcontext.SaveChanges();
@@ -532,7 +533,7 @@ namespace jbar.Controllers
             return mymodel;
         }
 
-     
+
 
 
         [BasicAuthentication]
@@ -696,11 +697,11 @@ namespace jbar.Controllers
                                            select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
 
 
-                    List<newtype> types = (from o in dbcontext.cartypes
-                                           join ot in dbcontext.ordertypes on o.typeID equals ot.typeID
-                                           join otp in dbcontext.cartypes on o.parentID equals otp.typeID
-                                           where ot.orderID == orderGuid
-                                           select new newtype { title = otp.title + " - " + o.title }).ToList();
+                    //List<newtype> types = (from o in dbcontext.cartypes
+                    //                       join ot in dbcontext.ordertypes on o.typeID equals ot.typeID
+                    //                       join otp in dbcontext.cartypes on o.parentID equals otp.typeID
+                    //                       where ot.orderID == orderGuid
+                    //                       select new newtype { title = otp.title + " - " + o.title }).ToList();
 
                     List<orderCommentVM> comments = (from c in dbcontext.comments
                                                      join u in dbcontext.users on c.userID equals u.userID
@@ -708,10 +709,10 @@ namespace jbar.Controllers
                                                      select new orderCommentVM { clientImage = "https://www.jbar.app/Uploads/" + u.profileImage, clientMark = c.clientMark, clientTitle = u.name, content = c.content, date = c.date }).ToList();
 
 
-                    
+
                     foreach (var item in comments)
                     {
-                       
+
                         item.srtdate = dateTimeConvert.ToPersianDateString(item.date);
                     }
                     List<Comment> lst = dbcontext.comments.ToList();
@@ -731,7 +732,7 @@ namespace jbar.Controllers
                     result.destination = destination;
                     result.description = myorder.description;
                     result.distance = sb.ToString();
-                    result.typeOrderList = types;
+                    result.typeOrderList = new List<newtype>();
                     result.netTotal = (int)myorder.priceTotal == 0 ? (int)myorder.pricePerTone * (int)myorder.loadAmount : (int)myorder.priceTotal;
                     result.netPerTon = (int)myorder.pricePerTone;
                     result.pricePerKiloometre = (int)((int)myorder.priceTotal / (myorder.distance / 1000));
@@ -787,11 +788,11 @@ namespace jbar.Controllers
                                            select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
 
 
-                    List<newtype> types = (from o in dbcontext.cartypes
-                                           join ot in dbcontext.ordertypes on o.typeID equals ot.typeID
-                                           join otp in dbcontext.cartypes on o.parentID equals otp.typeID
-                                           where ot.orderID == orderGuid
-                                           select new newtype { title = otp.title + " - " + o.title }).ToList();
+                    //List<newtype> types = (from o in dbcontext.cartypes
+                    //                       join ot in dbcontext.ordertypes on o.typeID equals ot.typeID
+                    //                       join otp in dbcontext.cartypes on o.parentID equals otp.typeID
+                    //                       where ot.orderID == orderGuid
+                    //                       select new newtype { title = otp.title + " - " + o.title }).ToList();
 
                     List<orderCommentVM> comments = (from c in dbcontext.comments
                                                      join u in dbcontext.users on c.userID equals u.userID
@@ -825,7 +826,7 @@ namespace jbar.Controllers
                     result.destination = destination;
                     result.description = myorder.description;
                     result.distance = sb.ToString();
-                    result.typeOrderList = types;
+                    result.typeOrderList = new List<newtype>();
                     result.netTotal = (int)myorder.priceTotal == 0 ? (int)myorder.pricePerTone * (int)myorder.loadAmount : (int)myorder.priceTotal;
                     result.netPerTon = (int)myorder.pricePerTone;
                     result.pricePerKiloometre = (int)((int)myorder.priceTotal / (myorder.distance / 1000));
@@ -878,24 +879,24 @@ namespace jbar.Controllers
                                       where u.userID != u.parentID && u.userID == myorder.originCityID
                                       select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
                     List<newcity> destination = await (from u in dbcontext.cities
-                                           join p in dbcontext.cities on u.parentID equals p.userID
-                                           where u.userID != u.parentID && u.userID == myorder.destinCityID
-                                           select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToListAsync();
+                                                       join p in dbcontext.cities on u.parentID equals p.userID
+                                                       where u.userID != u.parentID && u.userID == myorder.destinCityID
+                                                       select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToListAsync();
 
 
-                    List<newtype> types = await (from o in dbcontext.cartypes
-                                           join ot in dbcontext.ordertypes on o.typeID equals ot.typeID
-                                           join otp in dbcontext.cartypes on o.parentID equals otp.typeID
-                                           where ot.orderID == orderGuid
-                                           select new newtype { title = otp.title + " - " + o.title }).ToListAsync();
+                    //List<newtype> types = await (from o in dbcontext.cartypes
+                    //                             join ot in dbcontext.ordertypes on o.typeID equals ot.typeID
+                    //                             join otp in dbcontext.cartypes on o.parentID equals otp.typeID
+                    //                             where ot.orderID == orderGuid
+                    //                             select new newtype { title = otp.title + " - " + o.title }).ToListAsync();
 
                     List<orderCommentVM> comments = await (from c in dbcontext.comments
-                                                     join u in dbcontext.users on c.userID equals u.userID
-                                                     where c.orderID == orderGuid
-                                                     select new orderCommentVM { clientImage = "https://www.jbar.app/Uploads/" + u.profileImage, clientMark = c.clientMark, clientTitle = u.name, content = c.content, date = c.date }).ToListAsync();
+                                                           join u in dbcontext.users on c.userID equals u.userID
+                                                           where c.orderID == orderGuid
+                                                           select new orderCommentVM { clientImage = "https://www.jbar.app/Uploads/" + u.profileImage, clientMark = c.clientMark, clientTitle = u.name, content = c.content, date = c.date }).ToListAsync();
 
 
-                    var qResponse =  (from c in dbcontext.orderResponses
+                    var qResponse = (from c in dbcontext.orderResponses
                                      join u in dbcontext.users on c.driverID equals u.userID
                                      where c.orderID == orderGuid
                                      select new responsToOrder { driverID = c.driverID.ToString(), phone = u.phone, price = c.price, title = u.name }).AsQueryable();
@@ -921,7 +922,7 @@ namespace jbar.Controllers
                     result.destination = destination.First();
                     result.description = myorder.description;
                     result.distance = sb.ToString();
-                    result.typeOrderList = types;
+                    result.typeOrderList = new List<newtype>();
                     result.netTotal = (int)myorder.priceTotal == 0 ? (int)myorder.pricePerTone * (int)myorder.loadAmount : (int)myorder.priceTotal;
                     result.netPerTon = (int)myorder.pricePerTone;
                     result.pricePerKiloometre = (int)((int)myorder.priceTotal / (myorder.distance / 1000));
@@ -957,72 +958,7 @@ namespace jbar.Controllers
         }
 
 
-        [BasicAuthentication]
-        [System.Web.Http.HttpPost]
-        public getCoDriverResponse getCoDriver()
-        {
 
-            getCoDriverResponse obj = new getCoDriverResponse();
-            object someObject;
-            Request.Properties.TryGetValue("UserToken", out someObject);
-
-            Guid userID = new Guid(someObject.ToString());
-            using (Context dbcontext = new Context())
-            {
-                user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
-                List<codrivervm> lst = (from cd in dbcontext.coDrivers
-                                        join u in dbcontext.users on cd.coDriverID equals u.userID
-                                        where cd.DriverID == user.userID
-                                        select new codrivervm { did = u.userID, dname = u.name,dusername = u.username }).ToList();
-
-                obj.codrivers = lst;
-                obj.status = 200;
-
-
-            }
-            return obj;
-        }
-
-        [BasicAuthentication]
-        [System.Web.Http.HttpPost]
-        public JObject addDriver([FromBody] addDriverVM model)
-        {
-            getDashbaord obj = new getDashbaord();
-            object someObject;
-            Request.Properties.TryGetValue("UserToken", out someObject);
-            responseModel mymodel = new responseModel();
-            Guid userID = new Guid(someObject.ToString());
-            using (Context dbcontext = new Context())
-            {
-                user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
-
-                user codriver = dbcontext.users.SingleOrDefault(x => x.phone == model.phone && x.userType == "1");
-
-                if (codriver != null)
-                {
-                    coDriver coobj = new coDriver()
-                    {
-                        coDriverID = codriver.userID,
-                        DriverID = user.userID
-                    };
-                    dbcontext.coDrivers.Add(coobj);
-                    dbcontext.SaveChanges();
-                    mymodel.status = 200;
-
-                }
-                else
-                {
-                    mymodel.status = 400;
-                    mymodel.message = "کاربر مورد نظر عضو سامانه نمی باشد";
-                }
-            }
-
-
-            string result = JsonConvert.SerializeObject(mymodel);
-
-            JObject jObject = JObject.Parse(result);
-            return jObject;
-        }
 
 
 
@@ -1653,10 +1589,10 @@ namespace jbar.Controllers
         {
             using (Context dbcontext = new Context())
             {
-                dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [orders]");
-                dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [ordertypes]");
-                dbcontext.SaveChanges();
-                List<ordertype> lst0 = dbcontext.ordertypes.ToList();
+                //dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [orders]");
+                //dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [ordertypes]");
+                //dbcontext.SaveChanges();
+                //List<ordertype> lst0 = dbcontext.ordertypes.ToList();
                 List<order> lst = dbcontext.orders.ToList();
 
                 Guid tguid = Guid.NewGuid();
@@ -1943,18 +1879,85 @@ namespace jbar.Controllers
         // process
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public async Task<List<process>> getProcess()
+        public async Task<processActionVM> getProcess()
+        {
+            object someObject;
+            processActionVM responseModel = new processActionVM();
+
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            Guid userID = new Guid(someObject.ToString());
+
+            using (Context dbcontext = new Context())
+            {
+                var query = from process in dbcontext.processes select process;
+                responseModel.processList = await query.ToListAsync();
+                //responseModel.formulaList = await dbcontext.formulas.Where(x => x.name != "").ToListAsync();
+            }
+
+            return responseModel;
+        }
+
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<processFormulaActionVM> getProcessFormula([FromBody] process model)
+        {
+            object someObject;
+            processFormulaActionVM responseModel = new processFormulaActionVM();
+
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            Guid userID = new Guid(someObject.ToString());
+
+            using (Context dbcontext = new Context())
+            {
+                var query = from process in dbcontext.processes select process;
+                responseModel.processFormulaList = await (from p in dbcontext.processFormulas
+                                                          join f in dbcontext.formulas
+                                                          on p.FormulaID equals f.formulaID
+                                                          where p.proccessID == model.processID
+                                                          select new processFormulaVM { formulaName = f.name, processFormulaID = p.processFormulaID }).ToListAsync();
+                responseModel.FormulaList = await dbcontext.formulas.Where(x => x.name != "").ToListAsync();
+                responseModel.codingList = await dbcontext.codings.OrderBy(x => x.codeHesab).ToListAsync();
+
+            }
+
+            return responseModel;
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<JObject> setProcessFormula([FromBody] processFormula model)
         {
             object someObject;
             Request.Properties.TryGetValue("UserToken", out someObject);
             Guid userID = new Guid(someObject.ToString());
 
-            using (Context dbcontext = new   Context())
+            using (Context dbcontext = new Context())
             {
-                var query = from process in dbcontext.processes select process;
-                return await query.ToListAsync();
+                responseModel mymodel = new responseModel();
+                processFormula pf = await dbcontext.processFormulas.SingleOrDefaultAsync(x => x.FormulaID == model.FormulaID && x.proccessID == model.proccessID);
+
+                if (pf == null)
+                {
+                    dbcontext.processFormulas.Add(new processFormula { codingID = model.codingID, FormulaID = model.FormulaID, proccessID = model.proccessID, transactionType = model.transactionType, processFormulaID = Guid.NewGuid() });
+                    await dbcontext.SaveChangesAsync();
+                    mymodel.status = 200;
+                    mymodel.message = "ok";
+                }
+                else
+                {
+                    mymodel.status = 400;
+                    mymodel.message = "آیتم مورد نظر وجود دارد";
+                }
+
+                string result = JsonConvert.SerializeObject(mymodel);
+                JObject jObject = JObject.Parse(result);
+                return jObject;
             }
         }
+
+
+
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
         public async Task<JObject> setProcess([FromBody] process model)
@@ -1969,9 +1972,9 @@ namespace jbar.Controllers
                 var process = await dbcontext.processes.FirstOrDefaultAsync(i => i.title == model.title);
                 if (process == null)
                 {
-                    dbcontext.processes.Add(new process() { nodeID = userID, processID = Guid.NewGuid(), title = model.title });
+                    dbcontext.processes.Add(new process() { userID = userID, processID = Guid.NewGuid(), title = model.title });
                     await dbcontext.SaveChangesAsync();
-                   
+
                     mymodel.status = 200;
                     mymodel.message = "ok";
 
@@ -1981,7 +1984,7 @@ namespace jbar.Controllers
                     mymodel.status = 400;
                     mymodel.message = "پروسه هم نام وجود دارد";
                 }
-                
+
                 string result = JsonConvert.SerializeObject(mymodel);
                 JObject jObject = JObject.Parse(result);
                 return jObject;
@@ -1995,15 +1998,36 @@ namespace jbar.Controllers
         public async Task<formulaActionVM> getFormula()
         {
             object someObject;
+            object phone;
             Request.Properties.TryGetValue("UserToken", out someObject);
+            Request.Properties.TryGetValue("Userp", out phone); 
             Guid userID = new Guid(someObject.ToString());
             formulaActionVM model = new formulaActionVM();
             using (Context dbcontext = new Context())
             {
-                var query = from formula in dbcontext.formulas orderby formula.col select  formula;
-                var query1 = from mabna in dbcontext.mabnas select mabna;
-                var query2 = from namad in dbcontext.namads select namad;
-                model.formulaList = await query.ToListAsync();
+                List<formulaVM> formulalst = new List<formulaVM>();
+                var userSelected = await dbcontext.users.Include(x => x.Formulas).SingleOrDefaultAsync(x => x.phone == phone.ToString() && x.userType == "0");
+                foreach (var item in userSelected.Formulas)
+                {
+                    formulalst.Add(new formulaVM()
+                    {
+                        col = item.col,
+                        formulaID = item.formulaID,
+                        leftID = item.leftID,
+                        name = item.name,
+                        number = item.number,
+                        result = item.result,
+                        rightID = item.rightID,
+                        mabnaName = item.mabna != null ? item.mabna.title : "",
+                        namadName = item.namad != null ? item.namad.title : ""
+
+                    });
+                }
+
+
+                var query1 = from mabna in dbcontext.mabnas select new mabnaVM { mabnaID = mabna.mabnaID, title = mabna.title };
+                var query2 = from namad in dbcontext.namads select new namadVM { namadID = namad.namadID, title = namad.title };
+                model.formulaList = formulalst;
                 model.mabna = await query1.ToListAsync();
                 model.namadList = await query2.ToListAsync();
                 return model;
@@ -2020,28 +2044,27 @@ namespace jbar.Controllers
                 object someObject;
                 Request.Properties.TryGetValue("UserToken", out someObject);
                 Guid userID = new Guid(someObject.ToString());
-                model.nodeID = userID;
+                model.userID = userID;
                 using (Context dbcontext = new Context())
                 {
-                    
-                    var process = await dbcontext.formulas.FirstOrDefaultAsync(i => i.leftID == model.leftID && i.rightID == model.rightID && i.number == model.number && i.namadID == model.namadID && i.mabnaID == model.mabnaID && i.mabnaName == model.mabnaName && i.col == model.col);
+
+                    var process = await dbcontext.formulas.FirstOrDefaultAsync(i => i.leftID == model.leftID && i.rightID == model.rightID && i.number == model.number && i.namadID == model.namadID && i.mabnaID == model.mabnaID && i.col == model.col);
                     if (process == null)
                     {
+                        var lastprocess = await dbcontext.formulas.OrderByDescending(x => x.col).FirstOrDefaultAsync();
+                        int col = lastprocess != null ? lastprocess.col + 1 : 1;
 
-                        namad  namadFun = await  dbcontext.namads.FirstOrDefaultAsync(x => x.namadID == model.namadID);
-                        mabna mabnaFun =  await dbcontext.mabnas.FirstOrDefaultAsync(x => x.mabnaID == model.mabnaID);
-                        var finalLeftFun =await dbcontext.formulas.FirstOrDefaultAsync(x => x.col == model.leftID);
+                        var finalLeftFun = await dbcontext.formulas.FirstOrDefaultAsync(x => x.col == model.leftID);
                         var finalRightFun = await dbcontext.formulas.FirstOrDefaultAsync(x => x.col == model.rightID);
 
 
-                        model.mabnaName = mabnaFun != null ? mabnaFun.title : "";
-                        model.namadName = namadFun != null ? namadFun.title : "";
-                        
-                        string fuNamad = HttpUtility.HtmlDecode(model.namadName);
-                        string numberormabna = model.number == 0 ? model.mabnaName : model.number.ToString();
+
+
+                        string fuNamad = "";// HttpUtility.HtmlDecode(model.namad.title);
+                        string numberormabna = "";//model.number == 0 ? model.mabna.title : model.number.ToString();
                         model.result = (model.leftID == 0 && model.rightID == 0) ? "( " + numberormabna + " )" : "( " + finalLeftFun.result + " " + fuNamad + " " + finalRightFun.result + " )";
 
-                        dbcontext.formulas.Add(new formula() { namadName = model.namadName, name = model.name, nodeID = userID, mabnaID = model.mabnaID, mabnaName = model.mabnaName, number = model.number, formulaID = Guid.NewGuid(), namadID = model.namadID, leftID = model.leftID, rightID = model.rightID, col = model.col, result = model.result });
+                        dbcontext.formulas.Add(new formula() { name = model.name, userID = userID, mabnaID = model.mabnaID, number = model.number, formulaID = Guid.NewGuid(), namadID = model.namadID, leftID = model.leftID, rightID = model.rightID, col = col, result = model.result });
                         await dbcontext.SaveChangesAsync();
 
                         mymodel.status = 200;
@@ -2062,7 +2085,7 @@ namespace jbar.Controllers
 
                 throw;
             }
-           
+
             string result = JsonConvert.SerializeObject(mymodel);
             JObject jObject = JObject.Parse(result);
             return jObject;
@@ -2071,17 +2094,43 @@ namespace jbar.Controllers
         // coding
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public async Task<List<coding>> getCoding()
+        public async Task<List<codingVM>> getCoding()
         {
             object someObject;
-            Request.Properties.TryGetValue("UserToken", out someObject);
-            Guid userID = new Guid(someObject.ToString());
-            formulaActionVM model = new formulaActionVM();
-            using (Context dbcontext = new Context())
+            try
             {
-                var query = from coding in dbcontext.codings   where coding.nodeID == userID select coding;
-                return await query.ToListAsync();
+                
+                object phone;
+                Request.Properties.TryGetValue("UserToken", out someObject);
+                Request.Properties.TryGetValue("Userp", out phone);
+                Guid userID = new Guid(someObject.ToString());
+                formulaActionVM model = new formulaActionVM();
+                using (Context dbcontext = new Context())
+                {
+                    user userItem = await dbcontext.users.Where(x => x.phone == phone.ToString() && x.userType == "0" ).Include(x => x.Codings).SingleOrDefaultAsync();
+                    List<codingVM> lst = new List<codingVM>();
+                    foreach (var coding in userItem.Codings)
+                    {
+                        lst.Add(new codingVM()
+                        {
+                            codeHesab = coding.codeHesab,
+                            codingID = coding.codingID,
+                            codingType = coding.codingType,
+                            parentID = coding.parentID,
+                            title = coding.title,
+                        });
+
+                    }
+                    return lst;
+
+                }
             }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
         }
 
         [BasicAuthentication]
@@ -2094,24 +2143,25 @@ namespace jbar.Controllers
                 object someObject;
                 Request.Properties.TryGetValue("UserToken", out someObject);
                 Guid userID = new Guid(someObject.ToString());
-                model.nodeID = userID;
+                model.userID = userID;
                 using (Context dbcontext = new Context())
                 {
 
-                    var coding = await dbcontext.codings.FirstOrDefaultAsync(i => i.parentID == model.parentID && i.title == model.title );
+                    var coding = await dbcontext.codings.FirstOrDefaultAsync(i => i.codeHesab == model.codeHesab);
                     if (coding == null)
                     {
 
                         coding parentcoding = await dbcontext.codings.FirstOrDefaultAsync(x => x.codingID == model.parentID);
 
                         int itemCodingType = 1;
-                        int parentCodingType = parentcoding.codingType;
-                        
+
+
                         if (parentcoding != null)
                         {
+                            int parentCodingType = parentcoding.codingType;
                             switch (parentCodingType)
                             {
-                                
+
                                 case 1:
                                     itemCodingType = 2;
                                     break;
@@ -2136,7 +2186,7 @@ namespace jbar.Controllers
                             }
                         }
 
-                        dbcontext.codings.Add(new coding() {  codingID = Guid.NewGuid(), codingType = itemCodingType , parentID = model.parentID , codeHesab = model.codeHesab, title = model.title});
+                        dbcontext.codings.Add(new coding() { userID = userID, codingID = Guid.NewGuid(), codingType = itemCodingType, parentID = model.parentID, codeHesab = model.codeHesab, title = model.title });
                         await dbcontext.SaveChangesAsync();
 
                         mymodel.status = 200;
@@ -2163,6 +2213,414 @@ namespace jbar.Controllers
             return jObject;
         }
 
+        //codriver
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<getCoDriverResponse> getCoDriverAsync()
+        {
+
+            getCoDriverResponse obj = new getCoDriverResponse();
+            object someObject;
+            object phone;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            Request.Properties.TryGetValue("Userp", out phone);
+            Guid userID = new Guid(someObject.ToString());
+            using (Context dbcontext = new Context())
+            {
+                user user = await dbcontext.users.Where(x => x.phone == phone.ToString() && x.userType == "0").Include(x => x.CoDrivers).SingleOrDefaultAsync();
+                List<codrivervm> lst = new List<codrivervm>();
+                if (user.CoDrivers != null)
+                {
+                    foreach (var item in user.CoDrivers)
+                    {
+                        lst.Add(new codrivervm
+                        {
+                            did = item.userID,
+                            dname = item.name,
+                            plateNumber = item.vehicle == null ? "" : item.vehicle.iran + " ایران " + " " + item.vehicle.pelak2 + " " + item.vehicle.pelakHarf + " " + item.vehicle.pelak1,
+                            phone = item.phone
+
+                        });
+                    }
+
+                }
+                //List<vehicleStatus> kkk = dbcontext.vehicleStatuses.ToList();
+                vehicleStatus stat = await dbcontext.vehicleStatuses.Where(x => x.title == "بدون راننده").SingleOrDefaultAsync();
+                List<vehicleVM> vehicleList = await (from p in dbcontext.vehicles
+                                                     where p.userID == user.userID && p.StatusID == stat.vehicleStatusID
+                                                     select new vehicleVM { iran = p.iran, pelak1 = p.pelak1, pelak2 = p.pelak2, pelakHarf = p.pelakHarf, vehicleID = p.vehicleID }).ToListAsync();
+
+
+
+
+
+
+                obj.codrivers = lst;
+                obj.vehicleList = vehicleList;
+                obj.status = 200;
+
+
+            }
+            return obj;
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<JObject> addDriverAsync([FromBody] addDriverVM model)
+        {
+            getDashbaord obj = new getDashbaord();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            responseModel mymodel = new responseModel();
+            Guid userID = new Guid(someObject.ToString());
+            using (Context dbcontext = new Context())
+            {
+                try
+                {
+                    user user = await dbcontext.users.SingleOrDefaultAsync(x => x.userID == userID);
+
+                    user codriver = await dbcontext.users.SingleOrDefaultAsync(x => x.phone == model.phone && x.userType == "1");
+
+                    if (codriver != null)
+                    {
+                        codriver.barbariID = userID;
+                        await dbcontext.SaveChangesAsync();
+                        mymodel.status = 200;
+                    }
+                    else
+                    {
+                        mymodel.status = 400;
+                        mymodel.message = "کاربر مورد نظر عضو سامانه نمی باشد";
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    mymodel.status = 400;
+                    mymodel.message = "خطا در برقراری ارتباط با سرور";
+                }
+
+            }
+
+
+            string result = JsonConvert.SerializeObject(mymodel);
+
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+        }
+
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<JObject> setVehicleForDriverAsync([FromBody] setVehicleForVM model)
+        {
+            getDashbaord obj = new getDashbaord();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            responseModel mymodel = new responseModel();
+            Guid userID = new Guid(someObject.ToString());
+            using (Context dbcontext = new Context())
+            {
+                try
+                {
+                    // خودرو برای راننده ست شد
+                    user driver = await dbcontext.users.Where(x => x.userID == model.driverID).SingleOrDefaultAsync();
+                    driver.vehicleID = model.vehicleID;
+
+                    // تغییر استتوس خودر
+                    List<vehicleStatus> dddys = dbcontext.vehicleStatuses.ToList();
+                    vehicleStatus yds = await dbcontext.vehicleStatuses.Where(x => x.title == "در حال استفاده").FirstAsync();
+                    vehicle v = await dbcontext.vehicles.Where(x => x.vehicleID == model.vehicleID).SingleOrDefaultAsync();
+                    v.StatusID = yds.vehicleStatusID;
+
+
+                    //ثبت هیستوری تغییرات
+                    userVehicle lastvh = await dbcontext.userVehicles.Where(x => x.userID == model.driverID && x.vehicleID == model.vehicleID && x.isFinished == false).SingleOrDefaultAsync();
+                    if (lastvh != null)
+                    {
+                        lastvh.endDate = DateTime.Now;
+                        lastvh.isFinished = true;
+                    }
+                    userVehicle veya = new userVehicle()
+                    {
+                        isFinished = false,
+                        endDate = DateTime.Now,
+                        startDate = DateTime.Now,
+                        vehicleID = model.vehicleID,
+                        userID = model.driverID,
+                        userVehicleID = Guid.NewGuid(),
+
+                    };
+                    dbcontext.userVehicles.Add(veya);
+                    await dbcontext.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
+
+
+
+            }
+            string result = JsonConvert.SerializeObject(mymodel);
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+        }
+
+        //vehicle
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<getVehicleResponce> getVehicleAsync([FromBody] vehicle model)
+        {
+            getVehicleResponce obj = new getVehicleResponce();
+            try
+            {
+
+                object someObject;
+                Request.Properties.TryGetValue("UserToken", out someObject);
+
+                Guid userID = new Guid(someObject.ToString());
+                using (Context dbcontext = new Context())
+                {
+                    var vlistq =  dbcontext.vehicles.Include(x=>x.yadak).Include(x=>x.vehicleStatus).Where(x => x.userID == userID).AsQueryable();
+
+                    if (model.iran != null)
+                    {
+                        vlistq = vlistq.Where(x => x.iran.Contains(model.iran));
+                    }
+                    if (model.pelak1 != null)
+                    {
+                        vlistq = vlistq.Where(x => x.pelak1.Contains(model.pelak1));
+                    }
+                    if (model.pelak2 != null)
+                    {
+                        vlistq = vlistq.Where(x => x.pelak2.Contains(model.pelak2));
+                    }
+                    if (model.pelakHarf != model.pelakHarf)
+                    {
+                        vlistq = vlistq.Where(x => x.pelakHarf.Contains(model.pelakHarf));
+                    }
+                    if (model.StatusID != model.StatusID)
+                    {
+                        vlistq = vlistq.Where(x => x.StatusID ==  model.StatusID);
+                    }
+
+                    var vlist = await vlistq.Select(v => new vehicleVM()
+                    {
+                        iran = v.iran,
+                        pelak1 = v.pelak1,
+                        pelak2 = v.pelak2,
+                        pelakHarf = v.pelakHarf,
+                        vehicleID = v.vehicleID,
+                        status = v.vehicleStatus.title,
+                        yadakNumber = v.yadak != null ? v.yadak.yadakNumber : "",
+
+                    }).ToListAsync();
+                    var ylist = await dbcontext.yadaks.Include(x=>x.yadakStatus).Where(x => x.userID == userID && x.yadakStatus.title == "بدون کشنده").Select(y=> new yadakVM { yadakID = y.yadakID, yadakNumber = y.yadakNumber }).ToListAsync();
+                  
+                    obj.vehicleList = vlist;
+                    obj.yadakList = ylist;
+
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            return obj;
+
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<JObject> setVehicleAsync([FromBody] vehicle model)
+        {
+            getDashbaord obj = new getDashbaord();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            responseModel mymodel = new responseModel();
+            Guid userID = new Guid(someObject.ToString());
+            using (Context dbcontext = new Context())
+            {
+                try
+                {
+                    user user = await dbcontext.users.SingleOrDefaultAsync(x => x.userID == userID);
+
+                    vehicle vehicle = await dbcontext.vehicles.SingleOrDefaultAsync(x => x.userID == model.userID && x.pelak1 == model.pelak1 && x.pelak2 == model.pelak2 && x.pelakHarf == model.pelakHarf && x.iran == model.iran);
+                    vehicleStatus st = await dbcontext.vehicleStatuses.FirstAsync();
+                    if (vehicle == null)
+                    {
+                        vehicle vh = new vehicle()
+                        {
+                            vehicleID = Guid.NewGuid(),
+                            iran = model.iran,
+                            pelakHarf = model.pelakHarf,
+                            pelak2 = model.pelak2,
+                            pelak1 = model.pelak1,
+                            userID = user.userID,
+                            StatusID = st.vehicleStatusID
+
+                        };
+                        dbcontext.vehicles.Add(vh);
+                        await dbcontext.SaveChangesAsync();
+                        mymodel.status = 200;
+
+                    }
+                    else
+                    {
+                        mymodel.status = 400;
+                        mymodel.message = "آیتم مورد نظر قبلا ثبت شده است";
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    mymodel.status = 400;
+                    mymodel.message = "خطا در برقراری ارتباط با سرور";
+                }
+
+            }
+            string result = JsonConvert.SerializeObject(mymodel);
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<JObject> setYdakForVehicleAsync([FromBody] setYadakForVM model)
+        {
+            getDashbaord obj = new getDashbaord();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            responseModel mymodel = new responseModel();
+            Guid userID = new Guid(someObject.ToString());
+            using (Context dbcontext = new Context())
+            {
+                try
+                {
+                    vehicle vh = await dbcontext.vehicles.Where(x => x.vehicleID == model.vehicleID).SingleOrDefaultAsync();
+                    vh.yadakID = model.yadakID;
+
+                    //List<yadakStatus> dddys = dbcontext.yadakStatuses.ToList();
+                    yadakStatus yds = await dbcontext.yadakStatuses.Where(x => x.title == "عملیاتی").FirstAsync();
+                    yadak yd = await dbcontext.yadaks.Where(x => x.yadakID == model.yadakID).SingleOrDefaultAsync();
+                    yd.StatusID = yds.yadakStatusID;
+
+                    yadakVehicle lastvh = await dbcontext.yadakVehicles.Where(x => x.yadakID == model.yadakID && x.vehicleID == model.vehicleID && x.isFinished == false).SingleOrDefaultAsync();
+                    if (lastvh != null)
+                    {
+                        lastvh.endDate = DateTime.Now;
+                        lastvh.isFinished = true;
+                    }
+                    yadakVehicle veya = new yadakVehicle()
+                    {
+                        isFinished = false,
+                        endDate = DateTime.Now,
+                        startDate = DateTime.Now,
+                        vehicleID = model.vehicleID,
+                        yadakID = model.yadakID,
+                        yadakVehicleID = Guid.NewGuid(),
+
+                    };
+                    dbcontext.yadakVehicles.Add(veya);
+                    await dbcontext.SaveChangesAsync();
+                }
+                catch (Exception e)
+                {
+
+                    throw;
+                }
+
+
+
+            }
+            string result = JsonConvert.SerializeObject(mymodel);
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+        }
+
+        //yadak
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<getYadakResponce> getYadakAsync()
+        {
+            getYadakResponce obj = new getYadakResponce();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+
+
+            using (Context dbcontext = new Context())
+            {
+                Guid userID = new Guid(someObject.ToString());
+                user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
+
+                obj.yadakList = await (from v in dbcontext.yadaks
+                                       where v.userID == userID
+                                       select new yadakVM { loadtype = v.Cartype.title, status = v.yadakStatus.title, yadakID = v.yadakID, yadakNumber = v.yadakNumber }
+                                           ).ToListAsync();
+                obj.typeList = await (from l in dbcontext.cartypes
+                                      select new cartypeVM { title = l.title, typeID = l.typeID }).ToListAsync();
+
+            }
+            return obj;
+
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<JObject> setYadakAsync([FromBody] yadak model)
+        {
+            getDashbaord obj = new getDashbaord();
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            responseModel mymodel = new responseModel();
+            Guid userID = new Guid(someObject.ToString());
+            using (Context dbcontext = new Context())
+            {
+                try
+                {
+                    user user = await dbcontext.users.SingleOrDefaultAsync(x => x.userID == userID);
+
+                    yadak yadak = await dbcontext.yadaks.SingleOrDefaultAsync(x => x.userID == model.userID && x.yadakNumber == model.yadakNumber && x.typeID == model.typeID);
+                    yadakStatus st = await dbcontext.yadakStatuses.FirstAsync();
+                    if (yadak == null)
+                    {
+                        yadak vh = new yadak()
+                        {
+                            yadakID = Guid.NewGuid(),
+                            typeID = model.typeID,
+                            yadakNumber = model.yadakNumber,
+                            userID = userID,
+                            StatusID = st.yadakStatusID
+
+
+
+                        };
+                        dbcontext.yadaks.Add(vh);
+                        await dbcontext.SaveChangesAsync();
+                        mymodel.status = 200;
+
+                    }
+                    else
+                    {
+                        mymodel.status = 400;
+                        mymodel.message = "آیتم مورد نظر قبلا ثبت شده است";
+                    }
+                }
+                catch (Exception e)
+                {
+
+                    mymodel.status = 400;
+                    mymodel.message = "خطا در برقراری ارتباط با سرور";
+                }
+
+            }
+            string result = JsonConvert.SerializeObject(mymodel);
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+        }
 
     }
 }

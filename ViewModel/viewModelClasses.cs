@@ -40,7 +40,7 @@ namespace jbar.ViewModel
 
     }
 
-    
+
     public class getCityNameVM
     {
         public double lat { get; set; }
@@ -128,15 +128,83 @@ namespace jbar.ViewModel
     }
 
 
+    public class driverList
+    {
+      public   List<user> dlist { get; set; }
+    }
     public class codrivervm
     {
         public Guid did { get; set; }
         public string dname { get; set; }
-        public string dusername { get; set; }
+        public string phone { get; set; }
+        public string plateNumber { get; set; }
     }
+
+    public class getVehicleAsyncVM
+    {
+       public  IEnumerable<vehicle> vlist { get; set; }
+        public IEnumerable<yadak> ylist { get; set; }
+    }
+    public class vehicleVM 
+    {
+        public Guid vehicleID { get; set; }
+        public string pelak1 { get; set; }
+        public string pelakHarf { get; set; }
+        public string pelak2 { get; set; }
+        public string iran { get; set; }
+        public string yadakNumber { get; set; }
+        public string status { get; set; }
+    }
+    public class getVehicleResponce
+    {
+        public List<vehicleVM> vehicleList { get; set; }
+        public List<yadakVM> yadakList { get; set; }
+    }
+    public class setYadakForVM
+    {
+        public Guid vehicleID { get; set; }
+        public Guid yadakID { get; set; }
+    }
+    public class setVehicleForVM
+    {
+        public Guid driverID { get; set; }
+        public Guid vehicleID { get; set; }
+    }
+
+    public class codingVM
+    {
+        public Guid codingID { get; set; }
+        public Guid parentID { get; set; }
+
+        public int codingType { get; set; }
+        public int codeHesab { get; set; }
+        public string title { get; set; }
+    }
+
+    public class yadakVM
+    {
+
+        public Guid yadakID { get; set; }
+        public string yadakNumber { get; set; }
+        public string status { get; set; }
+        public string loadtype { get; set; }
+    }
+
+    public class cartypeVM
+    {
+        public Guid typeID { get; set; }
+        public string title { get; set; }
+    }
+    public class getYadakResponce
+    {
+        public List<yadakVM> yadakList { get; set; }
+        public List<cartypeVM> typeList { get; set; }
+    }
+
     public class getCoDriverResponse
     {
-       public  List<codrivervm> codrivers { get; set; }
+        public List<codrivervm> codrivers { get; set; }
+        public List<vehicleVM> vehicleList { get; set; }
         public int status { get; set; }
         public int message { get; set; }
     }
@@ -187,12 +255,12 @@ namespace jbar.ViewModel
 
     public class panelCityVM
     {
-        public  sendCityVM cityList { get; set; }
+        public sendCityVM cityList { get; set; }
         public string listname { get; set; }
     }
 
 
-    
+
     public class newcity
     {
         public Guid userID { get; set; }
@@ -290,7 +358,7 @@ namespace jbar.ViewModel
     public class requestOrderVM
     {
         public string orderID { get; set; }
-        public  double  price { get; set; }
+        public double price { get; set; }
     }
     public class responseOrderVM
     {
@@ -304,8 +372,8 @@ namespace jbar.ViewModel
     }
     public class setCommentVM
     {
-        public string  content { get; set; }
-        public string  mark { get; set; }
+        public string content { get; set; }
+        public string mark { get; set; }
         public string orderID { get; set; }
     }
 
@@ -432,12 +500,55 @@ namespace jbar.ViewModel
         public List<jbar.Model.cartype> typeList { get; set; }
     }
 
+    public class processFormulaVM
+    {
+        public string formulaName { get; set; }
+        public Guid processFormulaID { get; set; }
+    }
+    public class processFormulaActionVM
+    {
+        public List<processFormulaVM> processFormulaList { get; set; }
+        public List<formula> FormulaList { get; set; }
+        public List<coding> codingList { get; set; }
+        public process process { get; set; }
+    }
+    public class processActionVM
+    {
+        public List<process> processList { get; set; }
+        public List<formula> formulaList { get; set; }
+    }
+    public class namadVM
+    {
+        public Guid namadID { get; set; }
+        public string title { get; set; }
+    }
+    public class mabnaVM
+    {
+        public Guid mabnaID { get; set; }
+        public string title { get; set; }
+    }
+    
+    public class formulaVM
+    {
+        public Guid formulaID { get; set; }
+        public int col { get; set; }
+        public int leftID { get; set; }
+        public int rightID { get; set; }
+        public decimal number { get; set; }
+        public string name { get; set; }
+        public string result { get; set; }
+        public string namadName { get; set; }
+        public string mabnaName { get; set; }
+    }
     public class formulaActionVM
     {
-       public  List<formula> formulaList { get; set; }
-        public List<namad> namadList { get; set; }
-        public List<mabna> mabna { get; set; }
+        public List<formulaVM> formulaList { get; set; }
+        public List<namadVM> namadList { get; set; }
+        public List<mabnaVM> mabna { get; set; }
     }
+
+   
+
     public class nullclass
     {
 

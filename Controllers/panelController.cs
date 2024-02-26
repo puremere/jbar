@@ -30,67 +30,129 @@ namespace jbar.Controllers
         // GET: panel
         public ActionResult Login()
         {
-
             Context dbcontext = new Context();
-            //mabna mabna = new mabna()
-            //{
-            //    mabnaID = Guid.NewGuid(),
-            //     title = "قیمت تمام شده سفارش",
-            //      value = "1",
-            //};
-            //dbcontext.mabnas.Add(mabna);
-            //mabna = new mabna()
-            //{
-            //    mabnaID = Guid.NewGuid(),
-            //    title = "ارزش بار",
-            //    value = "2",
-            //};
-            //dbcontext.mabnas.Add(mabna);
-            //mabna = new mabna()
-            //{
-            //    mabnaID = Guid.NewGuid(),
-            //    title = "مسافت کلی بار",
-            //    value = "3",
-            //};
-            //dbcontext.mabnas.Add(mabna);
-            //dbcontext.SaveChanges();
+            //List<vehicleStatus> stl = dbcontext.vehicleStatuses.ToList();
+            dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [mabnas]");
+            dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [namads]"); 
+            //dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [codings]");
             //dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [formulas]");
-            //namad formula = new namad()
-            //{
-            //    namadID = Guid.NewGuid(),
-            //    title = "&#43;"
-            //};
-            //dbcontext.namads.Add(formula);
+            //dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [processes]"); 
+             dbcontext.SaveChanges();
+
+
+
+
+
+
             //dbcontext.SaveChanges();
-            //formula = new namad()
+            //yadakStatus yd = new yadakStatus()
             //{
-            //    namadID = Guid.NewGuid(),
-            //    title = "&#8722;"
+            //    title = "بدون کشنده",
+            //    yadakStatusID = Guid.NewGuid(),
             //};
-            //dbcontext.namads.Add(formula);
+            //dbcontext.yadakStatuses.Add(yd);
             //dbcontext.SaveChanges();
-            //formula = new namad()
+            //yd = new yadakStatus()
             //{
-            //    namadID = Guid.NewGuid(),
-            //    title = "&#215;"
+            //    title = "عملیاتی",
+            //    yadakStatusID = Guid.NewGuid(),
             //};
-            //dbcontext.namads.Add(formula);
+            //dbcontext.yadakStatuses.Add(yd);
             //dbcontext.SaveChanges();
-            //formula = new namad()
+            //yd = new yadakStatus()
             //{
-            //    namadID = Guid.NewGuid(),
-            //    title = "&#8260;"
+            //    title = "در دست تعمیرات",
+            //    yadakStatusID = Guid.NewGuid(),
             //};
-            //dbcontext.namads.Add(formula);
+            //dbcontext.yadakStatuses.Add(yd);
             //dbcontext.SaveChanges();
-            //formula = new namad()
-            //{
-            //    namadID = Guid.NewGuid(),
-            //    title = "&#61;"
-            //};
-            //dbcontext.namads.Add(formula);
+            Guid userid = new Guid("d7ddbb1d-5bac-40e0-a3f2-64d06712fba6");
+
+            mabna mabna = new mabna()
+            {
+                mabnaID = Guid.NewGuid(),
+                title = "قیمت تمام شده سفارش",
+                value = "1",
+                 userID = userid,
+                 
+            };
+            dbcontext.mabnas.Add(mabna);
             dbcontext.SaveChanges();
+            mabna = new mabna()
+            {
+                mabnaID = Guid.NewGuid(),
+                title = "ارزش بار",
+                value = "2",
+                userID = userid,
+            };
+            dbcontext.mabnas.Add(mabna);
+            dbcontext.SaveChanges();
+            mabna = new mabna()
+            {
+                mabnaID = Guid.NewGuid(),
+                title = "مسافت کلی بار",
+                value = "3",
+                userID = userid,
+            };
+            dbcontext.mabnas.Add(mabna);
+            dbcontext.SaveChanges();
+            //dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [formulas]");
+            namad formula = new namad()
+            {
+
+                namadID = Guid.NewGuid(),
+                value = "&#43;",
+                title = "plus",
+                userID = userid,
+               
+            };
+            dbcontext.namads.Add(formula);
+            dbcontext.SaveChanges();
+            formula = new namad()
+            {
+
+                namadID = Guid.NewGuid(),
+                value = "&#8722;",
+                title = "minus",
+                userID = userid,
+            };
+            dbcontext.namads.Add(formula);
+            dbcontext.SaveChanges();
+
+            formula = new namad()
+            {
+
+                namadID = Guid.NewGuid(),
+                value = "&#215;",
+                title ="multiple",
+                userID = userid,
+            };
+            dbcontext.namads.Add(formula);
+            dbcontext.SaveChanges();
+            formula = new namad()
+            {
+
+                namadID = Guid.NewGuid(),
+                value = "&#8260;",
+                title = "fraction",
+                userID = userid,
+            };
+            dbcontext.namads.Add(formula);
+            dbcontext.SaveChanges();
+
+            formula = new namad()
+            {
+
+                namadID = Guid.NewGuid(),
+                value = "&#61;",
+                title = "equal",
+                userID = userid,
+            };
+            dbcontext.namads.Add(formula);
+            dbcontext.SaveChanges();
+
             return View();
+
         }
         public ActionResult Dashboard()
         {
@@ -178,17 +240,13 @@ namespace jbar.Controllers
         public ActionResult getCity(string ID, string search)
         {
             string result = "";
-
             using (WebClient client = new WebClient())
             {
                 var collection = new NameValueCollection();
                 collection.Add("ID", ID);
                 collection.Add("search", search);
-
                 byte[] response = client.UploadValues(baseServer + "/getCity", collection);
-
                 result = System.Text.Encoding.UTF8.GetString(response);
-
             }
             sendCityVM res = JsonConvert.DeserializeObject<sendCityVM>(result);
             if (ID == null && search == null)
@@ -227,7 +285,6 @@ namespace jbar.Controllers
             }
             catch (Exception e)
             {
-
 
                 HttpCookie nameCookie = Request.Cookies["clientToken"];
                 nameCookie.Expires = DateTime.Now.AddDays(-1);
@@ -316,10 +373,13 @@ namespace jbar.Controllers
         [HttpPost]
         public ActionResult getCode(string phone)
         {
+            
+
             string result = "";
 
             using (WebClient client = new WebClient())
             {
+                
                 var collection = new NameValueCollection();
                 collection.Add("phone", phone);
                 collection.Add("userType", "0");
@@ -338,7 +398,6 @@ namespace jbar.Controllers
 
 
 
-        ///////////////////////////////
         
        
         // process
@@ -346,7 +405,7 @@ namespace jbar.Controllers
         {
             if (TempData["er"] != null)
                 ViewBag.error = TempData["er"].ToString();
-            List<process> responsemodel = new List<process>();
+            processActionVM responsemodel = new processActionVM();
             responsemodel = await methods.PostData(new nullclass(), responsemodel, "/getProcess", Request.Cookies["clientToken"].Value);
             return View(responsemodel);
         }
@@ -359,7 +418,25 @@ namespace jbar.Controllers
             return RedirectToAction("process");
         }
 
-
+        // processFormula
+        [HttpPost]
+        public async Task<ActionResult> processFormula(process model)
+        {
+            if (TempData["er"] != null)
+                ViewBag.error = TempData["er"].ToString();
+            processFormulaActionVM responsemodel = new processFormulaActionVM();
+            responsemodel = await methods.PostData(model, responsemodel, "/getProcessFormula", Request.Cookies["clientToken"].Value);
+            responsemodel.process = model;
+            return View(responsemodel);
+        }
+        [HttpPost]
+        public async Task<ActionResult> addFormulaToProcess (processFormula model)
+        {
+            responseModel responsemodel = await methods.PostData(model, new responseModel(), "/setProcessFormula", Request.Cookies["clientToken"].Value);
+            if (responsemodel.status != 200)
+                TempData["er"] = responsemodel.message;
+            return RedirectToAction("process");
+        }
 
         // formula
         public async Task<ActionResult> Formula()
@@ -383,6 +460,10 @@ namespace jbar.Controllers
         //coding
         public async Task<ActionResult> Coding()
         {
+
+            //Context dbcontext = new Context();
+            //dbcontext.Database.ExecuteSqlCommand("TRUNCATE TABLE [codings]");
+            //dbcontext.SaveChanges();
             if (TempData["er"] != null)
                 ViewBag.error = TempData["er"].ToString();
             List<coding> responsemodel = new List<coding>();
@@ -400,7 +481,80 @@ namespace jbar.Controllers
             return RedirectToAction("Coding");
         }
 
-       
 
+        //coDriver
+        public async Task<ActionResult> coDriver()
+        {
+            if (TempData["er"] != null)
+                ViewBag.error = TempData["er"].ToString();
+            getCoDriverResponse responsemodel = new getCoDriverResponse();
+            responsemodel = await methods.PostData(new nullclass(), responsemodel, "/getCoDriverAsync", Request.Cookies["clientToken"].Value);
+            return View(responsemodel);
+
+        }
+        public async Task<ActionResult> addDriverAsync(addDriverVM model)
+        {
+            responseModel responsemodel = await methods.PostData(model, new responseModel(), "/addDriverAsync", Request.Cookies["clientToken"].Value);
+            if (responsemodel.status != 200)
+                TempData["er"] = responsemodel.message;
+            return RedirectToAction("coDriver");
+        }
+        [HttpPost]
+        public async Task<ActionResult> setVehicleForDriver(setVehicleForVM model)
+        {
+            responseModel responsemodel = await methods.PostData(model, new responseModel(), "/setVehicleForDriverAsync", Request.Cookies["clientToken"].Value);
+            if (responsemodel.status != 200)
+                TempData["er"] = responsemodel.message;
+            return RedirectToAction("coDriver");
+        }
+
+        //vehicle
+
+        public async Task<ActionResult> vehicle()
+        {
+            if (TempData["er"] != null)
+                ViewBag.error = TempData["er"].ToString();
+            getVehicleResponce responsemodel = new getVehicleResponce();
+            responsemodel = await methods.PostData(new nullclass(), responsemodel, "/getVehicleAsync", Request.Cookies["clientToken"].Value);
+            return View(responsemodel);
+
+        }
+        [HttpPost]
+        public async Task<ActionResult> setVehicleAsync(vehicle model)
+        {
+            responseModel responsemodel = await methods.PostData(model, new responseModel(), "/setVehicleAsync", Request.Cookies["clientToken"].Value);
+            if (responsemodel.status != 200)
+                TempData["er"] = responsemodel.message;
+            return RedirectToAction("vehicle");
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> setYdakForVehicle(setYadakForVM model)
+        {
+            responseModel responsemodel = await methods.PostData(model, new responseModel(), "/setYdakForVehicleAsync", Request.Cookies["clientToken"].Value);
+            if (responsemodel.status != 200)
+                TempData["er"] = responsemodel.message;
+            return RedirectToAction("vehicle");
+        }
+
+        //yadak
+
+        public async Task<ActionResult> yadak()
+        {
+            if (TempData["er"] != null)
+                ViewBag.error = TempData["er"].ToString();
+            getYadakResponce responsemodel = new getYadakResponce();
+            responsemodel = await methods.PostData(new nullclass(), responsemodel, "/getYadakAsync", Request.Cookies["clientToken"].Value);
+            return View(responsemodel);
+
+        }
+        [HttpPost]
+        public async Task<ActionResult> setYadakAsync(yadak model)
+        {
+            responseModel responsemodel = await methods.PostData(model, new responseModel(), "/setYadakAsync", Request.Cookies["clientToken"].Value);
+            if (responsemodel.status != 200)
+                TempData["er"] = responsemodel.message;
+            return RedirectToAction("yadak");
+        }
     }
 }

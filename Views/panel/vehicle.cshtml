@@ -1,0 +1,179 @@
+﻿@model jbar.ViewModel.getVehicleResponce
+@{
+    ViewBag.Title = "vehicle";
+    Layout = "~/Views/Shared/_panelLayout.cshtml";
+}
+
+
+<div class="">
+    <div class="border">
+        <div class="bg-gray-300 nav-bg" style="border-radius:6px; margin:0 30px">
+            <nav class="nav nav-tabs">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">لیست خودروها </a>
+                <a class="nav-link " data-bs-toggle="tab" href="#tabCont2"> افزودن خودروی جدید </a>
+
+            </nav>
+        </div>
+        <div class="card-body tab-content">
+            <div class="tab-pane active show" id="tabCont1">
+                <div class="col-lg-12">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <div>
+                                <h6 class="main-content-label mb-1">جدول لیست خودرو ها</h6>
+                                <p class="text-muted card-sub-title">لیست تمامی خودروهای ثبت شده قابل مشاهده خواهد بود</p>
+                            </div>
+                            <div class="table-responsive border">
+                                <style>
+                                    td {
+                                        direction: ltr
+                                    }
+                                </style>
+                                <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
+                                    <thead>
+                                        <tr>
+
+                                            <th>ردیف</th>
+                                            <th>پلاک</th>
+                                            <th>یدک اختصاص یافته</th>
+                                            <th>وضعیت</th>
+                                            <th></th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @if (Model.vehicleList != null)
+                                        {
+                                            foreach (var item in Model.vehicleList)
+                                            {
+                                                int index = Model.vehicleList.IndexOf(item) + 1;
+                                                <tr>
+                                                    <td>@index</td>
+                                                    <td>
+                                                        <div style="display:flex; justify-content:right">
+                                                            <text>@item.pelak1</text> <text>@item.pelakHarf</text> <text>@item.pelak2</text> <text>ایران</text> <text>@item.iran</text>
+
+                                                        </div>
+                                                    
+                                                    </td>
+                                                    <td> @item.yadakNumber</td>
+                                                    <td> @item.status</td>
+                                                    <td>
+                                                        <a idtogo="@item.vehicleID" class="setYadak btn ripple btn-info" data-bs-target="#select2modal" data-bs-toggle="modal" href="#">تخصیص یدک</a>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane " id="tabCont2">
+                <div class="row row-sm">
+                    <div class="col-xl-12 col-lg-12 col-md-12">
+                        <div class="card custom-card">
+                            <div class="card-body">
+
+                                <form action="setVehicleAsync" method="post">
+                                    <div class="row row-sm mg-b-20">
+
+
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1">عدد سمت چپ </h6>
+                                            <input class="form-control" name="pelak1" placeholder="سمت چپ" required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> حرف پلاک </h6>
+                                            <select name="pelakHarf" class="form-control">
+                                                <option value="الف">الف</option>
+                                                <option value="ب">ب</option>
+                                                <option value="پ">پ</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> عدد سمت راست </h6>
+                                            <input class="form-control" name="pelak2" placeholder="سمت راست" required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> شماره ایران </h6>
+                                            <input class="form-control" name="iran" placeholder="ایران" required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+
+                                            <button style="margin-top:20px" class="btn ripple btn-main-primary btn-block">تایید</button>
+
+                                        </div>
+                                    </div>
+
+                                </form>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal" id="select2modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-content-demo">
+            <div class="modal-header">
+                <h6 class="modal-title">تخصیص یدک</h6><button aria-label="بستن" class="close" data-bs-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+            </div>
+            <form action="setYdakForVehicle" method="post">
+                <div class="modal-body">
+
+                    <h6>انتخاب یدک</h6>
+                    <!-- Select2 -->
+                   
+
+                    <h6>لطفا شماره یدک را انتخاب نمایید</h6>
+                  
+
+
+                    <select name="yadakID" class="form-control select-lg select2">
+                        @if (Model.yadakList != null)
+                        {
+                            foreach (var item in Model.yadakList)
+                            {
+                                <option value="@item.yadakID">
+                                    @item.yadakNumber
+                                </option>
+                            }
+                        }
+
+
+                    </select>
+                    <input id="vehicleID" hidden name="vehicleID" value="" />
+                </div>
+                <div class="modal-footer">
+                    <button class="btn ripple btn-primary" type="submit">تایید</button>
+                    <button class="btn ripple btn-secondary" data-bs-dismiss="modal" type="button">لغو</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script>
+        $(".setYadak").click(function () {
+            var id = $(this).attr('idtogo');
+            $("#vehicleID").val(id);
+        })
+    </script>
+
+}

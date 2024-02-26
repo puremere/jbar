@@ -10,7 +10,7 @@
     <script src="~/Scripts/persian-date.min.js"></script>
     <script src="~/Scripts/persian-datepicker.js"></script>
     <script src="~/Assets_panel/js/advanced-form-elements.js"></script>
-    <script src="~/Assets_panel/js/select2.js"></script>
+    
     @if (@ViewBag.error != null)
     {
         <script>
@@ -115,10 +115,7 @@
                                 <form action="setNewFormula" method="post">
                                     <div class="row row-sm mg-b-20">
 
-                                        <div class="col-lg-3 form-group">
-                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> شماره ارجاع</h6>
-                                            <input class="form-control" name="col" placeholder="شماره ارجاع" required="" type="text">
-                                        </div>
+                                        
                                         <div class="col-lg-3 form-group">
                                             <h6 style="margin-bottom:15px" class="main-content-label mb-1"> سمت چپ معادله</h6>
                                             <input class="form-control" name="leftID" placeholder="سمت چپ معادله" required="" type="text">

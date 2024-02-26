@@ -1,8 +1,272 @@
-﻿
+﻿@model List<jbar.Model.coding>
 @{
     ViewBag.Title = "Coding";
     Layout = "~/Views/Shared/_panelLayout.cshtml";
 }
 
-<h2>Coding</h2>
+
+@section scripts{
+    <script src="~/Scripts/persian-date.min.js"></script>
+    <script src="~/Scripts/persian-datepicker.js"></script>
+    <script src="~/Assets_panel/js/advanced-form-elements.js"></script>
+    <script src="~/Assets_panel/js/select2.js"></script>
+    @if (@ViewBag.error != null)
+    {
+        <script>
+            toastr.options = {
+                'closeButton': true,
+                'debug': false,
+                'newestOnTop': false,
+                'progressBar': false,
+                'positionClass': 'toast-top-right',
+                'preventDuplicates': false,
+                'showDuration': '1000',
+                'hideDuration': '1000',
+                'timeOut': '5000',
+                'extendedTimeOut': '1000',
+                'showEasing': 'swing',
+                'hideEasing': 'linear',
+                'showMethod': 'fadeIn',
+                'hideMethod': 'fadeOut',
+            }
+            toastr.error('@ViewBag.error');
+        </script>
+    }
+    <script>
+        var hideInnerEl = function (el) {
+            var element = $(el);
+            var prid = element.attr('parentID');
+            $("." + prid).removeClass("firstchild")
+       
+            $("." + prid).each(function () {
+                hideInnerEl(this);
+            })
+            element.removeAttr("open");
+
+        }
+        $(".childItem").click(function () {
+            var prid = $(this).attr('parentID');
+            
+           
+            if ($(this).attr('open') == undefined) {
+                $("." + prid).addClass("firstchild")
+                $(this).attr("open", "true");
+            }
+            else {
+              
+                hideInnerEl(this);
+            }
+            
+            
+        })
+    </script>
+
+}
+
+
+<div class="">
+    <div class="border">
+        <div class="bg-gray-300 nav-bg" style="border-radius:6px; margin:0 30px">
+            <nav class="nav nav-tabs">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">لیست کدینگ </a>
+                <a class="nav-link " data-bs-toggle="tab" href="#tabCont2"> افزودن کدینگ جدید </a>
+
+            </nav>
+        </div>
+        <div class="card-body tab-content">
+            <div class="tab-pane active show" id="tabCont1">
+                <div class="col-lg-12">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <div>
+                                <h6 class="main-content-label mb-1">جدول ماهیت سفارشات</h6>
+                                <p class="text-muted card-sub-title">لیست انواع پروسه های جاری شرکت قابل مشاهده خواهد بود</p>
+                            </div>
+                            <div class="table-responsive border">
+                                <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
+                                    <thead>
+                                        <tr>
+
+                                            <th>نام</th>
+                                            <th>کد</th>
+                                            <th>اقدامات</th>
+
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @if (Model != null)
+                                        {
+                                            foreach (var item in Model.Where(x => x.codingType == 1))
+                                            {
+                                                string parentclassname = "1" + item.codeHesab;
+                                                <tr parentID="@parentclassname" class="childItem firstchild">
+                                                    <td>@item.title</td>
+                                                    <td>@item.codeHesab</td>
+                                                    <td>
+                                                        <button id="@item.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                    </td>
+                                                </tr>
+                                                foreach (var grouh in Model.Where(x => x.codingType == 2 && x.parentID == item.codingID).OrderBy(x=>x.codeHesab))
+                                                {
+                                                    string classname = "1" + item.codeHesab;
+                                                    parentclassname = "2" + grouh.codeHesab;
+                                                    <tr parentID="@parentclassname" class="childItem @classname">
+                                                        <td>---@grouh.title</td>
+                                                        <td>@grouh.codeHesab</td>
+                                                        <td>
+                                                            <button id="@grouh.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                        </td>
+                                                    </tr>
+                                                    foreach (var moin in Model.Where(x => x.codingType == 3 && x.parentID == grouh.codingID))
+                                                    {
+                                                        classname = "2" + grouh.codeHesab;
+                                                        parentclassname = "3" + moin.codeHesab;
+                                                        <tr parentID="@parentclassname" class="childItem @classname">
+                                                            <td>------@moin.title</td>
+                                                            <td>@moin.codeHesab</td>
+                                                            <td>
+                                                                <button id="@moin.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                            </td>
+                                                        </tr>
+                                                        foreach (var tafsil1 in Model.Where(x => x.codingType == 4 && x.parentID == moin.codingID))
+                                                        {
+
+                                                            classname = "3" + moin.codeHesab;
+                                                            parentclassname = "4" + tafsil1.codeHesab;
+                                                            <tr parentID="@parentclassname" class="childItem @classname">
+                                                                <td>---------@tafsil1.title</td>
+                                                                <td>@tafsil1.codeHesab</td>
+                                                                <td>
+                                                                    <button id="@moin.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                </td>
+                                                            </tr>
+                                                            foreach (var tafsil2 in Model.Where(x => x.codingType == 5 && x.parentID == tafsil1.codingID))
+                                                            {
+
+                                                                classname = "4" + tafsil1.codeHesab;
+                                                                parentclassname = "5" + tafsil2.codeHesab;
+                                                                <tr parentID="@parentclassname" class="childItem @classname">
+                                                                    <td>------------@tafsil2.title</td>
+                                                                    <td>@tafsil2.codeHesab</td>
+                                                                    <td>
+                                                                        <button id="@tafsil2.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                    </td>
+                                                                </tr>
+                                                                foreach (var tafsil3 in Model.Where(x => x.codingType == 6 && x.parentID == tafsil2.codingID))
+                                                                {
+
+                                                                    classname = "5" + tafsil2.codeHesab;
+                                                                    parentclassname = "6" + tafsil3.codeHesab;
+                                                                    <tr parentID="@parentclassname" class="childItem @classname">
+                                                                        <td>---------------@tafsil3.title</td>
+                                                                        <td>@tafsil3.codeHesab</td>
+                                                                        <td>
+                                                                            <button id="@tafsil3.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                        </td>
+                                                                    </tr>
+                                                                    foreach (var tafsil4 in Model.Where(x => x.codingType == 7 && x.parentID == tafsil3.codingID))
+                                                                    {
+
+                                                                        classname = "6" + tafsil3.codeHesab;
+                                                                        parentclassname = "7" + tafsil4.codeHesab;
+                                                                        <tr parentID="@parentclassname" class="childItem @classname">
+                                                                            <td>------------------@tafsil4.title</td>
+                                                                            <td>@tafsil4.codeHesab</td>
+                                                                            <td>
+                                                                                <button id="@tafsil4.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                            </td>
+                                                                        </tr>
+                                                                        foreach (var tafsil5 in Model.Where(x => x.codingType == 5 && x.parentID == tafsil4.codingID))
+                                                                        {
+                                                                            classname = "7" + tafsil4.codeHesab;
+                                                                            parentclassname = "8" + tafsil5.codeHesab;
+                                                                            <tr parentID="@parentclassname" class="childItem @classname">
+
+                                                                                <td>---------------------@tafsil5.title</td>
+                                                                                <td>@tafsil5.codeHesab</td>
+                                                                                <td>
+                                                                                    <button id="@tafsil5.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane " id="tabCont2">
+                <div class="row row-sm">
+                    <div class="col-xl-12 col-lg-12 col-md-12">
+                        <div class="card custom-card">
+                            <div class="card-body">
+
+                                <form action="setNewCoding" method="post">
+                                    <div class="row row-sm mg-b-20">
+                                        <div>
+
+
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> نام </h6>
+                                            <input class="form-control" name="title" placeholder="نام آیتم  " required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> کد </h6>
+                                            <input class="form-control" name="codeHesab" placeholder="کد آیتم  " required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب آیتم بالاسری </h6>
+                                            <select name="parentID" class="form-control select2 select2-hidden-accessible" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                <option label="یکی را انتخاب کن" data-select2-id="3">
+                                                </option>
+                                                @foreach (var item in Model)
+                                                {
+                                                    <option value="@item.codingID">
+                                                        @item.title
+                                                    </option>
+                                                }
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+                                    <button class="btn ripple btn-main-primary btn-block">ارسال</button>
+                                </form>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .childItem {
+        display: none;
+    }
+
+    .firstchild {
+        display: revert
+    }
+</style>
 

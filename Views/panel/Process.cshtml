@@ -1,4 +1,4 @@
-﻿@model List<jbar.Model.process>
+﻿@model jbar.ViewModel.processActionVM
 
 @{
     ViewBag.Title = "Process";
@@ -60,21 +60,28 @@
                                             <th>نام</th>
 
                                             <th></th>
+                                            <th></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (Model != null)
+                                        @if (Model.processList != null)
                                         {
-                                            foreach (var item in Model)
+                                            foreach (var item in Model.processList)
                                             {
 
                                                 <tr>
-
-
                                                     <td>@item.title</td>
 
                                                     <td>
                                                         <button id="@item.processID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                    </td>
+                                                    <td>
+                                                        <form target="_blank" action="processFormula" method="post">
+                                                            <input name="processID" value="@item.processID" hidden />
+                                                            <input name="title" value="@item.title" hidden />
+                                                            <button type="submit" class="btn ripple btn-primary btn-sm">فرمول های اختصاصی </button>
+
+                                                        </form>
                                                     </td>
                                                 </tr>
                                             }

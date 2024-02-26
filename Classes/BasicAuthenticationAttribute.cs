@@ -36,7 +36,8 @@ namespace jbar.Classes
                 }
                 else
                 {
-                    actionContext.Request.Properties.Add(new KeyValuePair<string, object>("UserToken", tokenUsername));
+                    actionContext.Request.Properties.Add(new KeyValuePair<string, object>("UserToken", tokenUsername.Split(':')[1]));
+                    actionContext.Request.Properties.Add(new KeyValuePair<string, object>("Userp", tokenUsername.Split(':')[0]));
                 }
 
                 //// at 0th postion of array we get username and at 1st we get password  

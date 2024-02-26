@@ -83,7 +83,7 @@ namespace jbar.Classes
                 return null;
             }
 
-            username = usernameClaim.Value;
+            username = cuser.Value + ":"+ usernameClaim.Value;
             return username;
         }
 
