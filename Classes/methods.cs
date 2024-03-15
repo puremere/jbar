@@ -12,7 +12,7 @@ namespace jbar.Classes
 {
     public static class methods
     {
-        private static string baseServer = "https://localhost:44389/api/app";
+        private static string baseServer = "https://localhost:44389/api/app";// "https://jbar.app/api/app";
         public static string RandomString()
         {
             Random random = new Random();

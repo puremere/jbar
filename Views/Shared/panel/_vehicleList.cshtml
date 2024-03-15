@@ -1,0 +1,24 @@
+﻿@model jbar.ViewModel.getVehicleResponce
+
+@if (Model.vehicleList != null)
+{
+    foreach (var item in Model.vehicleList)
+    {
+        int index = Model.vehicleList.IndexOf(item) + 1;
+        <tr>
+            <td>@index</td>
+            <td>
+                <div style="display:flex; justify-content:right">
+                    <text>@item.pelak1</text> <text>@item.pelakHarf</text> <text>@item.pelak2</text> <text>ایران</text> <text>@item.iran</text>
+
+                </div>
+
+            </td>
+            <td> @item.yadakNumber</td>
+            <td> @item.status</td>
+            <td>
+                <a idtogo="@item.vehicleID" class="setYadak btn ripple btn-info" data-bs-target="#select2modal" data-bs-toggle="modal" href="#">تخصیص یدک</a>
+            </td>
+        </tr>
+    }
+}

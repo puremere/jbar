@@ -18,7 +18,7 @@ namespace jbar.Controllers
    
     public class clientappController : Controller
     {
-        string baseServer = "https://localhost:44389/api/app";
+        string baseServer = "https://jbar.app/api/app";
         // GET: clientapp
         public ActionResult Index()
         {

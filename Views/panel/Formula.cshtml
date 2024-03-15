@@ -10,7 +10,7 @@
     <script src="~/Scripts/persian-date.min.js"></script>
     <script src="~/Scripts/persian-datepicker.js"></script>
     <script src="~/Assets_panel/js/advanced-form-elements.js"></script>
-    
+
     @if (@ViewBag.error != null)
     {
         <script>
@@ -56,8 +56,8 @@
                             </div>
                             <div class="table-responsive border">
                                 <style>
-                                    td{
-                                        direction:ltr
+                                    td {
+                                        direction: ltr
                                     }
                                 </style>
                                 <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
@@ -77,23 +77,23 @@
                                     <tbody>
                                         @if (Model.formulaList != null)
                                         {
-                                            foreach (var item in Model.formulaList)
+                                            foreach (var item in Model.formulaList.OrderByDescending(x => x.col))
                                             {
 
-                                        <tr>
+                                                <tr>
 
 
-                                            <td>@item.col</td>
-                                            <td>@item.name</td>
-                                            <td>@item.leftID</td>
-                                            <td>@item.rightID</td>
-                                            <td>@Html.Raw(@item.namadName)</td>
-                                            <td>@item.mabnaName</td>
-                                            <td>@item.number</td>
-                                            <td>@item.result</td>
+                                                    <td>@item.col</td>
+                                                    <td>@item.name</td>
+                                                    <td>@item.leftID</td>
+                                                    <td>@item.rightID</td>
+                                                    <td>@Html.Raw(@item.namadName)</td>
+                                                    <td>@item.formItemName</td>
+                                                    <td>@item.number</td>
+                                                    <td>@item.result</td>
 
 
-                                        </tr>
+                                                </tr>
                                             }
                                         }
 
@@ -113,9 +113,10 @@
                             <div class="card-body">
 
                                 <form action="setNewFormula" method="post">
+                                    <input hidden name="processID" value="@Model.process.processID"/>
                                     <div class="row row-sm mg-b-20">
 
-                                        
+
                                         <div class="col-lg-3 form-group">
                                             <h6 style="margin-bottom:15px" class="main-content-label mb-1"> سمت چپ معادله</h6>
                                             <input class="form-control" name="leftID" placeholder="سمت چپ معادله" required="" type="text">
@@ -126,12 +127,17 @@
                                         </div>
                                         <div class="col-lg-3 form-group">
                                             <h6 style="margin-bottom:15px" class="main-content-label mb-1"> مبنا</h6>
-                                            <select name="mabnaID" class="form-control">
-                                                <option value="0000-0000-0000-0000">0</option>
-                                                @foreach (var item in Model.mabna)
-                                                {
+                                            <select name="formItemID" class="form-control">
 
-                                                    <option value="@item.mabnaID">@Html.Raw(item.title)</option>
+                                                <option value="0000-0000-0000-0000">0</option>
+
+                                                @if (Model.formItemList != null)
+                                                {
+                                                    foreach (var item in Model.formItemList)
+                                                    {
+
+                                                        <option value="@item.formItemID">@Html.Raw(item.itemDesc)</option>
+                                                    }
                                                 }
                                             </select>
                                         </div>
@@ -142,10 +148,14 @@
                                         <div class="col-lg-3 form-group">
                                             <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب عملگر</h6>
                                             <select name="namadID" class="form-control">
-                                                @foreach (var item in Model.namadList)
-                                                {
 
-                                                    <option value="@item.namadID">@Html.Raw(item.title)</option>
+                                                @if (Model.namadList != null)
+                                                {
+                                                    foreach (var item in Model.namadList)
+                                                    {
+
+                                                        <option value="@item.namadID">@Html.Raw(item.title)</option>
+                                                    }
                                                 }
                                             </select>
 

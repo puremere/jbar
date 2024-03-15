@@ -4,114 +4,185 @@
     Layout = "~/Views/Shared/_panelLayout.cshtml";
 }
 
-    <div class="">
-        <div class="border">
-            <div class="bg-gray-300 nav-bg" style="border-radius:6px; margin:0 30px">
-                <nav class="nav nav-tabs">
-                    <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">لیست یدک ها </a>
-                    <a class="nav-link " data-bs-toggle="tab" href="#tabCont2"> افزودن یدک جدید </a>
+<div class="">
+    <div class="border">
+        <div class="bg-gray-300 nav-bg" style="border-radius:6px; margin:0 30px">
+            <nav class="nav nav-tabs">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">لیست یدک ها </a>
+                <a class="nav-link " data-bs-toggle="tab" href="#tabCont2"> افزودن یدک جدید </a>
 
-                </nav>
-            </div>
-            <div class="card-body tab-content">
-                <div class="tab-pane active show" id="tabCont1">
-                    <div class="col-lg-12">
+            </nav>
+        </div>
+        <div class="card-body tab-content">
+            <div class="tab-pane active show" id="tabCont1">
+                <div class="row row-sm">
+                    <div class="col-xl-12 col-lg-12 col-md-12">
                         <div class="card custom-card">
                             <div class="card-body">
-                                <div>
-                                    <h6 class="main-content-label mb-1">جدول لیست یدک ها</h6>
-                                    <p class="text-muted card-sub-title">لیست یدک های شرکت </p>
-                                </div>
-                                <div class="table-responsive border">
-                                    <style>
-                                        td {
-                                            direction: ltr
-                                        }
-                                    </style>
-                                    <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
-                                        <thead>
-                                            <tr>
 
-                                                <th>ردیف</th>
-                                                <th>شماره</th>
-                                                <th>نوع</th>
-                                                <th>وضعیت</th>
-                                                <th></th>
+                                <div class="row row-sm mg-b-20">
+                                    <div>
+                                        <h6 class="main-content-label mb-1">پنل جستجو</h6>
+                                        <p class="text-muted card-sub-title">با استفاده از پنل زیر میتوانید خودرو مورد نظر خود را جستجو کنید</p>
+                                    </div>
 
+                                    <div class="col-lg-3 form-group">
+                                        <h6 style="margin-bottom:15px" class="main-content-label mb-1">شماره </h6>
+                                        <input id="query" class="form-control" name="pelak1" placeholder="شماره" required="" type="text">
+                                    </div>
 
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if (Model.yadakList != null)
-                                            {
-                                                foreach (var item in Model.yadakList)
+                                    <div class="col-lg-3 form-group">
+                                        <h6 style="margin-bottom:15px" class="main-content-label mb-1"> وضعیت </h6>
+                                        <div class="form-group mb-0">
+                                            <select id="StatusID" name="country" class="form-control select-sm select2">
+                                                <option value="">همه</option>
+                                                @if (Model.slist != null)
                                                 {
-                                                    int index = Model.yadakList.IndexOf(item) + 1;
-                                                    <tr>
-                                                        <td>@index</td>
-                                                        <td>@item.yadakNumber</td>
-                                                        <td> @item.loadtype</td>
-                                                        <td> @item.status</td>
-                                                        <td>
-                                                            <button type="submit" class="btn ripple btn-primary btn-sm"> گزارشات </button>
-                                                        </td>
-                                                    </tr>
+
+                                                    foreach (var item in Model.slist)
+                                                    {
+
+                                                        <option value="@item.statid">@item.title</option>
+                                                    }
                                                 }
-                                            }
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 form-group">
 
+                                        <button id="reloadList" style="margin-top:20px" class="btn ripple btn-main-primary btn-block">تایید</button>
 
-
-                                        </tbody>
-                                    </table>
+                                    </div>
                                 </div>
+
+
+
+
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane " id="tabCont2">
-                    <div class="row row-sm">
-                        <div class="col-xl-12 col-lg-12 col-md-12">
-                            <div class="card custom-card">
-                                <div class="card-body">
+                <div class="">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <div>
+                                <h6 class="main-content-label mb-1">جدول لیست یدک ها</h6>
+                                <p class="text-muted card-sub-title">لیست یدک های شرکت </p>
+                            </div>
+                            <div class="table-responsive border">
+                                <style>
+                                    td {
+                                        direction: ltr
+                                    }
+                                </style>
+                                <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
+                                    <thead>
+                                        <tr>
 
-                                    <form action="setYadakAsync" method="post">
-                                        <div class="row row-sm mg-b-20">
+                                            <th>ردیف</th>
+                                            <th>شماره</th>
+                                            <th>نوع</th>
+                                            <th>وضعیت</th>
+                                            <th></th>
 
 
-                                            <div class="col-lg-3 form-group">
-                                                <h6 style="margin-bottom:15px" class="main-content-label mb-1">شماره یدک </h6>
-                                                <input class="form-control" name="yadakNumber" placeholder="شماره یدک" required="" type="text">
-                                            </div>
-                                            <div class="col-lg-3 form-group">
-                                                <h6 style="margin-bottom:15px" class="main-content-label mb-1"> نوع یدک </h6>
-                                                <select name="typeID" class="form-control select-lg select2">
-                                                    @foreach (var typ in Model.typeList)
-                                                    {
-                                                        <option value="@typ.typeID">@typ.title</option>
-                                                    }
+                                        </tr>
+                                    </thead>
+                                    <tbody id="yadakListTable">
+                                        @if (Model.yadakList != null)
+                                        {
+                                            foreach (var item in Model.yadakList)
+                                            {
+                                                int index = Model.yadakList.IndexOf(item) + 1;
+                                                <tr>
+                                                    <td>@index</td>
+                                                    <td>@item.yadakNumber</td>
+                                                    <td> @item.loadtype</td>
+                                                    <td> @item.status</td>
+                                                    <td>
+                                                        <button idtogo="@item.yadakID" class="setWorkingStatus btn ripple btn-info btn-sm" data-bs-target="#workingModal" data-bs-toggle="modal" href="#">تغییر وضیعیت </button>
 
-                                                   
-                                                </select>
-                                            </div>
-                                           
-                                            <div class="col-lg-3 form-group">
+                                                        <button type="submit" class="btn ripple btn-primary btn-sm"> گزارشات </button>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
 
-                                                <button style="margin-top:20px" class="btn ripple btn-main-primary btn-block">تایید</button>
 
-                                            </div>
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane " id="tabCont2">
+                <div class="row row-sm">
+                    <div class="col-xl-12 col-lg-12 col-md-12">
+                        <div class="card custom-card">
+                            <div class="card-body">
+
+                                <form action="setYadakAsync" method="post">
+                                    <div class="row row-sm mg-b-20">
+
+
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1">شماره یدک </h6>
+                                            <input class="form-control" name="yadakNumber" placeholder="شماره یدک" required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> نوع یدک </h6>
+                                            <select name="typeID" class="form-control select-lg select2">
+                                                @foreach (var typ in Model.typeList)
+                                                {
+                                                    <option value="@typ.typeID">@typ.title</option>
+                                                }
+
+
+                                            </select>
                                         </div>
 
-                                    </form>
+                                        <div class="col-lg-3 form-group">
+
+                                            <button style="margin-top:20px" class="btn ripple btn-main-primary btn-block">تایید</button>
+
+                                        </div>
+                                    </div>
+
+                                </form>
 
 
 
-                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
+
         </div>
     </div>
+</div>
 
+
+
+@section scripts{
+
+    <script>
+        $(".setWorkingStatus").click(function () {
+            var id = $(this).attr('idtogo');
+            $("#yadakID").val(id);
+        })
+      
+        $("#reloadList").click(function () {
+            var query = $("#query").val();
+            var statusID = $("#StatusID").val();
+            $.post("getYadakList", { query: query, statusID: statusID }, function (result) {
+                $("#yadakListTable").html(result);
+            });
+        })
+
+    </script>
+
+
+}

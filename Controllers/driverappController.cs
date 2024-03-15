@@ -15,7 +15,7 @@ namespace jbar.Controllers
    
     public class driverappController : Controller
     {
-        string baseServer = "https://localhost:44389/api/app";
+        string baseServer = "https://jbar.app/api/app";
         // GET: driverapp
         public ActionResult Index()
         {

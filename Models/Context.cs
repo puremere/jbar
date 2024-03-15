@@ -32,7 +32,6 @@ namespace jbar.Model
         public DbSet<orderResponse> orderResponses { get; set; }
         public DbSet<Comment> comments { get; set; }
 
-        public DbSet<processOrder> processOrders { get; set; }
         public DbSet<process> processes { get; set; }
         public DbSet<vehicle> vehicles { get; set; }
         public DbSet<yadak> yadaks { get; set; }
@@ -48,6 +47,24 @@ namespace jbar.Model
         public DbSet<vehicleStatus> vehicleStatuses { get; set; }
         public DbSet<yadakStatus> yadakStatuses { get; set; }
         public DbSet<userVehicle> userVehicles { get; set; }
+        public DbSet<userWorkingStatus> userWorkingStatuses { get; set; }
+        public DbSet<verifyStatus> verifyStatuses { get; set; }
+        public DbSet<product> products { get; set; }
+        public DbSet<tag> tags { get; set; }
+        public DbSet<productType> productTypes { get; set; }
+        public DbSet<orderOption> orderOptions { get; set; }
+        public DbSet<thirdParty> thirdParties { get; set; }
+        public DbSet<formItemType> formItemTypes { get; set; }
+        public DbSet<formItemDesign> formItemDesigns { get; set; }
+        public DbSet<form> forms { get; set; }
+        public DbSet<formItem> formItems { get; set; }
+       
+        public DbSet<newOrderFields> newOrderFields { get; set; }
+        public DbSet<newOrder> NewOrders { get; set; }
+        public DbSet<newOrderFlow> OrderFlows { get; set; }
+        public DbSet<newOrderStatu> newOrderStatus { get; set; }
+
+        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -56,33 +73,39 @@ namespace jbar.Model
             modelBuilder.Entity<user>()
                         .HasIndex(p => new { p.phone, p.userType })
                         .IsUnique();
-
+            modelBuilder.Entity<user>().HasOptional(s => s.workingStatus).WithMany().HasForeignKey(x => x.workingStatusID);
+            modelBuilder.Entity<yadak>().HasOptional(s => s.vehicle).WithMany().HasForeignKey(x => x.vehicleID);
             modelBuilder.Entity<vehicle>().HasOptional(s => s.yadak).WithMany().HasForeignKey(x => x.yadakID);
-            modelBuilder.Entity<user>().HasOptional(s => s.vehicle).WithMany().HasForeignKey(x => x.vehicleID);
+         
+            modelBuilder.Entity<user>().HasOptional(s => s.verifyStatus).WithMany().HasForeignKey(x => x.verifyStatusID);
             modelBuilder.Entity<namad>().HasRequired(s => s.user).WithMany().HasForeignKey(x => x.userID).WillCascadeOnDelete(false);
             modelBuilder.Entity<mabna>().HasRequired(s => s.user).WithMany().HasForeignKey(x => x.userID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<yadakVehicle>().HasRequired(s => s.Vehicle).WithMany().HasForeignKey(x => x.vehicleID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<yadakVehicle>().HasRequired(s => s.yadak).WithMany().HasForeignKey(x => x.yadakID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<userVehicle>().HasRequired(s => s.user).WithMany().HasForeignKey(x => x.userID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<userVehicle>().HasRequired(s => s.vehicle).WithMany().HasForeignKey(x => x.vehicleID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<vehicle>().HasOptional(s => s.driver).WithMany().HasForeignKey(x => x.driverID);
+            modelBuilder.Entity<user>().HasOptional(s => s.vehicle).WithMany().HasForeignKey(x => x.vehicleID);
+            modelBuilder.Entity<order>().HasOptional(s => s.ThirdParty).WithMany().HasForeignKey(x => x.thirdPartyID);
+            modelBuilder.Entity<order>().HasOptional(m => m.driveruser).WithMany(t => t.driverOrders) .HasForeignKey(m => m.driverID) .WillCascadeOnDelete(false);
+            modelBuilder.Entity<order>().HasRequired(m => m.clientuser).WithMany(t => t.clientOrders).HasForeignKey(m => m.clientID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<order>().HasOptional(m => m.origincity).WithMany(t => t.originOrders) .HasForeignKey(m => m.originCityID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<order>().HasOptional(m => m.destincity).WithMany(t => t.destinOrders).HasForeignKey(m => m.destinCityID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<order>().HasOptional(m => m.loadtype).WithMany().HasForeignKey(m => m.loadTypeID).WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<order>()
-                         .HasOptional(m => m.driveruser)
-                         .WithMany(t => t.driverOrders)
-                         .HasForeignKey(m => m.driverID)
-                         .WillCascadeOnDelete(false);
-            modelBuilder.Entity<order>()
-                        .HasRequired(m => m.clientuser)
-                        .WithMany(t => t.clientOrders)
-                        .HasForeignKey(m => m.clientID)
-                        .WillCascadeOnDelete(false);
-            modelBuilder.Entity<order>()
-                        .HasRequired(m => m.origincity)
-                        .WithMany(t => t.originOrders)
-                        .HasForeignKey(m => m.originCityID)
-                        .WillCascadeOnDelete(false);
-            modelBuilder.Entity<order>()
-                        .HasRequired(m => m.destincity)
-                        .WithMany(t => t.destinOrders)
-                        .HasForeignKey(m => m.destinCityID)
-                        .WillCascadeOnDelete(false);
+            //modelBuilder.Entity<newOrder>().HasOptional(m => m.driveruser).WithMany().HasForeignKey(m => m.driverID).WillCascadeOnDelete(false);
+            //modelBuilder.Entity<newOrder>().HasRequired(m => m.clientuser).WithMany().HasForeignKey(m => m.clientID).WillCascadeOnDelete(false);
+            //modelBuilder.Entity<newOrderFields>().HasRequired(m => m.NewOrder).WithMany(t=>t.NewOrderFields).HasForeignKey(m => m.newOrderID).WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<newOrder>().HasOptional(s => s.ThirdParty).WithMany().HasForeignKey(x => x.thirdPartyID);
+            modelBuilder.Entity<newOrderFlow>().HasRequired(m => m.newOrderProcess).WithMany().HasForeignKey(m => m.processID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<newOrderFlow>().HasRequired(m => m.newOrderFlowServent).WithMany().HasForeignKey(m => m.ServentID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<orderOption>().HasRequired(m => m.optionParent).WithMany(t=>t.childList).HasForeignKey(m => m.parentID).WillCascadeOnDelete(false);
+            modelBuilder.Entity<formula>().HasOptional(m => m.FormItem).WithMany(t=>t.Formulas).HasForeignKey(m => m.formItemID).WillCascadeOnDelete(false);
+           
+
+
+           
         }
 
     }
@@ -90,11 +113,105 @@ namespace jbar.Model
 
 
 
+    public class thirdParty // ممکن است کسی به جز انجام دهنده و سفارش دهنده بخواهد نظاره گر باشد
+    {
+        [Key]
+        public Guid ThirdPartyID { get; set; }
+        public string phone { get; set; }
+        public string fullname { get; set; }
+        public string IDNumber { get; set; }
+        public string Rank { get; set; }
+        public string unitName { get; set; }
+        public string address { get; set; }
+        public string meta { get; set; }
+    }
+
+    public class orderOption
+    {
+
+
+        [Key]
+        public Guid orderOptionID { get; set; }
+        public string title { get; set; }
+        public string image { get; set; }
+        public Guid? userID { get; set; }
+        [ForeignKey("userID")]
+        public virtual user user { get; set; }
+        public Guid? parentID { get; set; }
+        [ForeignKey("parentID")]
+        public virtual orderOption optionParent { get; set; }
+        public virtual ICollection<orderOption> childList { get; set; }
+
+
+    }
+
+    public class product
+    {
+
+        public product()
+        {
+            this.Tags = new HashSet<tag>();
+            this.ProductTypes = new HashSet<productType>();
+        }
+        [Key]
+        public Guid productID { get; set; }
+        public string title { get; set; }
+        public string code { get; set; }
+        public string barcode { get; set; }
+        public string address { get; set; }
+
+        public Guid? userID { get; set; }
+        [ForeignKey("userID")]
+        public virtual user user { get; set; }
+
+        public virtual ICollection<tag> Tags { get; set; }
+        public virtual ICollection<productType> ProductTypes { get; set; }
+
+
+    }
+
+    public class productType
+    {
+
+        public productType()
+        {
+            this.Products = new HashSet<product>();
+        }
+        [Key]
+        public Guid productTypeID { get; set; }
+        public string title { get; set; }
+
+
+        public Guid? userID { get; set; }
+        [ForeignKey("userID")]
+        public virtual user user { get; set; }
+
+        public Guid parentID { get; set; }
+        [ForeignKey("parentID")]
+        public virtual productType ProductType { get; set; }
+
+        public virtual ICollection<productType> childItems { get; set; }
+        public virtual ICollection<product> Products { get; set; }
+    }
+
+    public class tag
+    {
+        public tag()
+        {
+            this.Products = new HashSet<product>();
+        }
+        [Key]
+        public Guid tagID { get; set; }
+        public string title { get; set; }
+        public virtual ICollection<product> Products { get; set; }
+
+        public Guid? userID { get; set; }
+        [ForeignKey("userID")]
+        public virtual user user { get; set; }
 
 
 
-
-
+    }
 
     public class coding
     {
@@ -105,6 +222,7 @@ namespace jbar.Model
         public int codingType { get; set; }
         public int codeHesab { get; set; }
         public string title { get; set; }
+        public string inList { get; set; }
 
         public Guid? userID { get; set; }
         [ForeignKey("userID")]
@@ -192,11 +310,16 @@ namespace jbar.Model
         public string pelakHarf { get; set; }
         public string pelak2 { get; set; }
         public string iran { get; set; }
-        
-        
+
+
         public Guid userID { get; set; } // مرتبط با کدوم باربریه
         [ForeignKey("userID")]
         public virtual user user { get; set; }
+
+
+        public Guid? driverID { get; set; } // به کدوم راننده اختصاص یافته
+        [ForeignKey("userID")]
+        public virtual user driver { get; set; }
 
 
         public Guid StatusID { get; set; }
@@ -214,9 +337,17 @@ namespace jbar.Model
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int col { get; set; }
         public string yadakNumber { get; set; }
+
+
         public Guid userID { get; set; } // مرتبط با کدوم باربریه
         [ForeignKey("userID")]
         public virtual user user { get; set; }
+
+
+        public Guid? vehicleID { get; set; }
+        [ForeignKey("vehicleID")]
+        public virtual vehicle vehicle { get; set; }
+
 
         [ForeignKey("yadakStatus")]
         public Guid StatusID { get; set; }
@@ -236,7 +367,11 @@ namespace jbar.Model
         [Key]
         public Guid yadakVehicleID { get; set; }
         public Guid yadakID { get; set; }
+        [ForeignKey("yadakID")]
+        public virtual yadak yadak { get; set; }
         public Guid vehicleID { get; set; }
+        [ForeignKey("vehicleID")]
+        public virtual vehicle Vehicle { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
         public bool isFinished { get; set; }
@@ -246,7 +381,11 @@ namespace jbar.Model
         [Key]
         public Guid userVehicleID { get; set; }
         public Guid vehicleID { get; set; }
+        [ForeignKey("vehicleID")]
+        public virtual vehicle vehicle { get; set; }
         public Guid userID { get; set; }
+        [ForeignKey("userID")]
+        public virtual user user { get; set; }
         public DateTime startDate { get; set; }
         public DateTime endDate { get; set; }
         public bool isFinished { get; set; }
@@ -274,7 +413,7 @@ namespace jbar.Model
         [ForeignKey("userID")]
         public virtual user user { get; set; }
 
-        public virtual ICollection<formula> Formulas { get; set; }
+       
     }
 
     public class formula
@@ -286,9 +425,16 @@ namespace jbar.Model
         public int rightID { get; set; }
 
 
-        public Guid? mabnaID { get; set; }
-        [ForeignKey("mabnaID")]
-        public virtual mabna mabna { get; set; }
+        public Guid? processID { get; set; }
+        [ForeignKey("processID")]
+        public virtual process process  { get; set; }
+
+
+        public Guid? formItemID { get; set; }
+        [ForeignKey("formItemID")]
+        public virtual formItem FormItem { get; set; }
+
+
 
 
         public Guid namadID { get; set; }
@@ -306,17 +452,195 @@ namespace jbar.Model
 
         public virtual ICollection<processFormula> ProcessFormulas { get; set; }
     }
+
+
+
+    public class formItemDesign
+    {
+        [Key]
+        public Guid formItemDesignID { get; set; }
+        public string title { get; set; }
+        public int number { get; set; }
+    }
+    public class formItemType
+    {
+        [Key]
+        public Guid formItemTypeID { get; set; }
+        public string title { get; set; }
+        public string formItemTypeCode { get; set; }
+        public Guid? userID { get; set; }
+        [ForeignKey("userID")]
+        public virtual user User { get; set; }
+
+
+
+    }
+
+    public class formItem
+    {
+       
+        [Key]
+        public Guid formItemID { get; set; }
+        public string itemName { get; set; }
+        public string itemDesc { get; set; }
+        public string itemPlaceholder { get; set; }
+        public string itemtImage { get; set; }
+        public string catchUrl { get; set; }
+        public string isMultiple { get; set; }
+        public string mediaType { get; set; }
+        public string collectionName { get; set; }
+
+
+        public Guid? OptionID { get; set; }
+        [ForeignKey("OptionID")]
+        public virtual orderOption op { get; set; }
+
+        public Guid? formItemDesingID { get; set; }
+        [ForeignKey("formItemDesingID")]
+        public virtual formItemDesign FormItemDesign { get; set; }
+
+
+        public Guid formItemTypeID { get; set; }
+        [ForeignKey("formItemTypeID")]
+        public virtual formItemType FormItemType { get; set; }
+
+        
+
+        public Guid formID { get; set; }
+        [ForeignKey("formID")]
+        public virtual form form { get; set; }
+
+
+        public virtual ICollection<formula> Formulas { get; set; }
+    }
+    public class form
+    {
+       
+        [Key]
+        public Guid formID { get; set; }
+        public string title { get; set; }
+
+        public Guid userID { get; set; }
+        [ForeignKey("userID")]
+        public virtual user User { get; set; }
+
+        public virtual ICollection<formItem> FormItems { get; set; }
+
+        public Guid? processID { get; set; }
+        [ForeignKey("processID")]
+        public virtual process process { get; set; }
+
+    }
+
+    public class processform
+    {
+        public Guid formID { get; set; }
+        [ForeignKey("formID")]
+        public virtual form form { get; set; }
+        public Guid processID { get; set; }
+        [ForeignKey("processID")]
+        public virtual process Process { get; set; }
+    }
+   
+    public class newOrderFields
+    {
+        [Key]
+        public Guid newOrderFieldsID { get; set; }
+        public int? valueInt { get; set; }
+        public bool? valueBool { get; set; }
+        public double? valueDuoble { get; set; }
+        public DateTime? valueDateTime { get; set; }
+        public Guid?  valueGuid { get; set; }
+        public string?  valueString { get; set; }
+        public string name { get; set; }
+        public string usedFeild { get; set; }
+
+        public Guid formItemID { get; set; }
+        [ForeignKey("formItemID")]
+        public virtual formItem FormItem { get; set; }
+
+        public Guid  newOrderFlowID { get; set; }
+        [ForeignKey("newOrderFlowID")]
+        public virtual newOrderFlow NewOrderFlow { get; set; }
+    }
+
+
+    public class newOrderStatu
+    {
+        [Key]
+        public Guid newOrderStatusID { get; set; }
+        public string title { get; set; }
+        public string statusCode { get; set; }
+
+    }
+    public class newOrder
+    {
+        [Key]
+        public Guid newOrderID { get; set; }
+        public string orderName { get; set; }
+
+        public Guid? thirdPartyID { get; set; }
+        [ForeignKey("thirdPartyID")]
+        public virtual thirdParty ThirdParty { get; set; }
+
+        public Guid newOrderStatusID { get; set; }
+        [ForeignKey("newOrderStatusID")]
+        public virtual user newOrderStatus { get; set; }
+
+        public DateTime creationDate { get; set; }
+        public DateTime terminationDate { get; set; }
+
+        public virtual ICollection<newOrderFlow> orderFlowList { get; set; }
+      
+    }
+   
+    public class newOrderFlow
+    {
+        [Key]
+        public Guid newOrderFlowID { get; set; }
+
+        public Guid newOrderID { get; set; }
+        [ForeignKey("newOrderID")]
+        public virtual newOrder NewOrder { get; set; }
+
+        public Guid ServentID { get; set; }
+        [ForeignKey("ServentID")]
+        public virtual user newOrderFlowServent { get; set; }
+
+        public Guid processID { get; set; }
+        [ForeignKey("processID")]
+        public virtual process newOrderProcess { get; set; }
+       
+        public string isFinished { get; set; }
+        public DateTime creationDate { get; set; }
+        public DateTime terminationDate { get; set; }
+
+        public virtual ICollection<newOrderFields> NewOrderFields { get; set; }
+    }
+   
     public class process// پروسه ای که بابری برای خدش توولید میکنه و اردرهاشو تطبیق میده
     {
         [Key]
         public Guid processID { get; set; }
+        public process()
+        {
+            this.orderHistoryList = new HashSet<newOrder>();
+            this.formList = new HashSet<form>();
+        }
+        public string isDefault { get; set; }
         public string title { get; set; }
         public Guid? userID { get; set; } // مرتبط با کدوم باربریه
         [ForeignKey("userID")]
         public virtual user user { get; set; }
 
         public virtual ICollection<processFormula> ProcessFormulas { get; set; }
+        public virtual ICollection<newOrder> orderHistoryList { get; set; }
+        public virtual ICollection<form> formList { get; set; }
+
+        
     }
+    
+
 
     public class processFormula// میگه چه فرمولهایی برای چه پروسه هایی هست که روی یک کدینگ اثر میزاره یا بدهکار یا بستانکار
     {
@@ -337,13 +661,7 @@ namespace jbar.Model
 
         public string transactionType { get; set; } // بدهکاری یا بستانکاری عدد حاصل از فرمول را رووی کدینگ اعمال میکند
     }
-    public class processOrder
-    {
-        [Key]
-        public Guid processOrderID { get; set; }
-        public Guid ordrID { get; set; }
-        public Guid processID { get; set; }
-    }   // ???
+  
 
 
     public class Comment
@@ -370,9 +688,9 @@ namespace jbar.Model
 
         [Key]
         public Guid orderID { get; set; }
-        
 
-      
+
+
         public DateTime orderdate { get; set; }
         public DateTime date { get; set; }
         public DateTime publishDate { get; set; }
@@ -387,12 +705,40 @@ namespace jbar.Model
         public string showPhone { get; set; }
         public string recieveSMS { get; set; }
         public int viewCount { get; set; }
-      
-        public string orderStatus { get; set; }
 
+
+        public decimal fullHeight { get; set; }
+        public decimal headCirc { get; set; }
+        public decimal neckCirc { get; set; }
+        public decimal frontLength { get; set; }
+        public decimal chestCirc { get; set; }
+        public decimal jacketWaist { get; set; }
+        public decimal jktHipCirc { get; set; }
+        public decimal jktBLength { get; set; }
+        public decimal sleeveLength { get; set; }
+        public decimal bieop { get; set; }
+        public decimal troWaist { get; set; }
+        public decimal troHip { get; set; }
+        public decimal troLength { get; set; }
+        public decimal troInseam { get; set; }
+        public decimal troHem { get; set; }
+        public decimal beretSize { get; set; }
+        public decimal jacketSize { get; set; }
+        public decimal shirtSize { get; set; }
+        public decimal trouserSize { get; set; }
+        public decimal shoeSize { get; set; }
+        public string comment { get; set; }
+        public string video { get; set; }
+
+
+        public string orderStatus { get; set; }
+       
 
         public virtual ICollection<cartype> Cartypes { get; set; }
 
+        public Guid? thirdPartyID { get; set; }
+        [ForeignKey("thirdPartyID")]
+        public virtual thirdParty ThirdParty { get; set; }
         public Guid clientID { get; set; }
         [ForeignKey("clientID")]
         public virtual user clientuser { get; set; }
@@ -402,18 +748,19 @@ namespace jbar.Model
         public virtual user driveruser { get; set; }
 
 
-        public Guid originCityID { get; set; }
+        public Guid? originCityID { get; set; }
         [ForeignKey("originCityID")]
         public virtual city origincity { get; set; }
 
-        public Guid destinCityID { get; set; }
+        public Guid? destinCityID { get; set; }
         [ForeignKey("destinCityID")]
         public virtual city destincity { get; set; }
 
 
-        public Guid loadTypeID { get; set; }
+        public Guid? loadTypeID { get; set; }
         [ForeignKey("loadTypeID")]
         public virtual loadType loadtype { get; set; }
+
 
     }
 
@@ -429,7 +776,7 @@ namespace jbar.Model
 
         public virtual ICollection<order> Orders { get; set; }
     }
-   
+
     public class orderResponse
     {
         [Key]
@@ -448,7 +795,7 @@ namespace jbar.Model
             Namads = new List<namad>();
         }
         [Key]
-       
+
 
         public Guid userID { get; set; }
         public string firebaseToken { get; set; }
@@ -459,7 +806,7 @@ namespace jbar.Model
         public string profileImage { get; set; }
         public string coName { get; set; }
         [Column(TypeName = "VARCHAR")]
-        
+
         public string phone { get; set; }
         public string code { get; set; }
         public string codeMelli { get; set; }
@@ -478,21 +825,32 @@ namespace jbar.Model
         public string cartDriver { get; set; }
         public string cartMelliModir { get; set; }
         public string rooznameOrParvaneOrTasvir { get; set; }
-        public string status { get; set; }
-        public string statusMessage { get; set; }
-        public string clientType { get; set; }
 
+        public string clientType { get; set; }
+        public string status { get; set; }
         public string lat { get; set; }
         public string lon { get; set; }
         public DbGeography point { get; set; }
 
 
-        public Guid? vehicleID { get; set; }
-        public virtual vehicle vehicle { get; set; }
+        public Guid? workingStatusID { get; set; }
+        [ForeignKey("workingStatusID")]
+        public virtual userWorkingStatus workingStatus { get; set; }
+
+
+        public Guid? verifyStatusID { get; set; }
+        [ForeignKey("verifyStatusID")]
+        public virtual verifyStatus verifyStatus { get; set; }
+
+
 
         public Guid? barbariID { get; set; }
         [ForeignKey("barbariID")]
         public virtual user barbari { get; set; }
+
+        public Guid? vehicleID { get; set; }
+        [ForeignKey("vehicleID")]
+        public virtual vehicle vehicle { get; set; }
 
 
 
@@ -518,12 +876,42 @@ namespace jbar.Model
 
     }
 
+
+    public class userWorkingStatus
+    {
+        [Key]
+        public Guid workingStatusID { get; set; }
+        public string title { get; set; }
+        public Guid? userID { get; set; } // مرتبط با کدوم باربریه
+        [ForeignKey("userID")]
+        public virtual user user { get; set; }
+
+        public virtual ICollection<user> Users { get; set; }
+    }
+
+
+
+
+
+    public class verifyStatus
+    {
+        [Key]
+        public Guid verifyStatusID { get; set; }
+        public string title { get; set; }
+        public string statusCode { get; set; }
+        public string message { get; set; }
+        public Guid? userID { get; set; } // مرتبط با کدوم باربریه
+        [ForeignKey("userID")]
+        public virtual user user { get; set; }
+
+        public virtual ICollection<user> Users { get; set; }
+    }
     public class city
     {
         [Key]
 
         public Guid userID { get; set; }
-        public Guid parentID { get; set; }
+
         public string title { get; set; }
 
         public string lat { get; set; }
@@ -536,7 +924,9 @@ namespace jbar.Model
         public string town { get; set; }
         public DbGeography citypoint { get; set; }
 
-
+        public Guid parentID { get; set; }
+        [ForeignKey("userID")]
+        public virtual city parentcity { get; set; }
         public virtual ICollection<order> originOrders { get; set; }
         public virtual ICollection<order> destinOrders { get; set; }
     }

@@ -1,0 +1,235 @@
+﻿@model jbar.ViewModel.orderOptionActionVM
+@{
+    ViewBag.Title = "Coding";
+    Layout = "~/Views/Shared/_panelLayout.cshtml";
+}
+
+
+@section scripts{
+    <script src="~/Scripts/persian-date.min.js"></script>
+    <script src="~/Scripts/persian-datepicker.js"></script>
+    <script src="~/Assets_panel/js/advanced-form-elements.js"></script>
+    <script src="~/Assets_panel/js/select2.js"></script>
+    @if (@ViewBag.error != null)
+    {
+        <script>
+            toastr.options = {
+                'closeButton': true,
+                'debug': false,
+                'newestOnTop': false,
+                'progressBar': false,
+                'positionClass': 'toast-top-right',
+                'preventDuplicates': false,
+                'showDuration': '1000',
+                'hideDuration': '1000',
+                'timeOut': '5000',
+                'extendedTimeOut': '1000',
+                'showEasing': 'swing',
+                'hideEasing': 'linear',
+                'showMethod': 'fadeIn',
+                'hideMethod': 'fadeOut',
+            }
+            toastr.error('@ViewBag.error');
+        </script>
+    }
+<script>
+    var hideInnerEl = function (el) {
+
+        var element = $(el);
+        element.removeAttr("open");
+        var prid = element.attr('parentID');
+        $("." + prid).removeClass("firstchild")
+
+        $("." + prid).each(function () {
+            hideInnerEl(this);
+        })
+
+
+    }
+    $(".childItem").click(function () {
+        var prid = $(this).attr('parentID');
+
+
+        if ($(this).attr('open') == undefined) {
+            $("." + prid).addClass("firstchild")
+            $(this).attr("open", "true");
+        }
+        else {
+
+            hideInnerEl(this);
+        }
+
+
+    })
+
+    $(".editButton").click(function () {
+        $("#editID").val($(this).attr("idtogo"));
+        $("#editTitle").val($(this).attr("nametogo"));
+    })
+</script>
+
+}
+
+
+<div class="">
+    <div class="border">
+        <div class="bg-gray-300 nav-bg" style="border-radius:6px; margin:0 30px">
+            <nav class="nav nav-tabs">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">لیست آپشن ها </a>
+                <a class="nav-link " data-bs-toggle="tab" href="#tabCont2"> افزودن آپشن جدید </a>
+
+            </nav>
+        </div>
+        <div class="card-body tab-content">
+            <div class="tab-pane active show" id="tabCont1">
+                <div class="col-lg-12">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <div>
+                                <h6 class="main-content-label mb-1">جدول لیست آپشن ها</h6>
+                                <p class="text-muted card-sub-title">لیست  تمامی آپشن های سفارشات  قابل مشاهده خواهد بود</p>
+                            </div>
+                            <div class="table-responsive border">
+                                <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
+                                    <thead>
+                                        <tr>
+
+                                            <th>عنوان</th>
+                                            <th>تصویر</th>
+                                            <th>اقدامات</th>
+
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @if (Model.prtlist != null)
+                                        {
+                                            foreach (var item in Model.prtlist.Where(x => x.parentID == x.orderOptionID))
+                                            {
+                                                string parentclassname = "1" + item.orderOptionID;
+                                                <tr parentID="@parentclassname" class="childItem firstchild">
+                                                    <td>@item.title</td>
+                                                    <td><img style="max-width:70px" src="/@item.image"/></td>
+                                                    <td>
+                                                        <button id="@item.orderOptionID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                        <button data-bs-target="#editModal" data-bs-toggle="modal" nametogo="@item.title" idtogo="@item.orderOptionID" type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+
+                                                    </td>
+                                                </tr>
+                                                foreach (var grouh in Model.prtlist.Where(x => x.parentID == item.orderOptionID && x.parentID != x.orderOptionID ))
+                                                {
+                                                    string classname = "1" + item.orderOptionID;
+                                                    <tr parentID="@parentclassname" class="childItem @classname">
+                                                        <td>---@grouh.title</td>
+                                                        <td><img style="max-width:70px" src="/@grouh.image" /></td>
+                                                        <td>
+                                                            <button id="@item.orderOptionID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                            <button  data-bs-target="#editModal" data-bs-toggle="modal" nametogo="@grouh.title" idtogo="@grouh.orderOptionID"  type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+                                                        </td>
+                                                    </tr>
+                                                    
+                                                }
+                                            }
+                                        }
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane " id="tabCont2">
+                <div class="row row-sm">
+                    <div class="col-xl-12 col-lg-12 col-md-12">
+                        <div class="card custom-card">
+                            <div class="card-body">
+
+                                <form action="addOrderOptionsAsync" method="post" enctype="multipart/form-data">
+                                    <div class="row row-sm mg-b-20">
+                                        <div>
+
+
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> نام </h6>
+                                            <input class="form-control" name="title" placeholder="نام   " required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> تصویر </h6>
+                                            <input class="form-control" name="file" placeholder="  " required="" type="file">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب آیتم بالاسری </h6>
+                                            <select name="parentID" class="form-control select2 select2-hidden-accessible" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                <option label="یکی را انتخاب کن" data-select2-id="3">
+                                                </option>
+                                                @if (Model.prtlist != null)
+                                                {
+                                                    foreach (var item in Model.prtlist.Where(x=>x.parentID == x.orderOptionID))
+                                                    {
+                                                        <option value="@item.orderOptionID">
+                                                            @item.title
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+                                    <button class="btn ripple btn-main-primary btn-block">ارسال</button>
+                                </form>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal" id="editModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-content-demo">
+            <div class="modal-header">
+                <h6 class="modal-title">ویرایش</h6><button aria-label="بستن" class="close" data-bs-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+            </div>
+            <form action="addOrderOptionsAsync" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+
+                    <input hidden type="text" id="editID" class="form-control" name="orderOptionID" value="" />
+                    <p>نام</p>
+                    <input type="text" id="editTitle" class="form-control" name="title" value="" />
+                    <p style="margin:10px"></p>
+                    <p>تصویر</p>
+                    <input class="form-control" type="file" name="file" value="" />
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn ripple btn-primary" type="submit">تایید</button>
+                    <button class="btn ripple btn-secondary" data-bs-dismiss="modal" type="button">لغو</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .childItem {
+        display: none;
+    }
+
+    .firstchild {
+        display: revert
+    }
+</style>
+
+
+

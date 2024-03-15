@@ -1,0 +1,400 @@
+﻿@model jbar.ViewModel.formItemActionVM
+@{
+    ViewBag.Title = "Coding";
+    Layout = "~/Views/Shared/_panelLayout.cshtml";
+}
+
+
+@section scripts{
+    <script src="~/Scripts/persian-date.min.js"></script>
+    <script src="~/Scripts/persian-datepicker.js"></script>
+    <script src="~/Assets_panel/js/advanced-form-elements.js"></script>
+    <script src="~/Assets_panel/js/select2.js"></script>
+    @if (@ViewBag.error != null)
+    {
+        <script>
+            toastr.options = {
+                'closeButton': true,
+                'debug': false,
+                'newestOnTop': false,
+                'progressBar': false,
+                'positionClass': 'toast-top-right',
+                'preventDuplicates': false,
+                'showDuration': '1000',
+                'hideDuration': '1000',
+                'timeOut': '5000',
+                'extendedTimeOut': '1000',
+                'showEasing': 'swing',
+                'hideEasing': 'linear',
+                'showMethod': 'fadeIn',
+                'hideMethod': 'fadeOut',
+            }
+            toastr.error('@ViewBag.error');
+        </script>
+    }
+<script>
+    var hideInnerEl = function (el) {
+
+        var element = $(el);
+        element.removeAttr("open");
+        var prid = element.attr('parentID');
+        $("." + prid).removeClass("firstchild")
+
+        $("." + prid).each(function () {
+            hideInnerEl(this);
+        })
+
+
+    }
+    $(".childItem").click(function () {
+        var prid = $(this).attr('parentID');
+
+
+        if ($(this).attr('open') == undefined) {
+            $("." + prid).addClass("firstchild")
+            $(this).attr("open", "true");
+        }
+        else {
+
+            hideInnerEl(this);
+        }
+
+
+    })
+
+    $(".editButton").click(function () {
+        $("#editID").val($(this).attr("idtogo"));
+        $("#editTitle").val($(this).attr("nametogo"));
+        $("#editDesc").val($(this).attr("desctogo"));
+        $("#editPlace").val($(this).attr("placeholdertogo"));
+        $("#itemTypeSelected").val($(this).attr("typetogo"));
+        $("#itemDesignSelected").val($(this).attr("designtogo"));
+        $("#optoinSelected").val($(this).attr("collectiontogo"));
+        
+
+        if ($(this).attr("isMultiple") == "on") {
+
+            $("#isMultiple").attr("checked", "checked");
+        } else {
+
+            $("#isMultiple").removeAttr("checked");
+        }
+    })
+</script>
+
+}
+
+
+<div class="">
+    <div class="border">
+        <div class="bg-gray-300 nav-bg" style="border-radius:6px; margin:0 30px">
+            <nav class="nav nav-tabs">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">لیست متغیر ها </a>
+                <a class="nav-link " data-bs-toggle="tab" href="#tabCont2"> افزودن متغیر جدید </a>
+
+            </nav>
+        </div>
+        <div class="card-body tab-content">
+            <div class="tab-pane active show" id="tabCont1">
+                <div class="col-lg-12">
+                    <div class="card custom-card">
+                        <div class="card-body">
+                            <div>
+                                <h6 class="main-content-label mb-1">جدول لیست پارامترها</h6>
+                                <p class="text-muted card-sub-title">لیست  تمامی پارامترهای فرم  قابل مشاهده خواهد بود</p>
+                            </div>
+                            <div class="table-responsive border">
+                                <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
+                                    <thead>
+                                        <tr>
+
+                                            <th>عنوان</th>
+                                            <th>توضیحات</th>
+                                            <th>تصویر</th>
+                                            <th>پلیس هولدر</th>
+                                            <th>جنس پارامتر</th>
+                                            <th>وضعیت چند انتخابی</th>
+                                            <th>مجموعه انتخاب شده</th>
+                                            <th>یو آی انتخاب شده</th>
+                                            <th>اقدامات</th>
+                                            <td></td>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        @if (Model.formItemList != null)
+                                        {
+                                            foreach (var item in Model.formItemList)
+                                            {
+
+                                        <tr class="childItem firstchild">
+                                            <td>@item.itemName</td>
+                                            <td>@item.itemDesc</td>
+
+                                            <td><img style="max-width:70px" src="/@item.itemtImage" /></td>
+                                            <td>@item.itemPlaceholder</td>
+                                            <td>@item.formItemTypeTitle</td>
+
+                                            @{
+                                                string inlistclass = "checked";
+                                                if (item.isMultiple != "on")
+                                                {
+                                                    inlistclass = "";
+
+                                                }
+                                                <td>
+                                                    <label width="" class="custom-switch">
+                                                        <input name="codingID" hidden />
+                                                        <input disabled type="checkbox" class="custom-switch-input inlistinput" @inlistclass>
+                                                        <span class="custom-switch-indicator"></span>
+                                                    </label>
+                                                </td>
+                                            }
+                                            <td>@item.collectionName</td>
+                                            <td>@item.UIName</td>
+                                            <td>
+                                                <div style="display:flex">
+                                                    <form action="removeFormItem" method="post" enctype="multipart/form-data">
+                                                        <input hidden name="formItemID" value="@item.formItemID" />
+                                                        <input hidden name="formID" value="@Model.form.formID" />
+                                                        <button type="submit" class="btn ripple btn-primary btn-sm">حذف </button>
+
+                                                    </form>
+                                                    <p style="margin:0 15px"></p>
+                                                    <button data-bs-target="#editModal" data-bs-toggle="modal" isMultiple="@item.isMultiple" collectiontogo="@item.optionSelected" designtogo="@item.formItemDesingID" typetogo="@item.formItemTypeID" placeholdertogo="@item.itemPlaceholder" desctogo="@item.itemDesc" nametogo="@item.itemName" idtogo="@item.formItemID" type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+
+                                                </div>
+
+                                            </td>
+                                        </tr>
+
+                                            }
+                                        }
+
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane " id="tabCont2">
+                <div class="row row-sm">
+                    <div class="col-xl-12 col-lg-12 col-md-12">
+                        <div class="card custom-card">
+                            <div class="card-body">
+
+                                <form action="addFormItem" method="post" enctype="multipart/form-data">
+                                    <div class="row row-sm mg-b-20">
+
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> نام (فقط انگلیسی)</h6>
+                                            <input class="form-control" name="itemName" placeholder="نام   " required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1">توضیحات</h6>
+                                            <input class="form-control" name="itemDesc" placeholder="   " required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> عکس </h6>
+                                            <input class="form-control" name="itemtImage" placeholder="" type="file">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> پلیس هولدر </h6>
+                                            <input class="form-control" name="itemPlaceholder" placeholder="  " required="" type="text">
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> پسوند محتوا(در نوع آپلود) </h6>
+                                            <input class="form-control" name="mediaType" placeholder="  " type="text">
+                                        </div>
+
+
+                                        <input hidden value="@Model.form.formID" name="formID" />
+
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب نوع </h6>
+                                            <select name="formItemTypeID" class="form-control select2 select2-hidden-accessible" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                <option label="یکی را انتخاب کن" data-select2-id="3">
+                                                </option>
+                                                @if (Model.formItemTypeList != null)
+                                                {
+                                                    foreach (var item in Model.formItemTypeList)
+                                                    {
+                                                        <option value="@item.formItemTypeID">
+                                                            @item.title
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب مجموعه  (درنوع چند انتخابی) </h6>
+                                            <select name="optionSelected" class="form-control select2 select2-hidden-accessible" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                <option label="یکی را انتخاب کن" data-select2-id="3">
+                                                </option>
+                                                @if (Model.orderOptionList != null)
+                                                {
+                                                    foreach (var item in Model.orderOptionList)
+                                                    {
+                                                        <option value="@item.orderOptionID">
+                                                            @item.title
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+                                        </div>
+
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب یو آی </h6>
+                                            <select name="formItemDesingID" class="form-control select2 select2-hidden-accessible" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                                                <option label="یکی را انتخاب کن" data-select2-id="3">
+                                                </option>
+                                                @if (Model.formItemDesingList != null)
+                                                {
+                                                    foreach (var item in Model.formItemDesingList)
+                                                    {
+                                                        <option value="@item.formItemDesingID">
+                                                            @item.title
+                                                        </option>
+                                                    }
+                                                }
+
+                                            </select>
+
+
+                                        </div>
+                                        <div class="col-lg-3 form-group">
+                                            <h6 style="margin-bottom:15px" class="main-content-label mb-1"> قابلیت چند انتخابی </h6>
+                                            <label class="custom-switch">
+                                                <input id="isMultiple" type="checkbox" name="isMultiple" class="custom-switch-input inlistinput">
+                                                <span class="custom-switch-indicator"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                 
+                                    <button class="btn ripple btn-main-primary btn-block">ارسال</button>
+                                </form>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div class="modal" id="editModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-content-demo">
+            <div class="modal-header">
+                <h6 class="modal-title">ویرایش</h6><button aria-label="بستن" class="close" data-bs-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+            </div>
+            <form action="addFormItem" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input hidden name="formID" value="@Model.form.formID" />
+                    <input hidden type="text" id="editID" class="form-control" name="formItemID" value="" />
+                    <p>نام</p>
+                    <input type="text" id="editTitle" class="form-control" name="itemName" value="" />
+                    <p style="margin:10px"></p>
+                    <p>توضیحات</p>
+                    <input type="text" id="editDesc" class="form-control" name="itemDesc" value="" />
+                    <p style="margin:10px"></p>
+                    <p>پلیس هولدر</p>
+                    <input type="text" id="editPlace" class="form-control" name="itemPlaceholder" value="" />
+                    <p style="margin:10px"></p>
+
+                    <p>وضعیت چند انتخابی</p>
+                    <label class="custom-switch">
+                        <input id="isMultiple" type="checkbox" name="isMultiple" class="custom-switch-input inlistinput">
+                        <span class="custom-switch-indicator"></span>
+                    </label>
+                    <p style="margin:10px"></p>
+                    <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب یو آی </h6>
+                    <select id="itemDesignSelected" name="formItemDesignID" class="form-control select2 select2-hidden-accessible" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                        <option label="یکی را انتخاب کن" data-select2-id="3">
+                        </option>
+                        @if (Model.formItemDesingList != null)
+                        {
+                            foreach (var item in Model.formItemDesingList)
+                            {
+                                <option value="@item.formItemDesingID">
+                                    @item.title
+                                </option>
+                            }
+                        }
+
+                    </select>
+                    <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب نوع پارامتر </h6>
+
+                    <select id="itemTypeSelected" name="formItemTypeID" class="form-control select2 select2-hidden-accessible" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                        <option label="انتخاب نوع" data-select2-id="3">
+                        </option>
+                        @if (Model.formItemTypeList != null)
+                        {
+                            foreach (var item in Model.formItemTypeList)
+                            {
+                                <option value="@item.formItemTypeID">
+                                    @item.title
+                                </option>
+                            }
+                        }
+
+                    </select>
+                    <p style="margin:10px"></p>
+                    <h6 style="margin-bottom:15px" class="main-content-label mb-1"> انتخاب آپشن ها (درنوع چند انتخابی) </h6>
+                    <select id="optoinSelected" name="optionSelected" class="form-control select2 select2-hidden-accessible" data-select2-id="1" tabindex="-1" aria-hidden="true">
+                        <option label="انتخاب مجموعه" data-select2-id="3">
+                        </option>
+                        @if (Model.orderOptionList != null)
+                        {
+                            foreach (var item in Model.orderOptionList)
+                            {
+                                <option value="@item.orderOptionID">
+                                    @item.title
+                                </option>
+                            }
+                        }
+
+
+                    </select>
+
+                    <p style="margin:10px"></p>
+                    <p>تصویر</p>
+                    <input class="form-control" type="file" name="file" value="" />
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn ripple btn-primary" type="submit">تایید</button>
+                    <button class="btn ripple btn-secondary" data-bs-dismiss="modal" type="button">لغو</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<style>
+    .childItem {
+        display: none;
+    }
+
+    .firstchild {
+        display: revert
+    }
+</style>
+
+
+
+
+
+

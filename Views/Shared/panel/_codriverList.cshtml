@@ -1,0 +1,22 @@
+﻿@model jbar.ViewModel.getCoDriverResponse
+
+@if (Model.codrivers != null)
+{
+    foreach (var item in Model.codrivers)
+    {
+        int index = Model.codrivers.IndexOf(item) + 1;
+        <tr>
+            <td>@index</td>
+            <td>@item.phone</td>
+            <td>@item.dname</td>
+            <td style="direction:rtl">@item.plateNumber</td>
+            <td>@item.verifyStatus</td>
+            <td>@item.workingStatus</td>
+            <td>
+                <a idtogo="@item.did" class="setVerifStatus btn ripple btn-info" data-bs-target="#vehicleModal" data-bs-toggle="modal" href="#">ثبت خودرو</a>
+                <a idtogo="@item.did" class="setVerifStatus btn ripple btn-info" data-bs-target="#verifModal" data-bs-toggle="modal" href="#">تغییر وضیعیت احراز</a>
+                <a idtogo="@item.did" class="setWorkingStatus btn ripple btn-info" data-bs-target="#workingModal" data-bs-toggle="modal" href="#">تغییر وضیعیت شغلی</a>
+            </td>
+        </tr>
+    }
+}

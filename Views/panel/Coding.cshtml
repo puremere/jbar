@@ -32,34 +32,71 @@
             toastr.error('@ViewBag.error');
         </script>
     }
-    <script>
-        var hideInnerEl = function (el) {
-            var element = $(el);
-            var prid = element.attr('parentID');
-            $("." + prid).removeClass("firstchild")
-       
-            $("." + prid).each(function () {
-                hideInnerEl(this);
-            })
-            element.removeAttr("open");
+<script>
+    var hideInnerEl = function (el) {
+        var element = $(el);
+        var prid = element.attr('parentID');
+        $("." + prid).removeClass("firstchild")
 
-        }
-        $(".childItem").click(function () {
+        $("." + prid).each(function () {
+            hideInnerEl(this);
+        })
+        element.removeAttr("open");
+
+    }
+    $(".childItem").click(function (e) {
+        var senderElement = e.target;
+        if (!$(e.target).is("button")) {
             var prid = $(this).attr('parentID');
-            
-           
+
+
             if ($(this).attr('open') == undefined) {
                 $("." + prid).addClass("firstchild")
                 $(this).attr("open", "true");
             }
             else {
-              
+
                 hideInnerEl(this);
             }
+        }
+
+
+
+    })
+    $(".editButton").click(function () {
+        $("#editID").val($(this).attr("idtogo"));
+        $("#editTitle").val($(this).attr("nametogo"));
+        $("#editHesab").val($(this).attr("hesabtogo"));
+        if ($(this).attr("inList") == "1") {
             
-            
-        })
-    </script>
+            $("#inList").attr("checked", "checked");
+        } else {
+           
+            $("#inList").removeAttr("checked");
+        }
+        
+        
+    })
+    $(".inlistinput").on('click', function (e) {
+
+        //$(this).parent().parent().submit();
+        //var isCheck = "0";
+        //var id = $(this).attr('idtogo');
+        //if ($(this).is(':checked')) {
+        //    isCheck = "1";
+        //}
+        //$.ajax({
+        //    url:    'setNewCoding',
+        //    data: {
+        //        id: id,
+        //        isCheck: isCheck
+
+
+        //    }
+        //})
+
+    })
+</script>
 
 }
 
@@ -89,6 +126,7 @@
 
                                             <th>نام</th>
                                             <th>کد</th>
+                                            <th> دسترسی کاربر</th>
                                             <th>اقدامات</th>
 
                                             <th></th>
@@ -100,38 +138,87 @@
                                         {
                                             foreach (var item in Model.Where(x => x.codingType == 1))
                                             {
+                                                string inlistclass = "checked";
+                                                if (item.inList != "1")
+                                                {
+                                                    inlistclass = "";
+
+                                                }
                                                 string parentclassname = "1" + item.codeHesab;
                                                 <tr parentID="@parentclassname" class="childItem firstchild">
                                                     <td>@item.title</td>
                                                     <td>@item.codeHesab</td>
                                                     <td>
+                                                      
+                                                        <label width="" class="custom-switch">
+                                                            <input name="codingID" hidden />
+                                                            <input disabled idtogo="@item.codingID" type="checkbox" name="inList" class="custom-switch-input inlistinput" @inlistclass>
+                                                            <span class="custom-switch-indicator"></span>
+                                                        </label>
+                                                       
+                                                    </td>
+
+                                                    <td class="works">
                                                         <button id="@item.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                        <button data-bs-target="#editModal" data-bs-toggle="modal" inList="@item.inList" hesabtogo="@item.codeHesab" nametogo="@item.title" idtogo="@item.codingID"  type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
                                                     </td>
                                                 </tr>
-                                                foreach (var grouh in Model.Where(x => x.codingType == 2 && x.parentID == item.codingID).OrderBy(x=>x.codeHesab))
+                                                foreach (var grouh in Model.Where(x => x.codingType == 2 && x.parentID == item.codingID).OrderBy(x => x.codeHesab))
                                                 {
+                                                    inlistclass = "checked";
+                                                    if (item.inList != "1")
+                                                    {
+                                                        inlistclass = "";
+
+                                                    }
                                                     string classname = "1" + item.codeHesab;
                                                     parentclassname = "2" + grouh.codeHesab;
                                                     <tr parentID="@parentclassname" class="childItem @classname">
                                                         <td>---@grouh.title</td>
                                                         <td>@grouh.codeHesab</td>
                                                         <td>
+                                                            <label width="@grouh.codingID" class="custom-switch">
+                                                                <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input inlistinput" @inlistclass>
+                                                                <span class="custom-switch-indicator"></span>
+                                                            </label>
+                                                        </td>
+
+                                                        <td>
                                                             <button id="@grouh.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
                                                         </td>
                                                     </tr>
                                                     foreach (var moin in Model.Where(x => x.codingType == 3 && x.parentID == grouh.codingID))
                                                     {
+                                                        inlistclass = "checked";
+                                                        if (item.inList != "1")
+                                                        {
+                                                            inlistclass = "";
+
+                                                        }
                                                         classname = "2" + grouh.codeHesab;
                                                         parentclassname = "3" + moin.codeHesab;
                                                         <tr parentID="@parentclassname" class="childItem @classname">
                                                             <td>------@moin.title</td>
                                                             <td>@moin.codeHesab</td>
                                                             <td>
+                                                                <label width="@moin.codingID" class="custom-switch">
+                                                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input inlistinput" @inlistclass>
+                                                                    <span class="custom-switch-indicator"></span>
+                                                                </label>
+                                                            </td>
+
+                                                            <td>
                                                                 <button id="@moin.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
                                                             </td>
                                                         </tr>
                                                         foreach (var tafsil1 in Model.Where(x => x.codingType == 4 && x.parentID == moin.codingID))
                                                         {
+                                                            inlistclass = "checked";
+                                                            if (item.inList != "1")
+                                                            {
+                                                                inlistclass = "";
+
+                                                            }
 
                                                             classname = "3" + moin.codeHesab;
                                                             parentclassname = "4" + tafsil1.codeHesab;
@@ -139,53 +226,109 @@
                                                                 <td>---------@tafsil1.title</td>
                                                                 <td>@tafsil1.codeHesab</td>
                                                                 <td>
+                                                                    <label width="@tafsil1.codingID" class="custom-switch">
+                                                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input inlistinput" @inlistclass>
+                                                                        <span class="custom-switch-indicator"></span>
+                                                                    </label>
+                                                                </td>
+
+                                                                <td>
                                                                     <button id="@moin.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
                                                                 </td>
                                                             </tr>
                                                             foreach (var tafsil2 in Model.Where(x => x.codingType == 5 && x.parentID == tafsil1.codingID))
                                                             {
+                                                                inlistclass = "checked";
+                                                                if (item.inList != "1")
+                                                                {
+                                                                    inlistclass = "";
 
+                                                                }
                                                                 classname = "4" + tafsil1.codeHesab;
                                                                 parentclassname = "5" + tafsil2.codeHesab;
                                                                 <tr parentID="@parentclassname" class="childItem @classname">
                                                                     <td>------------@tafsil2.title</td>
                                                                     <td>@tafsil2.codeHesab</td>
                                                                     <td>
+                                                                        <label width="@tafsil2.codingID" class="custom-switch">
+                                                                            <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input inlistinput" @inlistclass>
+                                                                            <span class="custom-switch-indicator"></span>
+                                                                        </label>
+                                                                    </td>
+
+                                                                    <td>
                                                                         <button id="@tafsil2.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
                                                                     </td>
                                                                 </tr>
                                                                 foreach (var tafsil3 in Model.Where(x => x.codingType == 6 && x.parentID == tafsil2.codingID))
                                                                 {
+                                                                    inlistclass = "checked";
+                                                                    if (item.inList != "1")
+                                                                    {
+                                                                        inlistclass = "";
 
+                                                                    }
                                                                     classname = "5" + tafsil2.codeHesab;
                                                                     parentclassname = "6" + tafsil3.codeHesab;
                                                                     <tr parentID="@parentclassname" class="childItem @classname">
                                                                         <td>---------------@tafsil3.title</td>
                                                                         <td>@tafsil3.codeHesab</td>
                                                                         <td>
+                                                                            <label width="@tafsil3.codingID" class="custom-switch">
+                                                                                <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input inlistinput" @inlistclass>
+                                                                                <span class="custom-switch-indicator"></span>
+                                                                            </label>
+                                                                        </td>
+
+                                                                        <td>
                                                                             <button id="@tafsil3.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
                                                                         </td>
                                                                     </tr>
                                                                     foreach (var tafsil4 in Model.Where(x => x.codingType == 7 && x.parentID == tafsil3.codingID))
                                                                     {
+                                                                        inlistclass = "checked";
+                                                                        if (item.inList != "1")
+                                                                        {
+                                                                            inlistclass = "";
 
+                                                                        }
                                                                         classname = "6" + tafsil3.codeHesab;
                                                                         parentclassname = "7" + tafsil4.codeHesab;
                                                                         <tr parentID="@parentclassname" class="childItem @classname">
                                                                             <td>------------------@tafsil4.title</td>
                                                                             <td>@tafsil4.codeHesab</td>
                                                                             <td>
+                                                                                <label width="@tafsil4.codingID" class="custom-switch">
+                                                                                    <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input inlistinput" @inlistclass>
+                                                                                    <span class="custom-switch-indicator"></span>
+                                                                                </label>
+                                                                            </td>
+
+                                                                            <td>
                                                                                 <button id="@tafsil4.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
                                                                             </td>
                                                                         </tr>
                                                                         foreach (var tafsil5 in Model.Where(x => x.codingType == 5 && x.parentID == tafsil4.codingID))
                                                                         {
+                                                                            inlistclass = "checked";
+                                                                            if (item.inList != "1")
+                                                                            {
+                                                                                inlistclass = "";
+
+                                                                            }
                                                                             classname = "7" + tafsil4.codeHesab;
                                                                             parentclassname = "8" + tafsil5.codeHesab;
                                                                             <tr parentID="@parentclassname" class="childItem @classname">
 
                                                                                 <td>---------------------@tafsil5.title</td>
                                                                                 <td>@tafsil5.codeHesab</td>
+                                                                                <td>
+                                                                                    <label width="@tafsil5.codingID" class="custom-switch">
+                                                                                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input inlistinput" @inlistclass>
+                                                                                        <span class="custom-switch-indicator"></span>
+                                                                                    </label>
+                                                                                </td>
+
                                                                                 <td>
                                                                                     <button id="@tafsil5.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
                                                                                 </td>
@@ -260,6 +403,38 @@
     </div>
 </div>
 
+<div class="modal" id="editModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content modal-content-demo">
+            <div class="modal-header">
+                <h6 class="modal-title">ویرایش</h6><button aria-label="بستن" class="close" data-bs-dismiss="modal" type="button"><span aria-hidden="true">×</span></button>
+            </div>
+            <form action="setNewCoding" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <input name="codingID" hidden id="editID"/>
+                    <input hidden type="text" id="editID" class="form-control" name="orderOptionID" value="" />
+                    <p>نام</p>
+                    <input type="text" id="editTitle" class="form-control" name="title" value="" />
+                    <p style="margin:10px"></p>
+                    <p>کد حساب</p>
+                    <input type="text" id="editHesab" class="form-control" name="codeHesab" value="" />
+                    <p style="margin:10px"></p>
+                    <p>وضعیت دسترسی</p>
+                    <label  class="custom-switch">
+                        <input id="inList" type="checkbox" name="inList" class="custom-switch-input inlistinput" >
+                        <span class="custom-switch-indicator"></span>
+                    </label>
+                    <p style="margin:10px"></p>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn ripple btn-primary" type="submit">تایید</button>
+                    <button class="btn ripple btn-secondary" data-bs-dismiss="modal" type="button">لغو</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <style>
     .childItem {
         display: none;

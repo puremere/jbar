@@ -1,4 +1,4 @@
-﻿@model jbar.ViewModel.processActionVM
+﻿@model jbar.ViewModel.processFormActionVM
 
 @{
     ViewBag.Title = "Process";
@@ -38,8 +38,8 @@
     <div class="border">
         <div class="bg-gray-300 nav-bg" style="border-radius:6px; margin:0 30px">
             <nav class="nav nav-tabs">
-                <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">لیست پروسه ها </a>
-                <a class="nav-link " data-bs-toggle="tab" href="#tabCont2"> افزودن پروسه جدید </a>
+                <a class="nav-link active" data-bs-toggle="tab" href="#tabCont1">لیست فرم ها </a>
+                <a class="nav-link " data-bs-toggle="tab" href="#tabCont2"> افزودن فرم جدید </a>
 
             </nav>
         </div>
@@ -49,8 +49,8 @@
                     <div class="card custom-card">
                         <div class="card-body">
                             <div>
-                                <h6 class="main-content-label mb-1">جدول ماهیت سفارشات</h6>
-                                <p class="text-muted card-sub-title">لیست انواع پروسه های جاری شرکت قابل مشاهده خواهد بود</p>
+                                <h6 class="main-content-label mb-1">جدول فرمها</h6>
+                                <p class="text-muted card-sub-title">لیست انواع فرمهای  جاری شرکت قابل مشاهده خواهد بود</p>
                             </div>
                             <div class="table-responsive border">
                                 <table class="table text-nowrap text-md-nowrap table-hover mg-b-0">
@@ -59,44 +59,26 @@
 
                                             <th>نام</th>
 
-                                          
-                                            <th></th>
+
+                                            <th>اقدامات</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (Model.processList != null)
+                                        @if (Model.processFormList != null)
                                         {
-                                            foreach (var item in Model.processList)
+                                            foreach (var item in Model.processFormList)
                                             {
 
                                                 <tr>
                                                     <td>@item.title</td>
 
-                                                    
+
                                                     <td style="display:flex">
-                                                        <button id="@item.processID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
-                                                        <p style="margin: 0 10px"></p>
-                                                        <form target="_blank" action="processForm" method="get">
-                                                            <input name="processID" value="@item.processID" hidden />
-                                                            <input name="title" value="@item.title" hidden />
-                                                            <button type="submit" class="btn ripple btn-primary btn-sm">فرم ها </button>
+                                                        <form target="_blank" action="formItem" method="get">
+                                                            <input name="formID" value="@item.processFormID" hidden />
+                                                            <button type="submit" class="btn ripple btn-primary btn-sm">لیست متغیر ها </button>
 
                                                         </form>
-                                                        <p style="margin: 0 10px"></p>
-                                                        <form target="_blank" action="formula" method="get">
-                                                            <input name="processID" value="@item.processID" hidden />
-                                                            <input name="title" value="@item.title" hidden />
-                                                            <button type="submit" class="btn ripple btn-primary btn-sm">فرمول های مالی </button>
-
-                                                        </form>
-                                                        <p style="margin: 0 10px"></p>
-                                                        <form target="_blank" action="processFormula" method="post">
-                                                            <input name="processID" value="@item.processID" hidden />
-                                                            <input name="title" value="@item.title" hidden />
-                                                            <button type="submit" class="btn ripple btn-primary btn-sm">تراکنش های ثابت </button>
-
-                                                        </form>
-
 
 
                                                     </td>
@@ -119,15 +101,14 @@
                         <div class="card custom-card">
                             <div class="card-body">
 
-                                <form action="setNewProcess" method="post">
+                                <form action="setNewForm" method="post">
                                     <div class="row row-sm mg-b-20">
                                         <div style="margin-bottom:15px">
-                                            <h6 class="main-content-label mb-1"> نام پروسه</h6>
+                                            <h6 class="main-content-label mb-1"> نام فرم</h6>
 
                                         </div>
                                         <div class="col-lg-12 form-group">
-
-                                            <input class="form-control" name="title" placeholder="نام پروسه  " required="" type="text">
+                                            <input class="form-control" name="title" placeholder="نام فرم  " required="" type="text">
                                         </div>
 
                                     </div>

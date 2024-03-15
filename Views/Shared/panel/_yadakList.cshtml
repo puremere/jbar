@@ -1,0 +1,18 @@
+﻿@model jbar.ViewModel.getYadakResponce
+
+@if (Model.yadakList != null)
+{
+    foreach (var item in Model.yadakList)
+    {
+        int index = Model.yadakList.IndexOf(item) + 1;
+        <tr>
+            <td>@index</td>
+            <td>@item.yadakNumber</td>
+            <td> @item.loadtype</td>
+            <td> @item.status</td>
+            <td>
+                <button type="submit" class="btn ripple btn-primary btn-sm"> گزارشات </button>
+            </td>
+        </tr>
+    }
+}
