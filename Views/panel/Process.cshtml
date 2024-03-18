@@ -74,8 +74,7 @@
 
                                                     
                                                     <td style="display:flex">
-                                                        <button id="@item.processID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
-                                                        <p style="margin: 0 10px"></p>
+
                                                         <form target="_blank" action="processForm" method="get">
                                                             <input name="processID" value="@item.processID" hidden />
                                                             <input name="title" value="@item.title" hidden />
@@ -83,12 +82,12 @@
 
                                                         </form>
                                                         <p style="margin: 0 10px"></p>
-                                                        <form target="_blank" action="formula" method="get">
-                                                            <input name="processID" value="@item.processID" hidden />
-                                                            <input name="title" value="@item.title" hidden />
-                                                            <button type="submit" class="btn ripple btn-primary btn-sm">فرمول های مالی </button>
+                                                        @*<form target="_blank" action="formula" method="get">
+            <input name="processID" value="@item.processID" hidden />
+            <input name="title" value="@item.title" hidden />
+            <button type="submit" class="btn ripple btn-primary btn-sm">فرمول های مالی </button>
 
-                                                        </form>
+        </form>*@
                                                         <p style="margin: 0 10px"></p>
                                                         <form target="_blank" action="processFormula" method="post">
                                                             <input name="processID" value="@item.processID" hidden />
@@ -96,7 +95,8 @@
                                                             <button type="submit" class="btn ripple btn-primary btn-sm">تراکنش های ثابت </button>
 
                                                         </form>
-
+                                                        <p style="margin: 0 10px"></p>
+                                                        <button id="@item.processID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
 
 
                                                     </td>

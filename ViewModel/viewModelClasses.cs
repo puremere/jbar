@@ -83,7 +83,7 @@ namespace jbar.ViewModel
     }
     public class sendProfileVM
     {
-        public Model.user user { get; set; }
+        public userVM user { get; set; }
         public int status { get; set; }
         public string message { get; set; }
         public string baseURL { get; set; }
@@ -121,9 +121,45 @@ namespace jbar.ViewModel
         public string cityName { get; set; }
         public string typeName { get; set; }
     }
+    public class userVM
+    {
+        public Guid userID { get; set; }
+        public string firebaseToken { get; set; }
+        
+        public string userType { get; set; }
+        public string username { get; set; }
+        public string name { get; set; }
+        public string profileImage { get; set; }
+        public string coName { get; set; }
+        
+        public string phone { get; set; }
+        public string code { get; set; }
+        public string codeMelli { get; set; }
+        public string shenaseSherkat { get; set; }
+        public string cityID { get; set; }
+        public string address { get; set; }
+        public string emPhone { get; set; }
+        public string typeID { get; set; }
+        public string postalCode { get; set; }
+        public string hooshmandMashin { get; set; }
+        public string pelakIran { get; set; }
+        public string pelak1 { get; set; }
+        public string pelakHarf { get; set; }
+        public string pelak2 { get; set; }
+        public string cartNavgan { get; set; }
+        public string cartDriver { get; set; }
+        public string cartMelliModir { get; set; }
+        public string rooznameOrParvaneOrTasvir { get; set; }
+
+        public string clientType { get; set; }
+        public string status { get; set; }
+        public string lat { get; set; }
+        public string lon { get; set; }
+       
+    }
     public class sendLoadTypeVM
     {
-        public List<Model.loadType> lst { get; set; }
+        public List<loadTypeVM> lst { get; set; }
         public int status { get; set; }
         public string message { get; set; }
     }
@@ -307,10 +343,16 @@ namespace jbar.ViewModel
         public string loadtype { get; set; }
     }
 
+    public class loadTypeVM
+    {
+        public Guid loadTypeID { get; set; }
+        public string title { get; set; }
+    }
     public class cartypeVM
     {
         public Guid typeID { get; set; }
         public string title { get; set; }
+        public Guid parentID { get; set; }
     }
 
     public class getYadakResponce
@@ -343,13 +385,13 @@ namespace jbar.ViewModel
     }
     public class getDashbaord
     {
-        public Model.cartype type { get; set; }
-        public Model.city origin { get; set; }
+        public cartypeVM type { get; set; }
+        public  newcity origin { get; set; }
         public int status { get; set; }
     }
     public class sendTypeVM
     {
-        public List<Model.cartype> lst { get; set; }
+        public List<cartypeVM> lst { get; set; }
         public int status { get; set; }
         public string message { get; set; }
 
@@ -656,8 +698,8 @@ namespace jbar.ViewModel
         public string orderOptions { get; set; }
 
         public string status { get; set; }
-        public string originCityID { get; set; }
-        public string destinCityID { get; set; }
+        public Guid originCityID { get; set; }
+        public Guid destinCityID { get; set; }
         public string date { get; set; }
         public string type { get; set; }
         public string loadingStartHour { get; set; }
@@ -736,7 +778,7 @@ namespace jbar.ViewModel
     {
         public sendLoadTypeVM loadList { get; set; }
         public sendCityVM cityList { get; set; }
-        public List<jbar.Model.cartype> typeList { get; set; }
+        public List<cartypeVM> typeList { get; set; }
     }
     public class orderHistoryDetailVM
     {
@@ -785,6 +827,9 @@ namespace jbar.ViewModel
 
     }
 
+    public class itemlistparent {
+        public List<detailCollection> collection { get; set; }
+    }
     public class detailCollection
     {
         public string key { get; set; }
@@ -794,11 +839,54 @@ namespace jbar.ViewModel
         public Guid formID { get; set; }
        
     }
+    public class getOrderList
+    {
+        public Guid originCityID { get; set; }
+        public Guid destinCityID { get; set; }
+        public string type { get; set; }
+        
+    }
+    public class flowCodingVM
+    {
+        
+        public string codingTitle { get; set; }
+        public double amount { get; set; }
+    }
+    public class flowProductVM
+    {
+
+        public string productTitle { get; set; }
+        public double amount { get; set; }
+    }
+    public class getFlowCost
+    {
+        public Guid flowID { get; set; }
+    }
+    public class flowCostVM
+    {
+        public List<codingVM> codingList { get; set; }
+        public List<productVM> productList { get; set; }
+        public List<flowCodingVM> flowCodingList { get; set; }
+        public List<flowProductVM> flowProductList { get; set; }
+    }
+    public class setFlowCodingVM
+    {
+        public Guid flowID { get; set; }
+        public Guid codingID { get; set; }
+        public double amount { get; set; }
+    }
+    public class setFlowProductVM
+    {
+        public Guid flowID { get; set; }
+        public Guid productID { get; set; }
+        public double amount { get; set; }
+    }
     public class setFormDetailVM
     {
         public string formDetailList { get; set; }
         public Guid processID { get; set; }
         public Guid orderID { get; set; }
+        public Guid flowID { get; set; }
         public string name { get; set; }
 
     }
@@ -807,6 +895,7 @@ namespace jbar.ViewModel
     {
         public Guid processID { get; set; }
         public Guid orderID { get; set; }
+        public Guid flowID { get; set; }
     }
 
     public class formFullDetailItemVM : formItemVM
@@ -821,11 +910,35 @@ namespace jbar.ViewModel
         public Guid formID { get; set; }
         public string formTitle { get; set; }
     }
+    public class newOrderFieldsVM
+    {
+        public Guid newOrderFieldsID { get; set; }
+        public int? valueInt { get; set; }
+        public bool? valueBool { get; set; }
+        public double? valueDuoble { get; set; }
+        public DateTime? valueDateTime { get; set; }
+        public Guid? valueGuid { get; set; }
+        public string? valueString { get; set; }
+        public string name { get; set; }
+        public string usedFeild { get; set; }
 
+        
+        
+    }
+    public class formItemListView
+    {
+        public List<newOrderFieldsVM> formItemDetailList { get; set; }
+    }
+
+    public class listOfForViewVM
+    {
+        public List<formItemListView> allForm { get; set; }
+    }
     public class listOfFormVM
     {
         public List<formItemList> allForm { get; set; }
         public Guid orderID { get; set; }
+        public Guid processID { get; set; }
     }
     public class setNewFormProcessVM
     {
@@ -836,7 +949,7 @@ namespace jbar.ViewModel
     public class formItemVM
     {
         public Guid formItemID { get; set; }
-
+        public string itemValue { get; set; }
         public string itemName { get; set; }
         public string itemDesc { get; set; }
         public string itemPlaceholder { get; set; }
@@ -945,7 +1058,46 @@ namespace jbar.ViewModel
         public List<tagVM> taglist { get; set; }
     }
 
+    public class newOrderList
+    {
+        public List<newOrderVM> list { get; set; }
+    }
+    public class newOrderVM
+    {
+        [Key]
+        public Guid newOrderID { get; set; }
+        public string orderName { get; set; }
+        public string thirdPartyTitle { get; set; }
+        public string newOrderStatusCode { get; set; }
+        public string newOrderStatusTitle { get; set; }
+        public DateTime creationDate { get; set; }
+        public DateTime terminationDate { get; set; }
 
+    }
+    
+    public class manageOrderVM
+    {
+        public Guid orderStatusID { get; set; }
+        public Guid processID { get; set; }
+    }
+    public class newFlowVM
+    {
+        public Guid processID { get; set; }
+        public Guid serventID { get; set; }
+        public Guid orderID { get; set; }
+    }
+    public class newOrderStatusVM
+    {
+        public Guid orderStatusID { get; set; }
+        public string orderStatusTitle { get; set; }
+    }
+    public class newOrderSearchVM
+    {
+        public List<processVM> processList { get; set; }
+         public  List<newOrderStatusVM> statusList { get; set; }
+        public List<codrivervm> codrivers { get; set; }
+        
+    }
     public class nullclass
     {
 

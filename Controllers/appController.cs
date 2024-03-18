@@ -204,7 +204,7 @@ namespace jbar.Controllers
 
                 if (model == null)
                 {
-                    List<cartype> types = await dbcontext.cartypes.Where(x => x.typeID == x.parentID).ToListAsync();
+                    List<cartypeVM> types = await dbcontext.cartypes.Where(x => x.typeID == x.parentID).Select(x => new cartypeVM { parentID = x.parentID, typeID = x.typeID, title = x.title }).ToListAsync();
                     output.lst = types;
                     output.status = 200;
 
@@ -213,7 +213,7 @@ namespace jbar.Controllers
                 {
                     if (model.ID == null)
                     {
-                        List<cartype> types = dbcontext.cartypes.Where(x => x.typeID == x.parentID).ToList();
+                        List<cartypeVM> types = await dbcontext.cartypes.Where(x => x.typeID == x.parentID).Select(x => new cartypeVM { parentID = x.parentID, typeID = x.typeID, title = x.title }).ToListAsync();
                         output.lst = types;
                         output.status = 200;
 
@@ -221,7 +221,7 @@ namespace jbar.Controllers
                     else
                     {
                         Guid myguid = new Guid(model.ID);
-                        List<cartype> types = dbcontext.cartypes.Where(x => x.parentID == myguid && x.typeID != myguid).ToList();
+                        List<cartypeVM> types = await dbcontext.cartypes.Where(x => x.parentID == myguid && x.typeID != myguid).Select(x => new cartypeVM { parentID = x.parentID, typeID = x.typeID, title = x.title }).ToListAsync();
                         output.lst = types;
                         output.status = 200;
 
@@ -237,18 +237,26 @@ namespace jbar.Controllers
         [System.Web.Http.HttpPost]
         public async Task<sendTypeVM> getTypeFull([FromBody] getCityVM model)
         {
+            try
+            {
+                sendTypeVM output = new sendTypeVM();
+                string modelstring = "";
+                using (Context dbcontext = new Context())
+                {
 
-            sendTypeVM output = new sendTypeVM();
-            string modelstring = "";
-            using (Context dbcontext = new Context())
+                    List<cartypeVM> types = await dbcontext.cartypes.Select(x => new cartypeVM { parentID = x.parentID, title = x.title, typeID = x.typeID }).ToListAsync();
+                    output.lst = types;
+                    output.status = 200;
+                }
+                return output;
+            }
+            catch (Exception e)
             {
 
-                List<cartype> types = await dbcontext.cartypes.ToListAsync();
-                output.lst = types;
-                output.status = 200;
+                throw;
             }
 
-            return output;
+
         }
         [System.Web.Http.HttpPost]
         public async Task<sendLoadTypeVM> getLoadType([FromBody] getCityVM model)
@@ -256,28 +264,37 @@ namespace jbar.Controllers
 
             sendLoadTypeVM output = new sendLoadTypeVM();
             string modelstring = "";
-            using (Context dbcontext = new Context())
+            try
+            {
+                using (Context dbcontext = new Context())
+                {
+
+                    if (model == null)
+                    {
+                        List<loadTypeVM> types = await dbcontext.loadTypes.Select(x => new loadTypeVM { loadTypeID = x.loadTypeID, title = x.title }).ToListAsync();
+                        output.lst = types;
+                        output.status = 200;
+
+                    }
+                    else
+                    {
+
+                        List<loadTypeVM> types = await dbcontext.loadTypes.Where(x => x.title.Contains(model.search)).Select(x => new loadTypeVM { loadTypeID = x.loadTypeID, title = x.title }).ToListAsync();
+                        output.lst = types;
+                        output.status = 200;
+                    }
+
+                    return output;
+                }
+            }
+            catch (Exception e)
             {
 
-                if (model == null)
-                {
-                    List<loadType> types = await dbcontext.loadTypes.ToListAsync();
-                    output.lst = types;
-                    output.status = 200;
-
-                }
-                else
-                {
-
-                    List<loadType> types = await dbcontext.loadTypes.Where(x => x.title.Contains(model.search)).ToListAsync();
-                    output.lst = types;
-                    output.status = 200;
-                }
-
-
+                throw;
             }
 
-            return output;
+
+
         }
 
         [System.Web.Http.HttpPost]
@@ -444,8 +461,8 @@ namespace jbar.Controllers
             using (Context dbcontext = new Context())
             {
                 citylist.lst = await dbcontext.cities.Where(x => x.userID == x.parentID).Select(x => new newcity { title = x.title, parentID = x.parentID, userID = x.userID }).ToListAsync();
-                loadList.lst = await dbcontext.loadTypes.ToListAsync();
-                typeList.lst = await dbcontext.cartypes.Where(x => x.parentID != x.typeID).ToListAsync();
+                loadList.lst = await dbcontext.loadTypes.Select(x => new loadTypeVM { loadTypeID = x.loadTypeID, title = x.title }).ToListAsync();
+                typeList.lst = await dbcontext.cartypes.Where(x => x.parentID != x.typeID).Select(x => new cartypeVM { parentID = x.parentID, typeID = x.typeID, title = x.title }).ToListAsync();
                 panelSetOrder fmodel = new panelSetOrder()
                 {
                     cityList = citylist,
@@ -460,6 +477,107 @@ namespace jbar.Controllers
         }
 
         //jbar
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<JObject> setOrder([FromBody] setOrderVM model)
+        {
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            string result = "";
+            Guid userID = new Guid(someObject.ToString());
+            try
+            {
+                using (Context dbcontext = new Context())
+                {
+
+
+                    city origin = dbcontext.cities.SingleOrDefault(x => x.userID == model.originCityID);
+                    city destination = dbcontext.cities.SingleOrDefault(x => x.userID == model.destinCityID);
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+                    HttpClient HttpClient = new HttpClient();
+                    HttpClient.DefaultRequestHeaders.Add("Api-Key", "service.88c9de7768a84c0393b15c115871da47");
+                    string url = "https://api.neshan.org/v1/distance-matrix/no-traffic?type=car&origins=" + origin.lat + "," + origin.lon + "&destinations=" + destination.lat + "," + destination.lon + "";
+                    string page = await HttpClient.GetStringAsync(url);
+                    distancVM distancemodel = JsonConvert.DeserializeObject<distancVM>(page);
+                    int distance = distancemodel.rows.First().elements.First().distance.value;
+
+
+                    user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
+                    List<string> dates = model.date.Trim(',').Split(',').ToList();
+                    DateTime orderdete = dateTimeConvert.UnixTimeStampToDateTime(double.Parse(dates.First()));
+                    Guid orderguid = Guid.NewGuid();
+
+
+
+                    order neworder = new order()
+                    {
+                        clientID = user.userID,
+                        distance = distance,
+                        date = orderdete,
+                        orderdate = DateTime.Now,
+                        description = model.description,
+                        destinCityID = model.destinCityID,
+                        loadAmount = model.loadAmount,
+                        loadingFinishHour = model.loadingFinishHour,
+                        loadingStartHour = model.loadingStartHour,
+                        loadTypeID = new Guid(model.loadTypeID),
+                        orderID = orderguid,
+                        originCityID = model.originCityID,
+                        pricePerTone = model.pricePerTone,
+                        priceTotal = model.priceTotal,
+                        recieveSMS = model.recieveSMS,
+                        showPhone = model.showPhone,
+                        viewCount = 0,
+                        publishDate = orderdete,
+                        orderStatus = "0",
+
+
+
+
+                    };
+                    dbcontext.orders.Add(neworder);
+                    List<string> typeList = model.type.Trim(',').Split(',').ToList();
+                    foreach (var type in typeList)
+                    {
+                        //dbcontext.order.Add(newtype);
+                        //ordertype newtype = new ordertype()
+                        //{
+                        //    orderID = orderguid,
+                        //    ordertypeID = Guid.NewGuid(),
+                        //    typeID = new Guid(type),
+
+                        //};
+
+                    }
+
+                    dbcontext.SaveChanges();
+
+                }
+
+                responseModel mymodel = new responseModel();
+                mymodel.status = 200;
+                mymodel.message = "ok";
+                result = JsonConvert.SerializeObject(mymodel);
+
+
+            }
+            catch (Exception e)
+            {
+
+                responseModel mymodel = new responseModel();
+                mymodel.status = 400;
+                mymodel.message = "Notok";
+                result = JsonConvert.SerializeObject(mymodel);
+            }
+
+
+            JObject jObject = JObject.Parse(result);
+            return jObject;
+        }
+
+
+        //tailor
         //[BasicAuthentication]
         //[System.Web.Http.HttpPost]
         //public async Task<JObject> setOrder([FromBody] setOrderVM model)
@@ -468,74 +586,123 @@ namespace jbar.Controllers
         //    Request.Properties.TryGetValue("UserToken", out someObject);
 
         //    Guid userID = new Guid(someObject.ToString());
-        //    using (Context dbcontext = new Context())
+        //    try
         //    {
-        //        Guid orgincity = new Guid(model.originCityID);
-        //        Guid desctincity = new Guid(model.destinCityID);
-
-        //        city origin = dbcontext.cities.SingleOrDefault(x => x.userID == orgincity);
-        //        city destination = dbcontext.cities.SingleOrDefault(x => x.userID == desctincity);
-        //        ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
-        //        ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-        //        HttpClient HttpClient = new HttpClient();
-        //        HttpClient.DefaultRequestHeaders.Add("Api-Key", "service.88c9de7768a84c0393b15c115871da47");
-        //        string url = "https://api.neshan.org/v1/distance-matrix/no-traffic?type=car&origins=" + origin.lat + "," + origin.lon + "&destinations=" + destination.lat + "," + destination.lon + "";
-        //        string page = await HttpClient.GetStringAsync(url);
-        //        distancVM distancemodel = JsonConvert.DeserializeObject<distancVM>(page);
-        //        int distance = distancemodel.rows.First().elements.First().distance.value;
-
-
-        //        user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
-        //        List<string> dates = model.date.Trim(',').Split(',').ToList();
-        //        DateTime orderdete = dateTimeConvert.UnixTimeStampToDateTime(double.Parse(dates.First()));
-        //        Guid orderguid = Guid.NewGuid();
-
-
-
-        //        order neworder = new order()
+        //        using (Context dbcontext = new Context())
         //        {
-        //            clientID = user.userID,
-        //            distance = distance,
-        //            date = orderdete,
-        //            orderdate = DateTime.Now,
-        //            description = model.description,
-        //            destinCityID = new Guid(model.destinCityID),
-        //            driverID = new Guid(),
-        //            loadAmount = model.loadAmount,
-        //            loadingFinishHour = model.loadingFinishHour,
-        //            loadingStartHour = model.loadingStartHour,
-        //            loadTypeID = new Guid(model.loadTypeID),
-        //            orderID = orderguid,
-        //            originCityID = new Guid(model.originCityID),
-        //            pricePerTone = model.pricePerTone,
-        //            priceTotal = model.priceTotal,
-        //            recieveSMS = model.recieveSMS,
-        //            showPhone = model.showPhone,
-        //            viewCount = 0,
-        //            publishDate = orderdete,
-        //            orderStatus = "0"
 
 
+        //            Guid orgincity = new Guid(model.originCityID);
+        //            Guid desctincity = new Guid(model.destinCityID);
 
-        //        };
-        //        dbcontext.orders.Add(neworder);
-        //        List<string> typeList = model.type.Trim(',').Split(',').ToList();
-        //        foreach (var type in typeList)
-        //        {
-        //            //dbcontext.order.Add(newtype);
-        //            //ordertype newtype = new ordertype()
+        //            city origin = dbcontext.cities.SingleOrDefault(x => x.userID == orgincity);
+        //            city destination = dbcontext.cities.SingleOrDefault(x => x.userID == desctincity);
+        //            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
+        //            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+        //            HttpClient HttpClient = new HttpClient();
+        //            HttpClient.DefaultRequestHeaders.Add("Api-Key", "service.88c9de7768a84c0393b15c115871da47");
+        //            string url = "https://api.neshan.org/v1/distance-matrix/no-traffic?type=car&origins=" + origin.lat + "," + origin.lon + "&destinations=" + destination.lat + "," + destination.lon + "";
+        //            string page = await HttpClient.GetStringAsync(url);
+        //            distancVM distancemodel = JsonConvert.DeserializeObject<distancVM>(page);
+        //            int distance = distancemodel.rows.First().elements.First().distance.value;
+
+
+        //            user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
+        //            List<string> dates = model.date.Trim(',').Split(',').ToList();
+        //            DateTime orderdete = dateTimeConvert.UnixTimeStampToDateTime(double.Parse(dates.First()));
+        //            Guid orderguid = Guid.NewGuid();
+
+
+        //            Guid thirdPartyID = Guid.NewGuid();
+        //            thirdParty th = new thirdParty()
+        //            {
+        //                address = model.address,
+        //                fullname = model.fullname,
+        //                IDNumber = model.IDNumber,
+        //                phone = model.phone,
+        //                Rank = model.Rank,
+        //                unitName = model.unitName,
+        //                ThirdPartyID = thirdPartyID
+        //            };
+        //            dbcontext.thirdParties.Add(th);
+
+        //            order neworder = new order()
+        //            {
+        //                thirdPartyID = thirdPartyID,
+        //                clientID = user.userID,
+        //                distance = 0,
+        //                date = DateTime.Now,
+        //                orderdate = DateTime.Now,
+        //                description = model.comment,
+        //                destinCityID = null,
+        //                driverID = null,
+        //                loadAmount = model.loadAmount,
+        //                loadingFinishHour =model.loadingFinishHour,
+        //                loadingStartHour =   model.loadingStartHour,
+        //                loadTypeID = new Guid(),
+        //                orderID = orderguid,
+        //                originCityID =  orgincity,
+        //                pricePerTone =  model.pricePerTone,
+        //                priceTotal = model.priceTotal,
+        //                recieveSMS = model.recieveSMS,
+        //                showPhone = model.showPhone,
+        //                viewCount = 0,
+        //                publishDate =  orderdete,
+        //                orderStatus = "1",
+        //                video = model.video,
+
+
+        //                beretSize = model.beretSize,
+        //                bieop = model.bieop,
+        //                comment = model.comment,
+        //                chestCirc = model.chestCirc,
+        //                frontLength = model.frontLength,
+        //                fullHeight = model.headCirc,
+        //                headCirc = model.headCirc,
+        //                jacketSize = model.jacketSize,
+        //                jacketWaist = model.jacketWaist,
+        //                jktBLength = model.jktBLength,
+        //                jktHipCirc = model.jktHipCirc,
+        //                neckCirc = model.neckCirc,
+        //                shirtSize = model.shirtSize,
+        //                shoeSize = model.shoeSize,
+        //                sleeveLength = model.sleeveLength,
+        //                troHem = model.troHem,
+        //                troHip = model.troHip,
+        //                troInseam = model.troInseam,
+        //                troLength = model.troLength,
+        //                trouserSize = model.trouserSize,
+        //                troWaist = model.troWaist,
+
+
+        //            };
+        //            dbcontext.orders.Add(neworder);
+        //            //List<string> typeList = model.type.Trim(',').Split(',').ToList();
+        //            //foreach (var type in typeList)
         //            //{
-        //            //    orderID = orderguid,
-        //            //    ordertypeID = Guid.NewGuid(),
-        //            //    typeID = new Guid(type),
+        //            //    //dbcontext.order.Add(newtype);
+        //            //    //ordertype newtype = new ordertype()
+        //            //    //{
+        //            //    //    orderID = orderguid,
+        //            //    //    ordertypeID = Guid.NewGuid(),
+        //            //    //    typeID = new Guid(type),
 
-        //            //};
+        //            //    //};
+
+        //            //}
+
+
+
+        //            await dbcontext.SaveChangesAsync();
 
         //        }
-
-        //        dbcontext.SaveChanges();
-
         //    }
+        //    catch (Exception e)
+        //    {
+
+        //        throw;
+        //    }
+
 
         //    responseModel mymodel = new responseModel();
         //    mymodel.status = 200;
@@ -545,143 +712,6 @@ namespace jbar.Controllers
         //    JObject jObject = JObject.Parse(result);
         //    return jObject;
         //}
-
-
-        //tailor
-        [BasicAuthentication]
-        [System.Web.Http.HttpPost]
-        public async Task<JObject> setOrder([FromBody] setOrderVM model)
-        {
-            object someObject;
-            Request.Properties.TryGetValue("UserToken", out someObject);
-
-            Guid userID = new Guid(someObject.ToString());
-            try
-            {
-                using (Context dbcontext = new Context())
-                {
-
-
-                    //Guid orgincity = new Guid(model.originCityID);
-                    //Guid desctincity = new Guid(model.destinCityID);
-
-                    //city origin = dbcontext.cities.SingleOrDefault(x => x.userID == orgincity);
-                    //city destination = dbcontext.cities.SingleOrDefault(x => x.userID == desctincity);
-                    //ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
-                    //ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-                    //HttpClient HttpClient = new HttpClient();
-                    //HttpClient.DefaultRequestHeaders.Add("Api-Key", "service.88c9de7768a84c0393b15c115871da47");
-                    //string url = "https://api.neshan.org/v1/distance-matrix/no-traffic?type=car&origins=" + origin.lat + "," + origin.lon + "&destinations=" + destination.lat + "," + destination.lon + "";
-                    //string page = await HttpClient.GetStringAsync(url);
-                    //distancVM distancemodel = JsonConvert.DeserializeObject<distancVM>(page);
-                    //int distance = distancemodel.rows.First().elements.First().distance.value;
-
-
-                    user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
-                    //List<string> dates = model.date.Trim(',').Split(',').ToList();
-                    //DateTime orderdete = dateTimeConvert.UnixTimeStampToDateTime(double.Parse(dates.First()));
-                    Guid orderguid = Guid.NewGuid();
-
-
-                    Guid thirdPartyID = Guid.NewGuid();
-                    thirdParty th = new thirdParty()
-                    {
-                        address = model.address,
-                        fullname = model.fullname,
-                        IDNumber = model.IDNumber,
-                        phone = model.phone,
-                        Rank = model.Rank,
-                        unitName = model.unitName,
-                        ThirdPartyID = thirdPartyID
-                    };
-                    dbcontext.thirdParties.Add(th);
-
-                    order neworder = new order()
-                    {
-                        thirdPartyID = thirdPartyID,
-                        clientID = user.userID,
-                        distance = 0,
-                        date = DateTime.Now,
-                        orderdate = DateTime.Now,
-                        description = model.comment,
-                        destinCityID = null,
-                        driverID = null,
-                        loadAmount = 0,// model.loadAmount,
-                        loadingFinishHour = "0", //model.loadingFinishHour,
-                        loadingStartHour = "0",//  model.loadingStartHour,
-                        loadTypeID = new Guid(),
-                        orderID = orderguid,
-                        originCityID = null,// orgincity,
-                        pricePerTone = 0, // model.pricePerTone,
-                        priceTotal = 0,// model.priceTotal,
-                        recieveSMS = "0",//model.recieveSMS,
-                        showPhone = "0",//model.showPhone,
-                        viewCount = 0,
-                        publishDate = DateTime.Now,// orderdete,
-                        orderStatus = "1",
-                        video = model.video,
-
-
-                        beretSize = model.beretSize,
-                        bieop = model.bieop,
-                        comment = model.comment,
-                        chestCirc = model.chestCirc,
-                        frontLength = model.frontLength,
-                        fullHeight = model.headCirc,
-                        headCirc = model.headCirc,
-                        jacketSize = model.jacketSize,
-                        jacketWaist = model.jacketWaist,
-                        jktBLength = model.jktBLength,
-                        jktHipCirc = model.jktHipCirc,
-                        neckCirc = model.neckCirc,
-                        shirtSize = model.shirtSize,
-                        shoeSize = model.shoeSize,
-                        sleeveLength = model.sleeveLength,
-                        troHem = model.troHem,
-                        troHip = model.troHip,
-                        troInseam = model.troInseam,
-                        troLength = model.troLength,
-                        trouserSize = model.trouserSize,
-                        troWaist = model.troWaist,
-
-
-                    };
-                    dbcontext.orders.Add(neworder);
-                    //List<string> typeList = model.type.Trim(',').Split(',').ToList();
-                    //foreach (var type in typeList)
-                    //{
-                    //    //dbcontext.order.Add(newtype);
-                    //    //ordertype newtype = new ordertype()
-                    //    //{
-                    //    //    orderID = orderguid,
-                    //    //    ordertypeID = Guid.NewGuid(),
-                    //    //    typeID = new Guid(type),
-
-                    //    //};
-
-                    //}
-
-
-
-                    await dbcontext.SaveChangesAsync();
-
-                }
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
-
-
-            responseModel mymodel = new responseModel();
-            mymodel.status = 200;
-            mymodel.message = "ok";
-
-            string result = JsonConvert.SerializeObject(mymodel);
-            JObject jObject = JObject.Parse(result);
-            return jObject;
-        }
 
 
         [BasicAuthentication]
@@ -747,7 +777,7 @@ namespace jbar.Controllers
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public getOrderVM getUserOrder([FromBody] setOrderVM model)
+        public async Task< getOrderVM> getUserOrder([FromBody] setOrderVM model)
         {
 
             object someObject;
@@ -760,22 +790,32 @@ namespace jbar.Controllers
             using (Context dbcontext = new Context())
             {
                 List<order> lstorder = dbcontext.orders.ToList();
-                List<orderListVM> lst = (from p in dbcontext.orders
-                                         join c in dbcontext.cities on
-                                         p.originCityID equals c.userID
-                                         join cc in dbcontext.cities on
-                                         p.destinCityID equals cc.userID
-                                         where p.orderStatus == "2" && p.driverID == userID
-                                         select new orderListVM
-                                         {
-                                             orderID = p.orderID.ToString(),
-                                             origin = c.title,
-                                             destin = cc.title,
-                                             pricePerTon = (int)p.pricePerTone,
-                                             priceTotal = (int)p.priceTotal,
-                                             viewNumber = "10"
+                List<orderListVM> lst = await dbcontext.orders.Include(x => x.origincity).Include(x => x.destincity).Where(x => x.driverID == userID).Select(x => new orderListVM
+                {
+                    orderID = x.orderID.ToString(),
+                    origin = x.origincity.title,
+                    destin = x.destincity.title,
+                    pricePerTon = (int)x.pricePerTone,
+                    priceTotal = (int)x.priceTotal,
+                    viewNumber = "10"
 
-                                         }).ToList();
+                }).ToListAsync();
+                //(from p in dbcontext.orders
+                //                         join c in dbcontext.cities on
+                //                         p.originCityID equals c.userID
+                //                         join cc in dbcontext.cities on
+                //                         p.destinCityID equals cc.userID
+                //                         where p.orderStatus == "2" && p.driverID == userID
+                //                         select new orderListVM
+                //                         {
+                //                             orderID = p.orderID.ToString(),
+                //                             origin = c.title,
+                //                             destin = cc.title,
+                //                             pricePerTon = (int)p.pricePerTone,
+                //                             priceTotal = (int)p.priceTotal,
+                //                             viewNumber = "10"
+
+                //                         }).ToList();
 
 
 
@@ -838,9 +878,70 @@ namespace jbar.Controllers
         }
 
 
+        //jbar
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public getOrderVM getOrder([FromBody] setOrderVM model)
+        public async Task<getOrderVM> getOrder([FromBody] setOrderVM model)
+        {
+
+            object someObject;
+            Request.Properties.TryGetValue("UserToken", out someObject);
+
+            Guid userID = new Guid(someObject.ToString());
+
+            getOrderVM mymodel = new getOrderVM();
+
+            using (Context dbcontext = new Context())
+            {
+                List<order> lstorder = dbcontext.orders.ToList();
+                var qlist = dbcontext.orders.Include(x => x.origincity).Include(x => x.destincity).Where(x=>x.orderStatus == "1").AsQueryable();
+
+                if (model != null)
+                {
+                    if (model.originCityID != new Guid("00000000-0000-0000-0000-000000000000"))
+                    {
+
+                        qlist = qlist.Where(x => x.originCityID == model.originCityID);
+                    }
+                    if (model.destinCityID != new Guid("00000000-0000-0000-0000-000000000000"))
+                    {
+
+                        qlist = qlist.Where(x => x.destinCityID == model.destinCityID);
+                    }
+
+                }
+                
+
+                List<orderListVM> lst = await (from p in qlist
+                                               select new orderListVM
+                                               {
+                                                   orderID = p.orderID.ToString(),
+                                                   origin = p.origincity.title,
+                                                   destin = p.destincity.title,
+                                                   pricePerTon = (int)p.pricePerTone,
+                                                   priceTotal = (int)p.priceTotal,
+                                                   viewNumber = "10"
+
+                                               }).ToListAsync();
+
+
+
+
+                mymodel.orderList = lst;
+            }
+
+
+            mymodel.status = 200;
+            mymodel.message = "ok";
+
+
+            return mymodel;
+        }
+
+        //tailor
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<getOrderVM> getOrderTailor([FromBody] setOrderVM model)
         {
 
             object someObject;
@@ -871,16 +972,16 @@ namespace jbar.Controllers
                     qlist = qlist.Where(x => x.date <= to);
                 }
 
-                List<orderListVM> lst = (from p in qlist
-                                         select new orderListVM
-                                         {
-                                             orderID = p.orderID.ToString(),
-                                             address = p.ThirdParty.address,
-                                             fullname = p.ThirdParty.fullname,
-                                             date = p.date,
-                                             status = "",
+                List<orderListVM> lst = await (from p in qlist
+                                               select new orderListVM
+                                               {
+                                                   orderID = p.orderID.ToString(),
+                                                   address = p.ThirdParty.address,
+                                                   fullname = p.ThirdParty.fullname,
+                                                   date = p.date,
+                                                   status = "",
 
-                                         }).ToList();
+                                               }).ToListAsync();
 
 
 
@@ -896,9 +997,12 @@ namespace jbar.Controllers
             return mymodel;
         }
 
+
+        //tailor
+
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public sendDetailVM getOrderDetail([FromBody] orderDetailVM model)
+        public sendDetailVM getOrderDetailTailor([FromBody] orderDetailVM model)
         {
             sendDetailVM result = new sendDetailVM();
             using (Context dbcontext = new Context())
@@ -975,6 +1079,111 @@ namespace jbar.Controllers
             }
             return result;
         }
+
+
+        // jbar
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<sendDetailVM> getOrderDetail([FromBody] orderDetailVM model)
+        {
+            sendDetailVM result = new sendDetailVM();
+            using (Context dbcontext = new Context())
+            {
+                try
+                {
+                    Guid orderGuid = new Guid(model.orderID);
+                    order myorder = await dbcontext.orders.SingleOrDefaultAsync(c => c.orderID == orderGuid);
+                    user client = await dbcontext.users.SingleOrDefaultAsync(x => x.userID == myorder.clientID);
+                    city orginc = await dbcontext.cities.Include(x => x.parentcity).SingleOrDefaultAsync(x => x.userID == myorder.originCityID);
+                    newcity origin = new newcity { lat = orginc.lat, lon = orginc.lon, title = orginc.title + " ( " + orginc.parentcity.title + " ) ", userID = orginc.userID, parentID = orginc.parentID };
+
+
+                    newcity destination = await dbcontext.cities.Include(x => x.parentcity).Select(u => new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + u.parentcity.title + " ) ", userID = u.userID, parentID = u.parentID }).SingleOrDefaultAsync(x => x.userID == myorder.destinCityID);
+
+                    //(from u in dbcontext.cities
+                    //                  join p in dbcontext.cities on u.parentID equals p.userID
+                    //                  where u.userID != u.parentID && u.userID == myorder.originCityID
+                    //                  select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
+
+                    //List<newcity> destination = await (from u in dbcontext.cities
+                    //                                   join p in dbcontext.cities on u.parentID equals p.userID
+                    //                                   where u.userID != u.parentID && u.userID == myorder.destinCityID
+                    //                                   select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToListAsync();
+
+
+                    //List<newtype> types = await (from o in dbcontext.cartypes
+                    //                             join ot in dbcontext.ordertypes on o.typeID equals ot.typeID
+                    //                             join otp in dbcontext.cartypes on o.parentID equals otp.typeID
+                    //                             where ot.orderID == orderGuid
+                    //                             select new newtype { title = otp.title + " - " + o.title }).ToListAsync();
+
+                    List<orderCommentVM> comments = await (from c in dbcontext.comments
+                                                           join u in dbcontext.users on c.userID equals u.userID
+                                                           where c.orderID == orderGuid
+                                                           select new orderCommentVM { clientImage = "https://www.jbar.app/Uploads/" + u.profileImage, clientMark = c.clientMark, clientTitle = u.name, content = c.content, date = c.date }).ToListAsync();
+
+
+                    var qResponse = (from c in dbcontext.orderResponses
+                                     join u in dbcontext.users on c.driverID equals u.userID
+                                     where c.orderID == orderGuid
+                                     select new responsToOrder { driverID = c.driverID.ToString(), phone = u.phone, price = c.price, title = u.name }).AsQueryable();
+
+                    if (myorder.orderStatus == "2")
+                    {
+                        qResponse = qResponse.Where(x => x.driverID == myorder.driverID.ToString());
+                    }
+
+                    List<responsToOrder> orderResponse = await qResponse.ToListAsync();
+                    result.orderRespons = orderResponse;
+                    foreach (var item in comments)
+                    {
+                        item.srtdate = dateTimeConvert.ToPersianDateString(item.date);
+                    }
+                    var sb = new StringBuilder();
+                    sb.Append(Math.Ceiling(myorder.distance / 1000).ToString());
+                    sb.Append("کیلومتر ");
+
+
+                    result.origing = origin;
+                    result.orderStatus = myorder.orderStatus;
+                    result.destination = destination;
+                    result.description = myorder.description;
+                    result.distance = sb.ToString();
+                    result.typeOrderList = new List<newtype>();
+                    result.netTotal = (int)myorder.priceTotal == 0 ? (int)myorder.pricePerTone * (int)myorder.loadAmount : (int)myorder.priceTotal;
+                    result.netPerTon = (int)myorder.pricePerTone;
+                    result.pricePerKiloometre = (int)((int)myorder.priceTotal / (myorder.distance / 1000));
+                    result.comments = comments;
+                    result.returnOrderCount = 5;
+                    result.clientTotalComment = 28;
+                    result.clientMark = 4.2;
+                    result.clientName = client.name;
+                    result.clientStatus = client.status;
+                    result.totalView = 0; // myorder.viewCount;
+                    result.status = 200;
+                    var sb2 = new StringBuilder();
+                    sb2.Append((DateTime.Now - myorder.date).TotalHours);
+                    sb2.Append(" ساعت پیش ");
+
+                    var sb3 = new StringBuilder();
+                    sb3.Append((DateTime.Now - myorder.date).Minutes);
+                    sb3.Append("  دقیقه پیش ");
+                    result.passedTime = (int)(DateTime.Now - myorder.date).TotalHours > 1 ? sb2.ToString() : sb3.ToString();
+
+
+
+                }
+                catch (Exception e)
+                {
+
+
+                }
+                return result;
+            }
+           
+        }
+
+
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
@@ -1069,16 +1278,23 @@ namespace jbar.Controllers
                 try
                 {
                     Guid orderGuid = new Guid(model.orderID);
-                    order myorder = dbcontext.orders.SingleOrDefault(c => c.orderID == orderGuid);
-                    user client = dbcontext.users.SingleOrDefault(x => x.userID == myorder.clientID);
-                    newcity origin = (from u in dbcontext.cities
-                                      join p in dbcontext.cities on u.parentID equals p.userID
-                                      where u.userID != u.parentID && u.userID == myorder.originCityID
-                                      select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
-                    List<newcity> destination = await (from u in dbcontext.cities
-                                                       join p in dbcontext.cities on u.parentID equals p.userID
-                                                       where u.userID != u.parentID && u.userID == myorder.destinCityID
-                                                       select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToListAsync();
+                    order myorder = await dbcontext.orders.SingleOrDefaultAsync(c => c.orderID == orderGuid);
+                    user client = await dbcontext.users.SingleOrDefaultAsync(x => x.userID == myorder.clientID);
+                    city orginc = await dbcontext.cities.Include(x => x.parentcity).SingleOrDefaultAsync(x => x.userID == myorder.originCityID);
+                    newcity origin = new newcity { lat = orginc.lat, lon = orginc.lon, title = orginc.title + " ( " + orginc.parentcity.title + " ) ", userID = orginc.userID, parentID = orginc.parentID };
+
+
+                    newcity destination = await dbcontext.cities.Include(x => x.parentcity).Select(u => new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + u.parentcity.title + " ) ", userID = u.userID, parentID = u.parentID }).SingleOrDefaultAsync(x => x.userID == myorder.destinCityID);
+
+                    //(from u in dbcontext.cities
+                    //                  join p in dbcontext.cities on u.parentID equals p.userID
+                    //                  where u.userID != u.parentID && u.userID == myorder.originCityID
+                    //                  select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToList().First();
+
+                    //List<newcity> destination = await (from u in dbcontext.cities
+                    //                                   join p in dbcontext.cities on u.parentID equals p.userID
+                    //                                   where u.userID != u.parentID && u.userID == myorder.destinCityID
+                    //                                   select new newcity { lat = u.lat, lon = u.lon, title = u.title + " ( " + p.title + " ) ", userID = u.userID, parentID = u.parentID }).ToListAsync();
 
 
                     //List<newtype> types = await (from o in dbcontext.cartypes
@@ -1116,7 +1332,7 @@ namespace jbar.Controllers
 
                     result.origing = origin;
                     result.orderStatus = myorder.orderStatus;
-                    result.destination = destination.First();
+                    result.destination = destination;
                     result.description = myorder.description;
                     result.distance = sb.ToString();
                     result.typeOrderList = new List<newtype>();
@@ -1161,7 +1377,7 @@ namespace jbar.Controllers
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public getDashbaord getDashboard()
+        public async Task<getDashbaord> getDashboard()
         {
 
             getDashbaord obj = new getDashbaord();
@@ -1175,16 +1391,16 @@ namespace jbar.Controllers
                 if (!string.IsNullOrEmpty(user.typeID))
                 {
                     Guid carguid = new Guid(user.typeID);
-                    cartype cartype = dbcontext.cartypes.SingleOrDefault(x => x.typeID == carguid);
+                    cartypeVM cartype =await dbcontext.cartypes.Select(x=> new cartypeVM {  parentID = x.parentID, title = x.title, typeID = x.typeID}).SingleOrDefaultAsync(x => x.typeID == carguid);
                     obj.type = cartype;
                     obj.status = 200;
                 }
                 List<city> citylist = dbcontext.cities.ToList();
-                List<city> citySelected = (from u in dbcontext.cities
+                List<newcity> citySelected = (from u in dbcontext.cities
                                            where u.userID != u.parentID
                                            let distance = u.citypoint.Distance(user.point)
                                            orderby distance ascending
-                                           select u).ToList();
+                                           select new newcity {  title =u.title, parentID = u.parentID, userID = u.userID, lat = u.lat, lon = u.lon}).ToList();
                 obj.origin = citySelected.First();
                 obj.status = 200;
 
@@ -1388,88 +1604,96 @@ namespace jbar.Controllers
         public async Task<JObject> requestOrder([FromBody] requestOrderVM model)
         {
             responseModel mymodel = new responseModel();
-
-            object someObject;
-            Request.Properties.TryGetValue("UserToken", out someObject);
-
-            Guid userID = new Guid(someObject.ToString());
-            Guid orderID = new Guid(model.orderID);
-            using (Context dbcontext = new Context())
+            try
             {
-                orderResponse lastorder = dbcontext.orderResponses.SingleOrDefault(x => x.driverID == userID && x.orderID == orderID);
-                if (lastorder == null)
+                object someObject;
+                Request.Properties.TryGetValue("UserToken", out someObject);
+
+                Guid userID = new Guid(someObject.ToString());
+                Guid orderID = new Guid(model.orderID);
+                using (Context dbcontext = new Context())
                 {
-                    orderResponse rsp = new orderResponse()
+                    orderResponse lastorder = await dbcontext.orderResponses.SingleOrDefaultAsync(x => x.driverID == userID && x.orderID == orderID);
+                    if (lastorder == null)
                     {
-                        orderresponseID = Guid.NewGuid(),
-                        driverID = userID,
-                        orderID = orderID,
-                        price = model.price,
+                        orderResponse rsp = new orderResponse()
+                        {
+                            orderresponseID = Guid.NewGuid(),
+                            driverID = userID,
+                            orderID = orderID,
+                            price = model.price,
+                        };
+                        dbcontext.orderResponses.Add(rsp);
+                    }
+                    else
+                    {
+                        lastorder.price = model.price;
+                    }
+
+                    await dbcontext.SaveChangesAsync();
+                    sendDetailVM modeltosend = new sendDetailVM();
+                    modeltosend.orderID = model.orderID;
+                    string notifString = JsonConvert.SerializeObject(modeltosend);
+                    order order = dbcontext.orders.SingleOrDefault(x => x.orderID == orderID);
+                    user orderclient = dbcontext.users.SingleOrDefault(x => x.userID == order.clientID);
+                    string src = HostingEnvironment.ApplicationPhysicalPath + "\\File\\key.json";
+                    if (FirebaseApp.DefaultInstance == null)
+                    {
+                        FirebaseApp.Create(new AppOptions()
+                        {
+                            Credential = GoogleCredential.FromFile(src),
+                        });
+                    }
+
+
+                    notifVM fm = new notifVM();
+                    fm.data = notifString;
+                    bigStyle big_style = new bigStyle();
+                    big_style.type = "";
+                    titleModel title = new titleModel();
+                    title.text = "orderVerify";
+                    clickAction click_action = new clickAction();
+                    click_action.title = "";
+                    click_action.type = "openapp";
+                    click_action.data = "/home/viewDetail?q=" + orderID;
+                    fm.big_style = big_style;
+                    fm.title = title;
+                    fm.click_action = click_action;
+
+                    string mdljson = JsonConvert.SerializeObject(fm);
+                    Dictionary<string, string> dat = new Dictionary<string, string>();
+                    dat.Add("mydata", mdljson);
+                    var message = new Message()
+                    {
+
+                        Data = dat,
+                        Notification = new Notification
+                        {
+                            Title = "درخواست جدید برای بار شما",
+                            Body = "",
+                        },
+                        Token = orderclient.firebaseToken
                     };
-                    dbcontext.orderResponses.Add(rsp);
-                }
-                else
-                {
-                    lastorder.price = model.price;
-                }
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
+                    var response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
 
-                dbcontext.SaveChanges();
-                sendDetailVM modeltosend = new sendDetailVM();
-                modeltosend.orderID = model.orderID;
-                string notifString = JsonConvert.SerializeObject(modeltosend);
-                order order = dbcontext.orders.SingleOrDefault(x => x.orderID == orderID);
-                user orderclient = dbcontext.users.SingleOrDefault(x => x.userID == order.clientID);
-                string src = HostingEnvironment.ApplicationPhysicalPath + "\\File\\key.json";
-                if (FirebaseApp.DefaultInstance == null)
-                {
-                    FirebaseApp.Create(new AppOptions()
-                    {
-                        Credential = GoogleCredential.FromFile(src),
-                    });
+                    mymodel.status = 200;
+                    mymodel.message = "ok";
                 }
 
 
-                notifVM fm = new notifVM();
-                fm.data = notifString;
-                bigStyle big_style = new bigStyle();
-                big_style.type = "";
-                titleModel title = new titleModel();
-                title.text = "orderVerify";
-                clickAction click_action = new clickAction();
-                click_action.title = "";
-                click_action.type = "openapp";
-                click_action.data = "/home/viewDetail?q=" + orderID;
-                fm.big_style = big_style;
-                fm.title = title;
-                fm.click_action = click_action;
+                string result = JsonConvert.SerializeObject(mymodel);
 
-                string mdljson = JsonConvert.SerializeObject(fm);
-                Dictionary<string, string> dat = new Dictionary<string, string>();
-                dat.Add("mydata", mdljson);
-                var message = new Message()
-                {
-
-                    Data = dat,
-                    Notification = new Notification
-                    {
-                        Title = "درخواست جدید برای بار شما",
-                        Body = "",
-                    },
-                    Token = orderclient.firebaseToken
-                };
-                ServicePointManager.Expect100Continue = true;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-                var response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
-
-                mymodel.status = 200;
-                mymodel.message = "ok";
+                JObject jObject = JObject.Parse(result);
+                return jObject;
             }
+            catch (Exception e)
+            {
 
-
-            string result = JsonConvert.SerializeObject(mymodel);
-
-            JObject jObject = JObject.Parse(result);
-            return jObject;
+                throw;
+            }
+            
         }
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
@@ -1662,43 +1886,53 @@ namespace jbar.Controllers
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public sendProfileVM getProfile()
+        public async Task<sendProfileVM> getProfile()
         {
             object someObject;
             Request.Properties.TryGetValue("UserToken", out someObject);
 
             Guid userID = new Guid(someObject.ToString());
             sendProfileVM mymodel = new sendProfileVM();
-            using (Context dbcontext = new Context())
+            try
             {
-                user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
-
-                string typestring = "";
-                if (!string.IsNullOrEmpty(user.typeID))
+                using (Context dbcontext = new Context())
                 {
-                    Guid typeguid = new Guid(user.typeID);
-                    typestring = dbcontext.cartypes.SingleOrDefault(x => x.typeID == typeguid).title;
+                    user user = await dbcontext.users.SingleOrDefaultAsync(x => x.userID == userID);
+                    userVM modeluser = new userVM { phone = user.phone, username = user.username };
+                    string typestring = "";
+                    if (!string.IsNullOrEmpty(user.typeID))
+                    {
+                        Guid typeguid = new Guid(user.typeID);
+                        typestring = dbcontext.cartypes.SingleOrDefault(x => x.typeID == typeguid).title;
 
+                    }
+
+                    string citystring = "";
+                    if (!string.IsNullOrEmpty(user.cityID))
+                    {
+                        Guid cityguid = new Guid(user.cityID);
+                        citystring = dbcontext.cities.SingleOrDefault(x => x.userID == cityguid).title;
+
+                    }
+
+                    mymodel.user = modeluser;
+
+                    mymodel.status = 200;
+                    mymodel.baseURL = "https://jbar.app/Uploads/";
+                    mymodel.city = citystring;
+                    mymodel.type = typestring;
                 }
 
-                string citystring = "";
-                if (!string.IsNullOrEmpty(user.cityID))
-                {
-                    Guid cityguid = new Guid(user.cityID);
-                    citystring = dbcontext.cities.SingleOrDefault(x => x.userID == cityguid).title;
 
-                }
-                user.point = null;
-                mymodel.user = user;
+                return mymodel;
 
-                mymodel.status = 200;
-                mymodel.baseURL = "https://jbar.app/Uploads/";
-                mymodel.city = citystring;
-                mymodel.type = typestring;
+            }
+            catch (Exception e)
+            {
+
+                throw;
             }
 
-
-            return mymodel;
         }
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
@@ -2125,7 +2359,7 @@ namespace jbar.Controllers
                 var query = from process in dbcontext.processes select process;
                 responseModel.processFormulaList = await dbcontext.processFormulas.Include(x => x.Process).Include(x => x.Coding).Include(x => x.Formula).Where(x => x.proccessID == model.processID).Select(x => new processFormulaVM { codingType = x.transactionType, codingName = x.Coding.title, formulaName = x.Formula.name, processFormulaID = x.processFormulaID, }).ToListAsync();
 
-                responseModel.FormulaList = await dbcontext.formulas.Where(x => x.name != "" && x.name != null && x.processID == model.processID).Select(x => new formulaVM { formulaID = x.formulaID, name = x.name }).ToListAsync();
+                responseModel.FormulaList = await dbcontext.formulas.Where(x => x.name != "" && x.name != null).Select(x => new formulaVM { formulaID = x.formulaID, name = x.name }).ToListAsync();
                 responseModel.codingList = await dbcontext.codings.Where(x => x.userID == userID).OrderBy(x => x.codeHesab).Select(x => new codingVM { codingID = x.codingID, title = x.title + "(" + x.codeHesab + ")" }).ToListAsync();
 
             }
@@ -2224,8 +2458,8 @@ namespace jbar.Controllers
                 {
                     var query = from process in dbcontext.processes select process;
                     process q = await dbcontext.processes.Include(x => x.formList).SingleOrDefaultAsync(x => x.processID == model.processID);
-                    responseModel.processFormList = q.formList.Select(x => new processFormVM {  processFormID = x.formID, title = x.title }).ToList();
-                    responseModel.allForm = await dbcontext.forms.Select(x => new processFormVM {  processFormID = x.formID, title = x.title }).ToListAsync();
+                    responseModel.processFormList = q.formList.Select(x => new processFormVM { processFormID = x.formID, title = x.title }).ToList();
+                    responseModel.allForm = await dbcontext.forms.Select(x => new processFormVM { processFormID = x.formID, title = x.title }).ToListAsync();
 
                 }
             }
@@ -2253,7 +2487,7 @@ namespace jbar.Controllers
 
                 using (Context dbcontext = new Context())
                 {
-                    process pr = await dbcontext.processes.Include(x=>x.formList).SingleOrDefaultAsync(x => x.processID == model.processID);
+                    process pr = await dbcontext.processes.Include(x => x.formList).SingleOrDefaultAsync(x => x.processID == model.processID);
                     form frm = await dbcontext.forms.SingleOrDefaultAsync(x => x.formID == model.formID);
                     if (!pr.formList.Contains(frm))
                     {
@@ -2267,18 +2501,18 @@ namespace jbar.Controllers
                         mymodel.status = 400;
                         mymodel.message = "آیتم تکراری";
                     }
-                   
-                   
+
+
 
                 }
 
-               
+
             }
             catch (Exception)
             {
                 mymodel.status = 400;
                 mymodel.message = "خطا";
-                
+
             }
             string result = JsonConvert.SerializeObject(mymodel);
             JObject jObject = JObject.Parse(result);
@@ -2302,7 +2536,7 @@ namespace jbar.Controllers
             {
                 using (Context dbcontext = new Context())
                 {
-                    
+
                     var query = dbcontext.formItems.Where(x => x.formID == model.formID).Include(x => x.FormItemDesign).Include(x => x.op).Include(x => x.FormItemType).Select(x => new formItemVM { formID = x.formID, UIName = x.FormItemDesign.title, formItemDesingID = x.FormItemDesign.formItemDesignID, formItemTypeID = x.formItemTypeID, optionSelected = x.OptionID, collectionName = x.op.title, formItemTypeTitle = x.FormItemType.title, itemDesc = x.itemDesc, catchUrl = x.catchUrl, formItemID = x.formItemID, isMultiple = x.isMultiple, itemName = x.itemName, itemPlaceholder = x.itemPlaceholder, itemtImage = "Uploads/" + x.itemtImage, mediaType = x.mediaType });
                     responseModel.formItemList = await query.ToListAsync();
 
@@ -2497,7 +2731,7 @@ namespace jbar.Controllers
                     Guid id1 = prc.formList.FirstOrDefault().formID;
                     Guid id2 = prc.formList.Skip(1).FirstOrDefault().formID;
                     formItemType frt = await dbcontext.formItemTypes.SingleOrDefaultAsync(x => x.title == "آیتم عددی");
-                    var query1 = from formItem in dbcontext.formItems where (formItem.formID == id1 || formItem.formID == id2) && formItem.formItemTypeID == frt.formItemTypeID select new formItemVM { itemDesc = formItem.itemDesc, formItemID = formItem.formItemID };
+                    var query1 = from formItem in dbcontext.formItems where formItem.formItemTypeID == frt.formItemTypeID select new formItemVM { itemDesc = formItem.itemDesc, formItemID = formItem.formItemID };
                     var query2 = from namad in dbcontext.namads select new namadVM { namadID = namad.namadID, title = namad.value };
                     model.formulaList = formulas;
                     model.formItemList = await query1.ToListAsync();
@@ -3195,7 +3429,7 @@ namespace jbar.Controllers
                 user user = dbcontext.users.SingleOrDefault(x => x.userID == userID);
 
                 obj.yadakList = await dbcontext.yadaks.Include(x => x.Cartype).Include(x => x.yadakStatus).Select(v => new yadakVM { loadtype = v.Cartype.title, status = v.yadakStatus.title, yadakID = v.yadakID, yadakNumber = v.yadakNumber }).ToListAsync();
-                obj.typeList = await (from l in dbcontext.cartypes select new cartypeVM { title = l.title, typeID = l.typeID }).ToListAsync();
+                obj.typeList = await (from l in dbcontext.cartypes select new cartypeVM { parentID = l.parentID, title = l.title, typeID = l.typeID }).ToListAsync();
                 obj.slist = await dbcontext.yadakStatuses.Where(x => x.userID == userID).Select(m => new vehicleSatatusVM { statid = m.yadakStatusID, title = m.title }).ToListAsync();
 
             }
@@ -3343,7 +3577,7 @@ namespace jbar.Controllers
                 productActionVM model = new productActionVM();
                 using (Context dbcontext = new Context())
                 {
-                    var products = await dbcontext.products.Where(x => x.userID == userID).Include(x => x.Tags).Include(x => x.ProductTypes).Take(12).ToListAsync();
+                    var products = await dbcontext.products.Where(x => x.userID == userID).Include(x=>x.productTypes).Include(x => x.Tags).ToListAsync();//.Include(x => x.productType)
                     List<productVM> finallst = new List<productVM>();
                     foreach (var x in products)
                     {
@@ -3353,15 +3587,16 @@ namespace jbar.Controllers
                             code = x.code,
                             productID = x.productID,
                             title = x.title,
-                            productTypesrt = String.Join(", ", x.ProductTypes.Select(t => t.title)),
+                            //productTypesrt = x.productType.title,
                             tagsrt = String.Join(", ", x.Tags.Select(t => t.title)),
+                             productTypesrt = String.Join(", ", x.productTypes.Select(t => t.title)),
 
                         };
                         finallst.Add(vmproducts);
 
                     };
                     model.productList = finallst;
-                    model.productTypeList = await dbcontext.productTypes.Where(x => x.userID == userID).Select(x => new productTypeVM { productTypeID = x.productTypeID, title = x.title, parentID = x.parentID }).ToListAsync();
+                    model.productTypeList = await dbcontext.productTypes.Select(x => new productTypeVM { productTypeID = x.productTypeID, title = x.title, parentID = x.parentID }).ToListAsync();
                     model.taglist = await dbcontext.tags.Where(x => x.userID == userID).Select(x => new tagVM { tagID = x.tagID, title = x.title }).ToListAsync();
                     return model;
 
@@ -3393,17 +3628,23 @@ namespace jbar.Controllers
                     {
                         Guid productID = Guid.NewGuid();
                         product myproduct = new product() { userID = userID, productID = productID, address = model.address, barcode = model.barcode, code = model.code, title = model.title };
+                        dbcontext.products.Add(myproduct);
+                        await dbcontext.SaveChangesAsync();
+                        product selectedproduct = await dbcontext.products.Include(x=>x.productTypes).Include(x=>x.Tags).SingleOrDefaultAsync(x => x.productID == productID);
                         foreach (var item in model.productTypeID)
                         {
                             productType prt = await dbcontext.productTypes.SingleOrDefaultAsync(x => x.productTypeID == item);
-                            myproduct.ProductTypes.Add(prt);
+                            selectedproduct.productTypes.Add(prt);
+
+
                         }
                         foreach (var item in model.produtTagID)
                         {
                             tag prt = await dbcontext.tags.SingleOrDefaultAsync(x => x.tagID == item);
-                            myproduct.Tags.Add(prt);
+                            selectedproduct.Tags.Add(prt);
+
                         }
-                        dbcontext.products.Add(myproduct);
+                        
                         await dbcontext.SaveChangesAsync();
 
                         mymodel.status = 200;
@@ -3815,7 +4056,7 @@ namespace jbar.Controllers
                     var form = await dbcontext.forms.FirstOrDefaultAsync(i => i.title == model.title);
                     if (form == null)
                     {
-                        dbcontext.forms.Add(new form() { userID = userID,  formID = Guid.NewGuid(), title = model.title });
+                        dbcontext.forms.Add(new form() { userID = userID, formID = Guid.NewGuid(), title = model.title });
                         await dbcontext.SaveChangesAsync();
 
                         mymodel.status = 200;
@@ -3840,15 +4081,15 @@ namespace jbar.Controllers
             }
 
         }
-        
+
 
         // formDetailAPI
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public async Task<formFullDetailVM> setFormDetail(setFormDetailVM model)
+        public async Task<responseModel> setFormDetail([FromBody] setFormDetailVM model)
         {
             object someObject;
-            formFullDetailVM responseModel = new formFullDetailVM();
+            responseModel responseModel = new responseModel();
 
             Request.Properties.TryGetValue("UserToken", out someObject);
             Guid userID = new Guid(someObject.ToString());
@@ -3860,49 +4101,95 @@ namespace jbar.Controllers
 
 
                     //form formModel = await dbcontext.forms.SingleOrDefaultAsync(x => x.formID == model.formID);
-                    if (model.orderID == null)
+
+                    if (model.orderID != null)
                     {
-                        // یک نیو اردر ایجاد میکنیم
-
-                        newOrderStatu neworderstatus = await dbcontext.newOrderStatus.SingleOrDefaultAsync(x => x.statusCode == "1");
-                        //Guid thirdPartyGUID = Guid.NewGuid();
-                        //thirdParty thirdParty = new thirdParty()
-                        //{
-                        //    fullname = model.formDetailList.SingleOrDefault(x => x.key == "thirdPartyName").value,
-                        //    address = model.formDetailList.SingleOrDefault(x => x.key == "thirdPartyAddress").value,
-                        //    phone = model.formDetailList.SingleOrDefault(x => x.key == "thirdPartyPhone").value,
-                        //    ThirdPartyID = thirdPartyGUID,
-                        //};
-                        //dbcontext.thirdParties.Add(thirdParty);
-
-
-                        model.orderID = Guid.NewGuid();
-                        newOrder neworder = new newOrder()
+                        if (model.orderID == new Guid("00000000-0000-0000-0000-000000000000"))
                         {
-                            creationDate = DateTime.Now,
-                            terminationDate = DateTime.Now,
-                            newOrderID = model.orderID,
-                            newOrderStatusID = neworderstatus.newOrderStatusID,
-                            //thirdPartyID = thirdPartyGUID,
-                        };
-                        dbcontext.NewOrders.Add(neworder);
+                            // یک نیو اردر ایجاد میکنیم
 
-                        await dbcontext.SaveChangesAsync();
-                    }
+                            newOrderStatus neworderstatus = await dbcontext.newOrderStatuses.SingleOrDefaultAsync(x => x.statusCode == "1");
+                            //Guid thirdPartyGUID = Guid.NewGuid();
+                            //thirdParty thirdParty = new thirdParty()
+                            //{
+                            //    fullname = model.formDetailList.SingleOrDefault(x => x.key == "thirdPartyName").value,
+                            //    address = model.formDetailList.SingleOrDefault(x => x.key == "thirdPartyAddress").value,
+                            //    phone = model.formDetailList.SingleOrDefault(x => x.key == "thirdPartyPhone").value,
+                            //    ThirdPartyID = thirdPartyGUID,
+                            //};
+                            //dbcontext.thirdParties.Add(thirdParty);
+
+
+                            model.orderID = Guid.NewGuid();
+                            newOrder neworder = new newOrder()
+                            {
+                                creationDate = DateTime.Now,
+                                terminationDate = DateTime.Now,
+                                newOrderID = model.orderID,
+                                newOrderStatusID = neworderstatus.newOrderStatusID,
+                                orderName = model.name
+                                //thirdPartyID = thirdPartyGUID,
+                            };
+                            newOrder checkorder = await dbcontext.NewOrders.SingleOrDefaultAsync(x => x.orderName == model.name);
+                            if (checkorder == null)
+                            {
+                                dbcontext.NewOrders.Add(neworder);
+                            }
+                            else
+                            {
+                                responseModel.status = 400;
+                                responseModel.message = "سفارش تکراری است";
+                                return responseModel;
+                            }
+
+
+                            await dbcontext.SaveChangesAsync();
+                        }
+                    }// 
+
+
 
                     newOrder orderSelected = await dbcontext.NewOrders.SingleOrDefaultAsync(x => x.newOrderID == model.orderID);
+                    newOrderStatus stat = await dbcontext.newOrderStatuses.SingleOrDefaultAsync(x => x.statusCode == "1");
+                    orderSelected.newOrderStatusID = stat.newOrderStatusID;
 
-                    Guid newFlowID = Guid.NewGuid();
-                    newOrderFlow newOrderFlow = new newOrderFlow()
+                    if ( model.processID != null ) //
                     {
-                        creationDate = DateTime.Now,
-                        processID = model.processID,
-                        isFinished = "1",
-                        newOrderID = model.orderID,
-                        newOrderFlowID = newFlowID,
-                        ServentID = userID,
-                        terminationDate = DateTime.Now,
-                    };
+                        if (model.processID == new Guid("00000000-0000-0000-0000-000000000000"))
+                        {
+                            process pr = await dbcontext.processes.Include(x => x.formList).Include(x => x.formList.Select(t => t.FormItems)).SingleOrDefaultAsync(x => x.isDefault == "1");
+                            model.processID = pr.processID;
+                        }
+
+                    }
+                    Guid newFlowID = Guid.NewGuid();
+                    if (model.flowID != null) //
+                    {
+                        if (model.flowID != new Guid("00000000-0000-0000-0000-000000000000"))
+                        {
+                            newOrderFlow newOrderFlow = new newOrderFlow()
+                            {
+                                creationDate = DateTime.Now,
+
+                                processID = model.processID,
+                                isFinished = "1",
+                                newOrderID = model.orderID,
+                                newOrderFlowID = newFlowID,
+                                ServentID = userID,
+                                terminationDate = DateTime.Now,
+                            };
+                            dbcontext.newOrderFlows.Add(newOrderFlow);
+                        }
+                       
+                    }
+                    else
+                    {
+                        newOrderFlow selectedflow = await dbcontext.newOrderFlows.FirstOrDefaultAsync(x => x.newOrderFlowID == model.flowID);
+                        selectedflow.isFinished = "1";
+                        newFlowID = model.flowID;
+                    }
+
+                    await dbcontext.SaveChangesAsync();
                     List<detailCollection> lstform = JsonConvert.DeserializeObject<List<detailCollection>>(model.formDetailList);
                     foreach (var item in lstform)
                     {
@@ -3938,6 +4225,12 @@ namespace jbar.Controllers
                         fieldItem.newOrderFieldsID = Guid.NewGuid();
                         fieldItem.newOrderFlowID = newFlowID;
                         fieldItem.usedFeild = fieldToGo;
+                        fieldItem.valueInt = 0;
+                        fieldItem.valueDuoble = 0;
+                        fieldItem.valueDateTime = DateTime.Now;
+                        fieldItem.valueBool = false;
+                        fieldItem.valueGuid = new Guid();
+
                         if (fieldToGo == "valueBool")
                             fieldItem.valueBool = Boolean.Parse(item.value);
                         if (fieldToGo == "valueString")
@@ -3951,10 +4244,13 @@ namespace jbar.Controllers
 
 
                         dbcontext.newOrderFields.Add(fieldItem);
-                        await dbcontext.SaveChangesAsync();
+
                     }
 
+                    await dbcontext.SaveChangesAsync();
 
+                    responseModel.status = 200;
+                    responseModel.message = "";
 
 
 
@@ -3963,7 +4259,9 @@ namespace jbar.Controllers
             catch (Exception e)
             {
 
-                throw;
+                responseModel.status = 400;
+                responseModel.message = e.InnerException.Message;
+                return responseModel;
             }
 
             return responseModel;
@@ -3971,7 +4269,7 @@ namespace jbar.Controllers
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public async Task<listOfFormVM> formFullDetailInsert(formFullDetailRequest model)
+        public async Task<listOfFormVM> formFullDetailInsert([FromBody] formFullDetailRequest model)
         {
             object someObject;
             formFullDetailVM responseModel = new formFullDetailVM();
@@ -3986,24 +4284,36 @@ namespace jbar.Controllers
                 {
 
                     process process = new process();
-                    
-                    if (model == null)
+
+                    if (model != null)
                     {
-                        process = await dbcontext.processes.Include(x=>x.formList).Include(x => x.formList.Select(t => t.FormItems)).SingleOrDefaultAsync(x => x.isDefault == "1");
+                        if (model.processID == new Guid("00000000-0000-0000-0000-000000000000"))
+                        {
+                            process = await dbcontext.processes.Include(x => x.formList).Include(x => x.formList.Select(t => t.FormItems)).SingleOrDefaultAsync(x => x.isDefault == "1");
+                        }
+
+                        else
+                        {
+                            process = await dbcontext.processes.Include(x => x.formList).Include(x => x.formList.Select(t => t.FormItems)).SingleOrDefaultAsync(x => x.processID == model.processID);
+                        }
                     }
                     else
                     {
-                        process = await dbcontext.processes.Include(x => x.formList).Include(x=> x.formList.Select(t=>t.FormItems)).SingleOrDefaultAsync(x => x.processID == model.processID);
+                        process = await dbcontext.processes.Include(x => x.formList).Include(x => x.formList.Select(t => t.FormItems)).SingleOrDefaultAsync(x => x.isDefault == "1");
+
+
                     }
-                   
-                    
-                    
+
+
+
+
+
                     foreach (var form in process.formList)
                     {
                         formItemList fil = new formItemList();
                         fil.formID = form.formID;
                         fil.formTitle = form.title;
-                        fil.formItemDetailList =  await dbcontext.formItems.Where(x => x.formID == form.formID).Include(x => x.FormItemDesign).Include(x => x.op).Include(x => x.op.childList).Include(x => x.FormItemType).Select(x => new formFullDetailItemVM {  formItemTypeCode = x.FormItemType.formItemTypeCode,  orderOptions = x.op.childList.Where(x=>x.parentID != x.orderOptionID).Select(t => new orderOptionVM { parentID = t.parentID, image = t.image, orderOptionID = t.orderOptionID, title = t.title }).ToList(), UIName = x.FormItemDesign.title, formItemDesingID = x.FormItemDesign.formItemDesignID, formItemTypeID = x.formItemTypeID, optionSelected = x.OptionID, collectionName = x.op.title, formItemTypeTitle = x.FormItemType.title, itemDesc = x.itemDesc, catchUrl = x.catchUrl, formItemID = x.formItemID, isMultiple = x.isMultiple, itemName = x.itemName, itemPlaceholder = x.itemPlaceholder, itemtImage = "Uploads/" + x.itemtImage, mediaType = x.mediaType }).ToListAsync();
+                        fil.formItemDetailList = await dbcontext.formItems.Where(x => x.formID == form.formID).Include(x => x.FormItemDesign).Include(x => x.op).Include(x => x.op.childList).Include(x => x.FormItemType).Select(x => new formFullDetailItemVM { formItemTypeCode = x.FormItemType.formItemTypeCode, orderOptions = x.op.childList.Where(x => x.parentID != x.orderOptionID).Select(t => new orderOptionVM { parentID = t.parentID, image = t.image, orderOptionID = t.orderOptionID, title = t.title }).ToList(), UIName = x.FormItemDesign.title, formItemDesingID = x.FormItemDesign.formItemDesignID, formItemTypeID = x.formItemTypeID, optionSelected = x.OptionID, collectionName = x.op.title, formItemTypeTitle = x.FormItemType.title, itemDesc = x.itemDesc, catchUrl = x.catchUrl, formItemID = x.formItemID, isMultiple = x.isMultiple, itemName = x.itemName, itemPlaceholder = x.itemPlaceholder, itemtImage = "Uploads/" + x.itemtImage, mediaType = x.mediaType }).ToListAsync();
                         formList.Add(fil);
                     }
 
@@ -4023,7 +4333,7 @@ namespace jbar.Controllers
 
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public async Task<listOfFormVM> formFullDetailView(formFullDetailRequest model)
+        public async Task<listOfFormVM> formFullDetailView([FromBody] formFullDetailRequest model)
         {
             object someObject;
             formFullDetailVM responseModel = new formFullDetailVM();
@@ -4036,7 +4346,7 @@ namespace jbar.Controllers
             {
                 using (Context dbcontext = new Context())
                 {
-
+                    List<newOrderFields> insertedFields = await dbcontext.newOrderFields.Where(x => x.newOrderFlowID == model.flowID).ToListAsync();
                     process process = new process();
 
                     if (model == null)
@@ -4052,10 +4362,21 @@ namespace jbar.Controllers
 
                     foreach (var form in process.formList)
                     {
+
+
+
                         formItemList fil = new formItemList();
                         fil.formID = form.formID;
                         fil.formTitle = form.title;
-                        fil.formItemDetailList = await dbcontext.formItems.Where(x => x.formID == form.formID).Include(x => x.FormItemDesign).Include(x => x.op).Include(x => x.op.childList).Include(x => x.FormItemType).Select(x => new formFullDetailItemVM { orderOptions = x.op.childList.Select(t => new orderOptionVM { parentID = t.parentID, image = t.image, orderOptionID = t.orderOptionID, title = t.title }).ToList(), UIName = x.FormItemDesign.title, formItemDesingID = x.FormItemDesign.formItemDesignID, formItemTypeID = x.formItemTypeID, optionSelected = x.OptionID, collectionName = x.op.title, formItemTypeTitle = x.FormItemType.title, itemDesc = x.itemDesc, catchUrl = x.catchUrl, formItemID = x.formItemID, isMultiple = x.isMultiple, itemName = x.itemName, itemPlaceholder = x.itemPlaceholder, itemtImage = "Uploads/" + x.itemtImage, mediaType = x.mediaType }).ToListAsync();
+                        fil.formItemDetailList = await dbcontext.formItems.Where(x => x.formID == form.formID).Include(x => x.FormItemDesign).Include(x => x.op).Include(x => x.op.childList).Include(x => x.FormItemType).Select(x => new formFullDetailItemVM { orderOptions = x.op.childList.Where(x => x.parentID != x.orderOptionID).Select(t => new orderOptionVM { parentID = t.parentID, image = t.image, orderOptionID = t.orderOptionID, title = t.title }).ToList(), UIName = x.FormItemDesign.title, formItemDesingID = x.FormItemDesign.formItemDesignID, formItemTypeID = x.formItemTypeID, optionSelected = x.OptionID, collectionName = x.op.title, formItemTypeCode = x.FormItemType.formItemTypeCode, formItemTypeTitle = x.FormItemType.title, itemDesc = x.itemDesc, catchUrl = x.catchUrl, formItemID = x.formItemID, isMultiple = x.isMultiple, itemName = x.itemName, itemPlaceholder = x.itemPlaceholder, itemtImage = "Uploads/" + x.itemtImage, mediaType = x.mediaType }).ToListAsync();
+                        foreach (var item in fil.formItemDetailList)
+                        {
+                            newOrderFields filed = insertedFields.SingleOrDefault(x => x.formItemID == item.formItemID);
+                            var nameOfProperty = filed.usedFeild;
+                            var propertyInfo = filed.GetType().GetProperty(nameOfProperty);
+                            var value = propertyInfo.GetValue(filed, null);
+                            item.itemValue = value.ToString();
+                        }
                         formList.Add(fil);
                     }
 
@@ -4086,7 +4407,30 @@ namespace jbar.Controllers
             {
                 using (Context dbcontext = new Context())
                 {
-                    response.flowList = await dbcontext.OrderFlows.Where(x => x.ServentID == userID).Include(x => x.NewOrder).Include(x => x.newOrderProcess).Select(x => new orderFlowVM {  processID = x.newOrderProcess.processID, orderID = x.NewOrder.newOrderID, isFinished = x.isFinished, flowID = x.newOrderFlowID, processName = x.newOrderProcess.title, orderName = x.NewOrder.orderName }).ToListAsync();
+                    response.flowList = await dbcontext.newOrderFlows.Where(x => x.ServentID == userID).Include(x => x.NewOrder).Include(x => x.newOrderProcess).Select(x => new orderFlowVM { processID = x.newOrderProcess.processID, orderID = x.NewOrder.newOrderID, isFinished = x.isFinished, flowID = x.newOrderFlowID, processName = x.newOrderProcess.title, orderName = x.NewOrder.orderName }).ToListAsync();
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+            return response;
+        }
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<userFlowVM> getOrderFlow([FromBody] newOrder model)
+        {
+            object someObject;
+            formFullDetailVM responseModel = new formFullDetailVM();
+            userFlowVM response = new userFlowVM();
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            Guid userID = new Guid(someObject.ToString());
+            try
+            {
+                using (Context dbcontext = new Context())
+                {
+                    response.flowList = await dbcontext.newOrderFlows.Where(x => x.newOrderID == model.newOrderID).Include(x => x.NewOrder).Include(x => x.newOrderProcess).Select(x => new orderFlowVM { processID = x.newOrderProcess.processID, orderID = x.NewOrder.newOrderID, isFinished = x.isFinished, flowID = x.newOrderFlowID, processName = x.newOrderProcess.title, orderName = x.NewOrder.orderName }).ToListAsync();
                 }
             }
             catch (Exception)
@@ -4098,18 +4442,90 @@ namespace jbar.Controllers
         }
         [BasicAuthentication]
         [System.Web.Http.HttpPost]
-        public async Task<userFlowVM> getOrderFlow(newOrder model)
+        public async Task<flowCostVM> getFlowCost([FromBody] getFlowCost model)
         {
             object someObject;
             formFullDetailVM responseModel = new formFullDetailVM();
-            userFlowVM response = new userFlowVM();
+            flowCostVM response = new flowCostVM();
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            Guid userID = new Guid(someObject.ToString());
+            try
+            {
+               
+                using (Context dbcontext = new Context())
+                {
+                    response.codingList = await dbcontext.codings.Where(x => x.inList == "1").Select(x => new codingVM { title = x.title, codingID = x.codingID }).ToListAsync();
+                    response.productList = await dbcontext.products.Select(x => new productVM { title = x.title, productID = x.productID }).ToListAsync();
+                    response.flowCodingList = await dbcontext.flowCodings.Where(x=>x.flowID == model.flowID).Include(x=>x.coding).Select(x => new flowCodingVM {  amount = x.amount,  codingTitle = x.coding.title }).ToListAsync();
+                    response.flowProductList = await dbcontext.flowProducts.Where(x=>x.flowID == model.flowID).Include(x=>x.product).Select(x => new flowProductVM {  amount = x.amount,  productTitle = x.product.title }).ToListAsync();
+
+                    return response;
+                }
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
+
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<responseModel> setFlowCoding([FromBody] setFlowCodingVM model)
+        {
+            object someObject;
+            responseModel responseModel = new responseModel();
             Request.Properties.TryGetValue("UserToken", out someObject);
             Guid userID = new Guid(someObject.ToString());
             try
             {
                 using (Context dbcontext = new Context())
                 {
-                    response.flowList = await dbcontext.OrderFlows.Where(x => x.newOrderID == model.newOrderID).Include(x => x.NewOrder).Include(x => x.newOrderProcess).Select(x => new orderFlowVM { processID = x.newOrderProcess.processID, orderID = x.NewOrder.newOrderID, isFinished = x.isFinished, flowID = x.newOrderFlowID, processName = x.newOrderProcess.title, orderName = x.NewOrder.orderName }).ToListAsync();
+                    flowCoding flc = new flowCoding()
+                    {
+                        amount = model.amount,
+                        CodingID = model.codingID,
+                        flowID = model.flowID,
+                        flowCodingID = Guid.NewGuid(),
+                        date = DateTime.Now,
+                    };
+                    dbcontext.flowCodings.Add(flc);
+                    await dbcontext.SaveChangesAsync();
+                    responseModel.status = 200;
+                    responseModel.message = "";
+                }
+            }
+            catch (Exception)
+            {
+                responseModel.status = 400;
+                responseModel.message = "";
+                throw;
+            }
+            return responseModel;
+        }
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<responseModel> setFlowProduct([FromBody] setFlowProductVM model)
+        {
+            object someObject;
+            responseModel responseModel = new responseModel();
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            Guid userID = new Guid(someObject.ToString());
+            try
+            {
+                using (Context dbcontext = new Context())
+                {
+                    flowProduct flc = new flowProduct()
+                    {
+                        amount = model.amount,
+                        productID = model.productID,
+                        flowID = model.flowID,
+                        flowCodingID = Guid.NewGuid(),
+                        date = DateTime.Now,
+                    };
+                    dbcontext.flowProducts.Add(flc);
+                    await dbcontext.SaveChangesAsync();
                 }
             }
             catch (Exception)
@@ -4117,11 +4533,132 @@ namespace jbar.Controllers
 
                 throw;
             }
-            return response;
+            return responseModel;
+        }
+        // manger 
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<newOrderSearchVM> getNewOrderSearch()
+        {
+            object someObject;
+
+            userFlowVM response = new userFlowVM();
+            Request.Properties.TryGetValue("UserToken", out someObject);
+            Guid userID = new Guid(someObject.ToString());
+            newOrderSearchVM model = new newOrderSearchVM();
+            try
+            {
+                using (Context dbcontext = new Context())
+                {
+                    model.processList = await dbcontext.processes.Select(x => new processVM { processID = x.processID, title = x.title }).ToListAsync();
+                    model.statusList = await dbcontext.newOrderStatuses.Select(x => new newOrderStatusVM { orderStatusID = x.newOrderStatusID, orderStatusTitle = x.title }).ToListAsync();
+
+                    model.codrivers = await dbcontext.users.Where(x => x.barbariID == userID).Include(x => x.vehicle).Include(x => x.workingStatus).Include(x => x.verifyStatus).Select(item => new codrivervm
+                    {
+                        did = item.userID,
+                        dname = item.name,
+                        //plateNumber = item.vehicle != null ? "" : item.vehicle.iran + " ایران " + " " + item.vehicle.pelak2 + " " + item.vehicle.pelakHarf + " " + item.vehicle.pelak1,
+                        phone = item.phone,
+                        verifyStatus = item.verifyStatus != null ? item.verifyStatus.title : "",
+                        workingStatus = item.workingStatus != null ? item.workingStatus.title : ""
+
+                    }).ToListAsync();
+                    return model;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<newOrderList> getManagerOrder([FromBody] manageOrderVM model)
+        {
 
-       
+            try
+            {
+                newOrderList responseModel = new newOrderList();
+                using (Context dbcontext = new Context())
+                {
+
+                    var q = dbcontext.NewOrders.Include(x => x.newOrderStatus).Include(x => x.ThirdParty).AsQueryable();
+                    if (model != null)
+                    {
+                        if (model.processID != new Guid("00000000-0000-0000-0000-000000000000"))
+                        {
+
+                            List<Guid> orderlist = await dbcontext.newOrderFlows.Where(x => x.isFinished != "1" && x.processID == model.processID).Select(x => x.newOrderID).ToListAsync();
+                            q = q.Where(x => orderlist.Contains(x.newOrderID));
+                        }
+                        if (model.orderStatusID != new Guid("00000000-0000-0000-0000-000000000000"))
+                        {
+                            q = q.Where(x => x.newOrderStatusID == model.orderStatusID);
+                        }
+                    }
+
+                    responseModel.list = await q.Select(x => new newOrderVM { newOrderStatusCode = x.newOrderStatus.statusCode, creationDate = x.creationDate, newOrderID = x.newOrderID, orderName = x.orderName, terminationDate = x.terminationDate, thirdPartyTitle = x.ThirdParty == null ? "" : x.ThirdParty.fullname, newOrderStatusTitle = x.newOrderStatus == null ? "" : x.newOrderStatus.title }).ToListAsync();
+                    return responseModel;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        [BasicAuthentication]
+        [System.Web.Http.HttpPost]
+        public async Task<responseModel> setNewFlow([FromBody] newFlowVM model)
+        {
+            responseModel response = new responseModel();
+            try
+            {
+                using (Context dbcontext = new Context())
+                {
+                    Guid newFlowID = Guid.NewGuid();
+                    newOrderFlow newOrderFlow = new newOrderFlow()
+                    {
+                        creationDate = DateTime.Now,
+                        processID = model.processID,
+                        isFinished = "0",
+                        newOrderID = model.orderID,
+                        newOrderFlowID = newFlowID,
+                        ServentID = model.serventID,
+                        terminationDate = DateTime.Now,
+                    };
+                    dbcontext.newOrderFlows.Add(newOrderFlow);
+                    await dbcontext.SaveChangesAsync();
+
+                    newOrder order = await dbcontext.NewOrders.SingleOrDefaultAsync(x => x.newOrderID == model.orderID);
+                    newOrderStatus stat = await dbcontext.newOrderStatuses.SingleOrDefaultAsync(x => x.statusCode == "2");
+
+                    order.newOrderStatusID = stat.newOrderStatusID;
+
+                    user servent = await dbcontext.users.SingleOrDefaultAsync(x => x.userID == model.serventID && x.userType == "1");
+                    Guid ustatuid = new Guid("569bb370-b49d-4713-883f-1a3750f92978");// عملیاتی
+                    servent.workingStatusID = ustatuid;
+
+                    await dbcontext.SaveChangesAsync();
+
+                    response.status = 200;
+                    response.message = "";
+
+                }
+
+            }
+            catch (Exception)
+            {
+                response.status = 400;
+                response.message = "خطا";
+
+
+            }
+            return response;
+        }
 
     }
 }

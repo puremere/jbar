@@ -42,7 +42,7 @@
 <div style="display:flex; direction:rtl">
     <div style="width:35%; background-color:white" >
         @{
-            List<jbar.Model.cartype> parentList = Model.lst.Where(x => x.parentID == x.typeID).ToList();
+            List<jbar.ViewModel.cartypeVM> parentList = Model.lst.Where(x => x.parentID == x.typeID).ToList();
             foreach (var item in parentList)
             {
                 int index = parentList.IndexOf(item);
@@ -61,7 +61,7 @@
     </div>
     @foreach (var parentitem in parentList)
     {
-        List<jbar.Model.cartype> childList = Model.lst.Where(x => x.parentID != x.typeID && x.parentID == parentitem.typeID).ToList();
+        List<jbar.ViewModel.cartypeVM> childList = Model.lst.Where(x => x.parentID != x.typeID && x.parentID == parentitem.typeID).ToList();
 
         int index = parentList.IndexOf(parentitem);
         string classname = "";

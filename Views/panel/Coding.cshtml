@@ -166,7 +166,7 @@
                                                 foreach (var grouh in Model.Where(x => x.codingType == 2 && x.parentID == item.codingID).OrderBy(x => x.codeHesab))
                                                 {
                                                     inlistclass = "checked";
-                                                    if (item.inList != "1")
+                                                    if (grouh.inList != "1")
                                                     {
                                                         inlistclass = "";
 
@@ -185,12 +185,14 @@
 
                                                         <td>
                                                             <button id="@grouh.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                            <button data-bs-target="#editModal" data-bs-toggle="modal" inList="@grouh.inList" hesabtogo="@grouh.codeHesab" nametogo="@grouh.title" idtogo="@grouh.codingID" type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+
                                                         </td>
                                                     </tr>
                                                     foreach (var moin in Model.Where(x => x.codingType == 3 && x.parentID == grouh.codingID))
                                                     {
                                                         inlistclass = "checked";
-                                                        if (item.inList != "1")
+                                                        if (moin.inList != "1")
                                                         {
                                                             inlistclass = "";
 
@@ -209,12 +211,14 @@
 
                                                             <td>
                                                                 <button id="@moin.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                <button data-bs-target="#editModal" data-bs-toggle="modal" inList="@moin.inList" hesabtogo="@moin.codeHesab" nametogo="@moin.title" idtogo="@moin.codingID" type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+
                                                             </td>
                                                         </tr>
                                                         foreach (var tafsil1 in Model.Where(x => x.codingType == 4 && x.parentID == moin.codingID))
                                                         {
                                                             inlistclass = "checked";
-                                                            if (item.inList != "1")
+                                                            if (tafsil1.inList != "1")
                                                             {
                                                                 inlistclass = "";
 
@@ -233,13 +237,15 @@
                                                                 </td>
 
                                                                 <td>
-                                                                    <button id="@moin.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                    <button id="@tafsil1.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                    <button data-bs-target="#editModal" data-bs-toggle="modal" inList="@tafsil1.inList" hesabtogo="@tafsil1.codeHesab" nametogo="@tafsil1.title" idtogo="@tafsil1.codingID" type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+
                                                                 </td>
                                                             </tr>
                                                             foreach (var tafsil2 in Model.Where(x => x.codingType == 5 && x.parentID == tafsil1.codingID))
                                                             {
                                                                 inlistclass = "checked";
-                                                                if (item.inList != "1")
+                                                                if (tafsil2.inList != "1")
                                                                 {
                                                                     inlistclass = "";
 
@@ -258,12 +264,14 @@
 
                                                                     <td>
                                                                         <button id="@tafsil2.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                        <button data-bs-target="#editModal" data-bs-toggle="modal" inList="@tafsil2.inList" hesabtogo="@tafsil2.codeHesab" nametogo="@tafsil2.title" idtogo="@tafsil2.codingID" type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+
                                                                     </td>
                                                                 </tr>
                                                                 foreach (var tafsil3 in Model.Where(x => x.codingType == 6 && x.parentID == tafsil2.codingID))
                                                                 {
                                                                     inlistclass = "checked";
-                                                                    if (item.inList != "1")
+                                                                    if (tafsil3.inList != "1")
                                                                     {
                                                                         inlistclass = "";
 
@@ -282,12 +290,14 @@
 
                                                                         <td>
                                                                             <button id="@tafsil3.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                            <button data-bs-target="#editModal" data-bs-toggle="modal" inList="@tafsil3.inList" hesabtogo="@tafsil3.codeHesab" nametogo="@tafsil3.title" idtogo="@tafsil3.codingID" type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+
                                                                         </td>
                                                                     </tr>
                                                                     foreach (var tafsil4 in Model.Where(x => x.codingType == 7 && x.parentID == tafsil3.codingID))
                                                                     {
                                                                         inlistclass = "checked";
-                                                                        if (item.inList != "1")
+                                                                        if (tafsil4.inList != "1")
                                                                         {
                                                                             inlistclass = "";
 
@@ -306,12 +316,14 @@
 
                                                                             <td>
                                                                                 <button id="@tafsil4.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                                <button data-bs-target="#editModal" data-bs-toggle="modal" inList="@tafsil4.inList" hesabtogo="@tafsil4.codeHesab" nametogo="@tafsil4.title" idtogo="@tafsil4.codingID" type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+
                                                                             </td>
                                                                         </tr>
                                                                         foreach (var tafsil5 in Model.Where(x => x.codingType == 5 && x.parentID == tafsil4.codingID))
                                                                         {
                                                                             inlistclass = "checked";
-                                                                            if (item.inList != "1")
+                                                                            if (tafsil5.inList != "1")
                                                                             {
                                                                                 inlistclass = "";
 
@@ -331,6 +343,8 @@
 
                                                                                 <td>
                                                                                     <button id="@tafsil5.codingID" onclick="removeProcess(this)" type="button" class="btn ripple btn-primary btn-sm">حذف </button>
+                                                                                    <button data-bs-target="#editModal" data-bs-toggle="modal" inList="@tafsil5.inList" hesabtogo="@tafsil5.codeHesab" nametogo="@tafsil5.title" idtogo="@tafsil5.codingID" type="button" class="btn ripple btn-primary btn-sm editButton">ویرایش </button>
+
                                                                                 </td>
                                                                             </tr>
                                                                         }

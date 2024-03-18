@@ -26,11 +26,83 @@ namespace jbar.Controllers
     [doForAll]
     public class panelController : Controller
     {
-        string baseServer = "https://localhost:44389/";// "https://jbar.app/api/app";
+        string baseServer = "https://jbar.app/api/app";// ;"https://localhost:44389/"
         // GET: panel
         public ActionResult Login()
         {
             Context dbcontext = new Context();
+            newOrderStatus status1 = new newOrderStatus()
+            {
+                newOrderStatusID = Guid.NewGuid(),
+                statusCode = "1",
+                title = "در انتظار"
+            };
+            dbcontext.newOrderStatuses.Add(status1);
+            dbcontext.SaveChanges();
+            status1 = new newOrderStatus()
+            {
+                newOrderStatusID = Guid.NewGuid(),
+                statusCode = "2",
+                title = "عملیاتی"
+            };
+            dbcontext.newOrderStatuses.Add(status1);
+            dbcontext.SaveChanges();
+            status1 = new newOrderStatus()
+            {
+                newOrderStatusID = Guid.NewGuid(),
+                statusCode = "3",
+                title = "رد شده"
+            };
+            dbcontext.newOrderStatuses.Add(status1);
+            dbcontext.SaveChanges();
+            status1 = new newOrderStatus()
+            {
+                newOrderStatusID = Guid.NewGuid(),
+                statusCode = "4",
+                title = "تمام شده"
+            };
+            dbcontext.newOrderStatuses.Add(status1);
+            dbcontext.SaveChanges();
+            //List<detailCollection> listItem = new List<detailCollection>();
+            //detailCollection item1 = new detailCollection()
+            //{
+            //    key = "sleeve",
+            //    value = "1629132d-335e-4823-9d98-cdcac5e8b9d0",
+            //     formID = new Guid("0687a7ca-c78a-41dc-bf5c-25927eac2f62"),
+            //      formItemID = new Guid("5e094ad2-cea6-418a-8bb8-2608fcdf0c4c"),
+            //       formItemTypeCode = "4"
+            //};
+            //listItem.Add(item1);
+            //detailCollection item2 = new detailCollection()
+            //{
+            //    key = "fullHeight",
+            //    value = "190",
+            //    formID = new Guid("0687a7ca-c78a-41dc-bf5c-25927eac2f62"),
+            //    formItemID = new Guid("bb1edc2c-6eff-4499-a84e-036bd071d2e2"),
+            //    formItemTypeCode = "7"
+            //};
+            //listItem.Add(item2);
+            //detailCollection item3 = new detailCollection()
+            //{
+            //    key = "userPhone",
+            //    value = "09194594505",
+            //    formID = new Guid("07e4a30c-3b02-41e2-a7bc-fa85148b66a6"),
+            //    formItemID = new Guid("bae7ea90-9c56-49bb-8d48-3555dbe621d0"),
+            //    formItemTypeCode = "7"
+            //};
+            //listItem.Add(item3);
+            //detailCollection item4 = new detailCollection()
+            //{
+            //    key = "userTitle",
+            //    value = "mere",
+            //    formID = new Guid("07e4a30c-3b02-41e2-a7bc-fa85148b66a6"),
+            //    formItemID = new Guid("c1167cc8-b133-4928-b171-7b91c0d63827"),
+            //    formItemTypeCode = "7"
+            //};
+            //listItem.Add(item4);
+
+            //string laststring = JsonConvert.SerializeObject(listItem);
+            //string srt = "";
             //Guid userid = new Guid("9f82f3e1-df02-46aa-86cb-7bdbd9887147");
             //formItemDesign ftd = new formItemDesign()
             //{

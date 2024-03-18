@@ -979,6 +979,7 @@
     }
     function sendOrderRequest(ID, price) {
         $("#loading").show();
+        
         $.post(
             "/driverapp/requestOrder",
             { orderID: ID, price: price },

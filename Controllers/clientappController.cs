@@ -18,7 +18,7 @@ namespace jbar.Controllers
    
     public class clientappController : Controller
     {
-        string baseServer = "https://jbar.app/api/app";
+        string baseServer = "https://localhost:44389/api/app";// "https://jbar.app/api/app";
         // GET: clientapp
         public ActionResult Index()
         {
@@ -55,6 +55,7 @@ namespace jbar.Controllers
                 var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(model.message + ":" + phone);
                 string tkn = System.Convert.ToBase64String(plainTextBytes);
 
+                //Response.Cookies["clientToken"].Value = "Annathurai";
                 Response.Cookies["clientToken"].Value = tkn;
             }
 
@@ -448,38 +449,13 @@ namespace jbar.Controllers
             string result = "";
             try
             {
-
-                using (var client = new HttpClient())
-                {
-                    client.BaseAddress = new Uri(baseServer + "/getOrderDetailClientAsync");
-                    client.DefaultRequestHeaders.Add("Authorization", "Basic " + token);
-                    orderDetailVM mdl = new orderDetailVM();
-                    mdl.orderID = orderID;
-                    string content = JsonConvert.SerializeObject(mdl);
-
-                    var buffer = System.Text.Encoding.UTF8.GetBytes(content);
-                    var byteContent = new ByteArrayContent(buffer);
-                    byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-                    var rsp =await client.PostAsync("", byteContent).ConfigureAwait(false);
-                    sendDetailVM model = JsonConvert.DeserializeObject<sendDetailVM>(rsp.ToString());
-                    model.orderID = orderID;
-                    return PartialView("/Views/Shared/client/_cleintOrderDetailParial.cshtml", model);
-
-                }
-                using (WebClient client = new WebClient())
-                {
-                    client.Headers.Set("Authorization", "Basic " + token);
-                    var collection = new NameValueCollection();
-                    collection.Add("orderID", orderID);
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
-                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
-                    byte[] response = client.UploadValues(baseServer + "/getOrderDetailClient", collection);
-
-                    result = System.Text.Encoding.UTF8.GetString(response);
-                    sendDetailVM model = JsonConvert.DeserializeObject<sendDetailVM>(result);
-                    model.orderID = orderID;
-                    return PartialView("/Views/Shared/client/_cleintOrderDetailParial.cshtml", model);
-                }
+                orderDetailVM mdl = new orderDetailVM();
+                mdl.orderID = orderID;
+                sendDetailVM responsemodel = new sendDetailVM();
+                responsemodel = await methods.PostData(mdl, responsemodel, "/getOrderDetailClientAsync", Request.Cookies["clientToken"].Value);
+                responsemodel.orderID = orderID;
+                return PartialView("/Views/Shared/client/_cleintOrderDetailParial.cshtml", responsemodel);
+               
             }
             catch (Exception e)
             {
@@ -805,7 +781,7 @@ namespace jbar.Controllers
             {
                 client.Headers.Set("Authorization", "Basic " + token);
                 var collection = new NameValueCollection();
-                byte[] response = client.UploadValues(baseServer + "/getCoDriver", collection);
+                byte[] response = client.UploadValues(baseServer + "/getCoDriverAsync", collection);
 
                 result = System.Text.Encoding.UTF8.GetString(response);
 

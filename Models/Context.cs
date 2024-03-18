@@ -61,10 +61,11 @@ namespace jbar.Model
        
         public DbSet<newOrderFields> newOrderFields { get; set; }
         public DbSet<newOrder> NewOrders { get; set; }
-        public DbSet<newOrderFlow> OrderFlows { get; set; }
-        public DbSet<newOrderStatu> newOrderStatus { get; set; }
+        public DbSet<newOrderFlow> newOrderFlows { get; set; }
+        public DbSet<newOrderStatus> newOrderStatuses { get; set; }
+        public DbSet<flowCoding> flowCodings { get; set; }
+        public DbSet<flowProduct> flowProducts { get; set; }
 
-        
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -92,10 +93,6 @@ namespace jbar.Model
             modelBuilder.Entity<order>().HasOptional(m => m.origincity).WithMany(t => t.originOrders) .HasForeignKey(m => m.originCityID).WillCascadeOnDelete(false);
             modelBuilder.Entity<order>().HasOptional(m => m.destincity).WithMany(t => t.destinOrders).HasForeignKey(m => m.destinCityID).WillCascadeOnDelete(false);
             modelBuilder.Entity<order>().HasOptional(m => m.loadtype).WithMany().HasForeignKey(m => m.loadTypeID).WillCascadeOnDelete(false);
-
-            //modelBuilder.Entity<newOrder>().HasOptional(m => m.driveruser).WithMany().HasForeignKey(m => m.driverID).WillCascadeOnDelete(false);
-            //modelBuilder.Entity<newOrder>().HasRequired(m => m.clientuser).WithMany().HasForeignKey(m => m.clientID).WillCascadeOnDelete(false);
-            //modelBuilder.Entity<newOrderFields>().HasRequired(m => m.NewOrder).WithMany(t=>t.NewOrderFields).HasForeignKey(m => m.newOrderID).WillCascadeOnDelete(false);
 
             modelBuilder.Entity<newOrder>().HasOptional(s => s.ThirdParty).WithMany().HasForeignKey(x => x.thirdPartyID);
             modelBuilder.Entity<newOrderFlow>().HasRequired(m => m.newOrderProcess).WithMany().HasForeignKey(m => m.processID).WillCascadeOnDelete(false);
@@ -151,7 +148,6 @@ namespace jbar.Model
         public product()
         {
             this.Tags = new HashSet<tag>();
-            this.ProductTypes = new HashSet<productType>();
         }
         [Key]
         public Guid productID { get; set; }
@@ -164,19 +160,23 @@ namespace jbar.Model
         [ForeignKey("userID")]
         public virtual user user { get; set; }
 
+        
+
+        public virtual ICollection<productType> productTypes { get; set; }
         public virtual ICollection<tag> Tags { get; set; }
-        public virtual ICollection<productType> ProductTypes { get; set; }
+        public virtual ICollection<flowProduct> FlowProducts { get; set; }
+
 
 
     }
 
     public class productType
     {
-
         public productType()
         {
             this.Products = new HashSet<product>();
         }
+
         [Key]
         public Guid productTypeID { get; set; }
         public string title { get; set; }
@@ -559,13 +559,13 @@ namespace jbar.Model
         [ForeignKey("formItemID")]
         public virtual formItem FormItem { get; set; }
 
-        public Guid  newOrderFlowID { get; set; }
+        public Guid newOrderFlowID { get; set; }
         [ForeignKey("newOrderFlowID")]
         public virtual newOrderFlow NewOrderFlow { get; set; }
     }
 
 
-    public class newOrderStatu
+    public class newOrderStatus
     {
         [Key]
         public Guid newOrderStatusID { get; set; }
@@ -585,23 +585,28 @@ namespace jbar.Model
 
         public Guid newOrderStatusID { get; set; }
         [ForeignKey("newOrderStatusID")]
-        public virtual user newOrderStatus { get; set; }
+        public virtual newOrderStatus newOrderStatus { get; set; }
+
+
 
         public DateTime creationDate { get; set; }
         public DateTime terminationDate { get; set; }
 
         public virtual ICollection<newOrderFlow> orderFlowList { get; set; }
-      
+
     }
-   
+
     public class newOrderFlow
     {
         [Key]
         public Guid newOrderFlowID { get; set; }
 
+
         public Guid newOrderID { get; set; }
         [ForeignKey("newOrderID")]
         public virtual newOrder NewOrder { get; set; }
+
+
 
         public Guid ServentID { get; set; }
         [ForeignKey("ServentID")]
@@ -610,21 +615,52 @@ namespace jbar.Model
         public Guid processID { get; set; }
         [ForeignKey("processID")]
         public virtual process newOrderProcess { get; set; }
-       
+
         public string isFinished { get; set; }
         public DateTime creationDate { get; set; }
         public DateTime terminationDate { get; set; }
 
         public virtual ICollection<newOrderFields> NewOrderFields { get; set; }
+        public virtual ICollection<flowCoding> flowCodings { get; set; }
+        public virtual ICollection<flowProduct> flowProducts { get; set; }
     }
-   
+    public class flowProduct
+    {
+        [Key]
+        public Guid flowCodingID { get; set; }
+        public Guid productID { get; set; }
+        [ForeignKey("productID")]
+        public virtual product product { get; set; }
+        public Guid flowID { get; set; }
+        [ForeignKey("flowID")]
+        public virtual newOrderFlow orderflow { get; set; }
+        public double amount { get; set; }
+        public DateTime date { get; set; }
+
+    }
+
+    public  class flowCoding
+    {
+        [Key]
+        public Guid flowCodingID { get; set; }
+        public Guid CodingID { get; set; }
+        [ForeignKey("CodingID")]
+        public virtual coding coding { get; set; }
+        public Guid flowID { get; set; }
+        [ForeignKey("flowID")]
+        public virtual newOrderFlow orderflow { get; set; }
+        public  double amount { get; set; }
+        public DateTime date { get; set; }
+
+    }
+
     public class process// پروسه ای که بابری برای خدش توولید میکنه و اردرهاشو تطبیق میده
     {
         [Key]
         public Guid processID { get; set; }
         public process()
         {
-            this.orderHistoryList = new HashSet<newOrder>();
+            //this.orderHistoryList = new HashSet<newOrder>();
             this.formList = new HashSet<form>();
         }
         public string isDefault { get; set; }
@@ -634,7 +670,7 @@ namespace jbar.Model
         public virtual user user { get; set; }
 
         public virtual ICollection<processFormula> ProcessFormulas { get; set; }
-        public virtual ICollection<newOrder> orderHistoryList { get; set; }
+        //public virtual ICollection<newOrder> orderHistoryList { get; set; }
         public virtual ICollection<form> formList { get; set; }
 
         
@@ -865,6 +901,7 @@ namespace jbar.Model
         public virtual ICollection<yadak> yadaks { get; set; }
         public virtual ICollection<formula> Formulas { get; set; }
         public virtual ICollection<process> processes { get; set; }
+        public virtual ICollection<product> products { get; set; }
         public virtual ICollection<order> driverOrders { get; set; }
         public virtual ICollection<order> clientOrders { get; set; }
         public virtual ICollection<loadType> loadTypes { get; set; }
@@ -925,7 +962,7 @@ namespace jbar.Model
         public DbGeography citypoint { get; set; }
 
         public Guid parentID { get; set; }
-        [ForeignKey("userID")]
+        [ForeignKey("parentID")]
         public virtual city parentcity { get; set; }
         public virtual ICollection<order> originOrders { get; set; }
         public virtual ICollection<order> destinOrders { get; set; }

@@ -415,7 +415,7 @@
 
     function showTwoPoin(orlat, orlon, deslat, deslon) {
 
-
+       
         var Mapnik = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -617,7 +617,7 @@
         url: "DriverPartial",
         success: function (data) {
             if (data == "400") {
-                alert("DriverPartial");
+               
                // window.location.href = "/clientapp/index";
             }
             else {
@@ -632,7 +632,7 @@
             url: "getHome",
             success: function (data) {
                 if (data == "400") {
-                    alert("getHome");
+                   
                    // window.location.href = "/clientapp/index";
                 }
                 else {
@@ -894,7 +894,7 @@
             { originCityID: "", destinCityID: "", type: "" },
             function (data) {
                 if (data == "400") {
-                    window.location.href = "/driverapp/index";
+                    window.location.href = "/Clientapp/index";
                 }
                 else {
                     $("#loggigTypeParent").html(data);

@@ -7,6 +7,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 
@@ -15,7 +16,7 @@ namespace jbar.Controllers
    
     public class driverappController : Controller
     {
-        string baseServer = "https://jbar.app/api/app";
+        string baseServer = "https://localhost:44389/api/app"; //"https://jbar.app/api/app";
         // GET: driverapp
         public ActionResult Index()
         {
@@ -87,7 +88,7 @@ namespace jbar.Controllers
         }
 
 
-        public ActionResult DriverPartial()
+        public async Task<ActionResult> DriverPartial()
         {
             if (Request.Cookies["token"] == null)
             {
@@ -97,19 +98,24 @@ namespace jbar.Controllers
             string result = "";
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    client.Headers.Set("Authorization", "Basic " + token );
-                    var collection = new NameValueCollection();
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
-                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
-                    byte[] response = client.UploadValues(baseServer + "/getProfile", collection);
+                orderDetailVM mdl = new orderDetailVM();
+                
+                sendProfileVM responsemodel = new sendProfileVM();
+                responsemodel = await methods.PostData(new nullclass(), responsemodel, "/getProfile", Request.Cookies["clientToken"].Value);
+                return PartialView("/Views/Shared/driver/_driverProfileParial.cshtml", responsemodel);
+                //using (WebClient client = new WebClient())
+                //{
+                //    client.Headers.Set("Authorization", "Basic " + token );
+                //    var collection = new NameValueCollection();
+                //    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
+                //    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
+                //    byte[] response = client.UploadValues(baseServer + "/getProfile", collection);
 
 
-                    result = System.Text.Encoding.UTF8.GetString(response);
-                    sendProfileVM model = JsonConvert.DeserializeObject<sendProfileVM>(result);
-                    return PartialView("/Views/Shared/driver/_driverProfileParial.cshtml", model);
-                }
+                //    result = System.Text.Encoding.UTF8.GetString(response);
+                //    sendProfileVM model = JsonConvert.DeserializeObject<sendProfileVM>(result);
+                   
+                //}
             }
             catch (Exception e)
             {
@@ -130,7 +136,7 @@ namespace jbar.Controllers
         }
 
        [HttpPost]
-       public ActionResult requestOrder(requestOrderVM inputmodel)
+       public async Task< ActionResult> requestOrder(requestOrderVM inputmodel)
         {
             if (Request.Cookies["token"] == null)
             {
@@ -140,6 +146,15 @@ namespace jbar.Controllers
             string result = "";
             try
             {
+                requestOrderVM mdl = new requestOrderVM();
+                mdl.orderID = inputmodel.orderID;
+                mdl.price = inputmodel.price;
+               
+                responseModel responsemodel = new responseModel();
+                responsemodel = await methods.PostData(mdl, responsemodel, "/requestOrder", Request.Cookies["clientToken"].Value);
+                return Content(responsemodel.status.ToString());
+
+
                 using (WebClient client = new WebClient())
                 {
                     client.Headers.Set("Authorization", "Basic " + token);
@@ -168,7 +183,7 @@ namespace jbar.Controllers
 
 
         [HttpPost]
-        public ActionResult getOrderList(string originCityID, string destinCityID, string type)
+        public async Task<ActionResult> getOrderList(getOrderList model)
         {
             if (Request.Cookies["token"] == null)
             {
@@ -178,21 +193,28 @@ namespace jbar.Controllers
             string result = "";
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    client.Headers.Set("Authorization", "Basic " + token);
-                    var collection = new NameValueCollection();
-                    collection.Add("originCityID", originCityID);
-                    collection.Add("destinCityID", destinCityID);
-                    collection.Add("type", type);
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
-                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
-                    byte[] response = client.UploadValues(baseServer + "/getOrder", collection);
+                setOrderVM mdl = new setOrderVM();
+                mdl.originCityID = model.originCityID;
+                mdl.destinCityID = model.destinCityID;
+                mdl.type = model.type;
+                getOrderVM responsemodel = new getOrderVM();
+                responsemodel = await methods.PostData(mdl, responsemodel, "/getOrder", Request.Cookies["clientToken"].Value);
+                return PartialView("/Views/Shared/driver/_driverOrderlistParial.cshtml", responsemodel);
+                //using (WebClient client = new WebClient())
+                //{
+                //    client.Headers.Set("Authorization", "Basic " + token);
+                //    var collection = new NameValueCollection();
+                //    collection.Add("originCityID", originCityID);
+                //    collection.Add("destinCityID", destinCityID);
+                //    collection.Add("type", type);
+                //    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
+                //    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
+                //    byte[] response = client.UploadValues(baseServer + "/getOrder", collection);
 
-                    result = System.Text.Encoding.UTF8.GetString(response);
-                    getOrderVM model = JsonConvert.DeserializeObject<getOrderVM>(result);
-                    return PartialView("/Views/Shared/driver/_driverOrderlistParial.cshtml", model);
-                }
+                //    result = System.Text.Encoding.UTF8.GetString(response);
+                //    getOrderVM model = JsonConvert.DeserializeObject<getOrderVM>(result);
+                   
+                //}
             }
             catch (Exception e)
             {
@@ -207,7 +229,7 @@ namespace jbar.Controllers
 
 
         [HttpPost]
-        public ActionResult getOrderDetail(string orderID)
+        public async Task<ActionResult> getOrderDetail(string orderID)
         {
             if (Request.Cookies["token"] == null)
             {
@@ -217,20 +239,27 @@ namespace jbar.Controllers
             string result = "";
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    client.Headers.Set("Authorization", "Basic " + token);
-                    var collection = new NameValueCollection();
-                    collection.Add("orderID", orderID);
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
-                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
-                    byte[] response = client.UploadValues(baseServer + "/getOrderDetail", collection);
+                orderDetailVM mdl = new orderDetailVM();
+                mdl.orderID = orderID;
+               
+                sendDetailVM responsemodel = new sendDetailVM();
+                responsemodel = await methods.PostData(mdl, responsemodel, "/getOrderDetail", Request.Cookies["clientToken"].Value);
+                responsemodel.orderID = orderID;
+                return PartialView("/Views/Shared/driver/_driverOrderDetailParial.cshtml", responsemodel);
+                //using (WebClient client = new WebClient())
+                //{
+                //    client.Headers.Set("Authorization", "Basic " + token);
+                //    var collection = new NameValueCollection();
+                //    collection.Add("orderID", orderID);
+                //    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
+                //    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
+                //    byte[] response = client.UploadValues(baseServer + "/getOrderDetail", collection);
 
-                    result = System.Text.Encoding.UTF8.GetString(response);
-                    sendDetailVM model = JsonConvert.DeserializeObject<sendDetailVM>(result);
-                    model.orderID = orderID;
-                    return PartialView("/Views/Shared/driver/_driverOrderDetailParial.cshtml", model);
-                }
+                //    result = System.Text.Encoding.UTF8.GetString(response);
+                //    sendDetailVM model = JsonConvert.DeserializeObject<sendDetailVM>(result);
+                //    model.orderID = orderID;
+                //    return PartialView("/Views/Shared/driver/_driverOrderDetailParial.cshtml", model);
+                //}
             }
             catch (Exception e)
             {
@@ -263,7 +292,7 @@ namespace jbar.Controllers
         }
 
         
-        public ActionResult getUserOrder()
+        public async  Task<ActionResult> getUserOrder()
         {
             if (Request.Cookies["token"] == null)
             {
@@ -273,18 +302,13 @@ namespace jbar.Controllers
             string result = "";
             try
             {
-                using (WebClient client = new WebClient())
-                {
-                    client.Headers.Set("Authorization", "Basic " + token);
-                    var collection = new NameValueCollection();
-                    ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12; // .NET 4.5
-                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // .NET 4.0
-                    byte[] response = client.UploadValues(baseServer + "/getUserOrder", collection);
+                
 
-                    result = System.Text.Encoding.UTF8.GetString(response);
-                    getOrderVM model = JsonConvert.DeserializeObject<getOrderVM>(result);
-                    return PartialView("/Views/Shared/driver/_driverOrderlistParial.cshtml", model);
-                }
+                getOrderVM responsemodel = new getOrderVM();
+                responsemodel = await methods.PostData(new nullclass(), responsemodel, "/getUserOrder", Request.Cookies["clientToken"].Value);
+
+                return PartialView("/Views/Shared/driver/_driverOrderlistParial.cshtml", responsemodel);
+               
             }
             catch (Exception e)
             {
